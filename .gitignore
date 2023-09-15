@@ -1,0 +1,23 @@
+TS-frontend/package-lock.json
+TS-frontend/node_modules
+
+TS-frontend/.pnp
+TS-frontend/.pnp.js
+
+# testing
+TS-frontend/coverage
+
+# production
+TS-frontend/build
+
+# misc
+TS-frontend/.DS_Store
+TS-frontend/.env.local
+TS-frontend/.env.development.local
+TS-frontend/.env.test.local
+TS-frontend/.env.production.local
+
+TS-frontend/npm-debug.log*
+TS-frontend/yarn-debug.log*
+TS-frontend/yarn-error.log*
+
