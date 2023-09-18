@@ -1,4 +1,9 @@
 export { default as Dashboard } from './Dashboard';
+export { default as DerivativeNifty } from './DerivativeNifty';
+export { default as DerivativeBankNifty } from './DerivativeBankNifty';
+export { default as DerivativeFinNifty } from './DerivativeFinNifty';
+export { default as DerivativeMidCapNifty } from './DerivativeMidCapNifty';
+
 export { default as Ecommerce } from './Ecommerce';
 export { default as Kanban } from './Kanban';
 export { default as Orders } from './Orders';

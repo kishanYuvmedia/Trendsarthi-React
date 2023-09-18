@@ -8,6 +8,7 @@ import { Stacked, Pie, Button, LineChart, SparkLine } from '../Components';
 import { earningData, medicalproBranding, recentTransactions, weeklyStats, dropdownData, SparklineAreaData, ecomPieChartData } from '../Data/dummy';
 import { useStateContext } from '../Contexts/ContextProvider';
 import product9 from '../Data/product9.jpg';
+import barLogo from '../Data/bar-graph.png';
 
 const DropDown = ({ currentMode }) => (
   <div className="w-28 border-1 border-color px-2 py-1 rounded-md">
@@ -19,12 +20,19 @@ const Dashboard = () => {
   const { currentColor, currentMode } = useStateContext();
 
   return (
-    <div className="mt-24">
-      
+    <div className="mt-8">
+    {/* heading */}
+      <div className="flex flex-wrap lg:flex-nowrap justify-center container mx-auto">
+        <div className="text-gray-400 flex text-4xl font-bold uppercase mb-3">
+          <img src={barLogo} alt="trend-sarthi-logo" width="32px" height="32px" className='me-3'/>
+          <h2>Trend Sarthi</h2>
+        </div>
+      </div>
+
+    {/* main tabs */}
       <div className="flex flex-wrap lg:flex-nowrap justify-center ">
-      <h2> This is a Dashboard</h2>
         <div className="bg-white dark:text-gray-200 dark:bg-secondary-dark-bg h-44 rounded-xl w-full lg:w-80 p-8 pt-9 m-3 bg-hero-pattern bg-no-repeat bg-cover bg-center">
-          
+
           <div className="flex justify-between items-center">
             <div>
               <p className="font-bold text-gray-400">Earnings</p>
@@ -38,6 +46,7 @@ const Dashboard = () => {
               <BsCurrencyDollar />
             </button>
           </div>
+          
           <div className="mt-6">
             <Button
               color="white"

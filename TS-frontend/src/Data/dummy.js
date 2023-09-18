@@ -461,107 +461,155 @@ export const customersGrid = [
 
 export const employeesGrid = [
   {
-    headerText: 'Employee',
-    width: '150',
+    field: 'EmployeeID',
+    headerText: 'Sr.',
+    width: '25',
+    textAlign: 'Center'
+  },
+  {
+    headerText: 'Open Interest',
+    width: '50',
     template: gridEmployeeProfile,
     textAlign: 'Center'
   },
   {
     field: 'Name',
-    headerText: '',
-    width: '0',
+    headerText: 'OI Change',
+    width: '50',
     textAlign: 'Center',
   },
   {
     field: 'Title',
-    headerText: 'Designation',
-    width: '170',
+    headerText: 'Total QTY Traded',
+    width: '50',
     textAlign: 'Center',
   },
   {
-    headerText: 'Country',
-    width: '120',
+    headerText: 'Price Change %',
+    width: '50',
     textAlign: 'Center',
     template: gridEmployeeCountry
   },
 
   {
     field: 'HireDate',
-    headerText: 'Hire Date',
-    width: '135',
+    headerText: 'LTP',
+    width: '50',
     format: 'yMd',
     textAlign: 'Center'
   },
 
   {
     field: 'ReportsTo',
-    headerText: 'Reports To',
-    width: '120',
+    headerText: 'Strike Price',
+    width: '50',
     textAlign: 'Center'
   },
   {
-    field: 'EmployeeID',
-    headerText: 'Employee ID',
-    width: '125',
+    field: 'ReportsTo',
+    headerText: 'LTP',
+    width: '50',
     textAlign: 'Center'
   },
+  {
+    field: 'ReportsTo',
+    headerText: 'Price Change %',
+    width: '50',
+    textAlign: 'Center'
+  },
+  {
+    field: 'ReportsTo',
+    headerText: 'Total QTY Traded',
+    width: '50',
+    textAlign: 'Center'
+  },
+  {
+    field: 'ReportsTo',
+    headerText: 'OI Change',
+    width: '50',
+    textAlign: 'Center'
+  },
+  {
+    field: 'ReportsTo',
+    headerText: 'Open Interest',
+    width: '50',
+    textAlign: 'Center'
+  },
+  
 ];
 
+// sidebar navigation
 export const links = [
   {
-    title: 'Dashboard',
+    title: 'Main Menu',
     links: [
       {
         name: 'Dashboard',
         icon: <FiShoppingBag />,
       },
       
-      {
-        name: 'ecommerce',
-        icon: <FiShoppingBag />,
-      },
+      // {
+      //   name: 'ecommerce',
+      //   icon: <FiShoppingBag />,
+      // },
       
     ],
   },
 
   {
-    title: 'Pages',
+    title: 'Derivatives',
     links: [
+      // {
+      //   name: 'orders',
+      //   icon: <AiOutlineShoppingCart />,
+      // },
+      // {
+      //   name: 'employees',
+      //   icon: <IoMdContacts />,
+      // },
+      // {
+      //   name: 'customers',
+      //   icon: <RiContactsLine />,
+      // },
       {
-        name: 'orders',
-        icon: <AiOutlineShoppingCart />,
+        name: 'Nifty',
+        icon: <RiContactsLine />,
       },
       {
-        name: 'employees',
-        icon: <IoMdContacts />,
+        name: 'BankNifty',
+        icon: <RiContactsLine />,
       },
       {
-        name: 'customers',
+        name: 'FinNifty',
+        icon: <RiContactsLine />,
+      },
+      {
+        name: 'MidCapNifty',
         icon: <RiContactsLine />,
       },
     ],
   },
-  {
-    title: 'Apps',
-    links: [
-      {
-        name: 'calendar',
-        icon: <AiOutlineCalendar />,
-      },
-      {
-        name: 'kanban',
-        icon: <BsKanban />,
-      },
-      {
-        name: 'editor',
-        icon: <FiEdit />,
-      },
-      {
-        name: 'color-picker',
-        icon: <BiColorFill />,
-      },
-    ],
-  },
+  // {
+  //   title: 'Apps',
+  //   links: [
+      // {
+      //   name: 'calendar',
+      //   icon: <AiOutlineCalendar />,
+      // },
+      // {
+      //   name: 'kanban',
+      //   icon: <BsKanban />,
+      // },
+      // {
+      //   name: 'editor',
+      //   icon: <FiEdit />,
+      // },
+      // {
+      //   name: 'color-picker',
+      //   icon: <BiColorFill />,
+      // },
+  //   ],
+  // },
   {
     title: 'Charts',
     links: [
@@ -569,35 +617,35 @@ export const links = [
         name: 'line',
         icon: <AiOutlineStock />,
       },
-      {
-        name: 'area',
-        icon: <AiOutlineAreaChart />,
-      },
+      // {
+      //   name: 'area',
+      //   icon: <AiOutlineAreaChart />,
+      // },
 
-      {
-        name: 'bar',
-        icon: <AiOutlineBarChart />,
-      },
-      {
-        name: 'pie',
-        icon: <FiPieChart />,
-      },
-      {
-        name: 'financial',
-        icon: <RiStockLine />,
-      },
-      {
-        name: 'color-mapping',
-        icon: <BsBarChart />,
-      },
-      {
-        name: 'pyramid',
-        icon: <GiLouvrePyramid />,
-      },
-      {
-        name: 'stacked',
-        icon: <AiOutlineBarChart />,
-      },
+      // {
+      //   name: 'bar',
+      //   icon: <AiOutlineBarChart />,
+      // },
+      // {
+      //   name: 'pie',
+      //   icon: <FiPieChart />,
+      // },
+      // {
+      //   name: 'financial',
+      //   icon: <RiStockLine />,
+      // },
+      // {
+      //   name: 'color-mapping',
+      //   icon: <BsBarChart />,
+      // },
+      // {
+      //   name: 'pyramid',
+      //   icon: <GiLouvrePyramid />,
+      // },
+      // {
+      //   name: 'stacked',
+      //   icon: <AiOutlineBarChart />,
+      // },
     ],
   },
 ];

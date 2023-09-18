@@ -4,7 +4,7 @@ import { FiSettings } from 'react-icons/fi';
 import { TooltipComponent } from '@syncfusion/ej2-react-popups';
 
 import { Navbar, Footer, Sidebar, ThemeSettings } from './Components';
-import { Ecommerce, Dashboard, Orders, Calendar, Employees, Stacked, Pyramid, Customers, Kanban, Line, Area, Bar, Pie, Financial, ColorPicker, ColorMapping, Editor } from './Pages';
+import { Ecommerce, Dashboard, Orders, Calendar, Employees, Stacked, Pyramid, Customers, Kanban, Line, Area, Bar, Pie, Financial, ColorPicker, ColorMapping, Editor, DerivativeNifty, DerivativeBankNifty, DerivativeFinNifty, DerivativeMidCapNifty } from './Pages';
 import './App.css';
 
 import { useStateContext } from './Contexts/ContextProvider';
@@ -69,6 +69,10 @@ const App = () => {
                 <Route path="/ecommerce" element={(<Ecommerce />)} />
 
                 {/* pages  */}
+                <Route path="/Nifty" element={<DerivativeNifty />} />
+                <Route path="/BankNifty" element={<DerivativeBankNifty />} />
+                <Route path="/FinNifty" element={<DerivativeFinNifty />} />
+                <Route path="/MidCapNifty" element={<DerivativeMidCapNifty />} />
                 <Route path="/orders" element={<Orders />} />
                 <Route path="/employees" element={<Employees />} />
                 <Route path="/customers" element={<Customers />} />
@@ -83,7 +87,7 @@ const App = () => {
                 <Route path="/line" element={<Line />} />
                 <Route path="/area" element={<Area />} />
                 <Route path="/bar" element={<Bar />} />
-                <Route path="/pie" element={<Pie />} />
+                <Route path="/pie" element={<Pie />} /> 
                 <Route path="/financial" element={<Financial />} />
                 <Route path="/color-mapping" element={<ColorMapping />} />
                 <Route path="/pyramid" element={<Pyramid />} />
