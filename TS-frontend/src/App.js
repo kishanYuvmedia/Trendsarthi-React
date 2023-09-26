@@ -1,106 +1,112 @@
-import React, { useEffect } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { FiSettings } from 'react-icons/fi';
-import { TooltipComponent } from '@syncfusion/ej2-react-popups';
+import PropTypes from 'prop-types';
+import React from "react";
+import { useSelector } from "react-redux";
+import { createSelector } from "reselect";
+import { Routes, Route } from "react-router-dom";
+import { layoutTypes } from "./constants/layout";
+// Import Routes all
+import { authProtectedRoutes, publicRoutes } from "./routes";
 
-import { Navbar, Footer, Sidebar, ThemeSettings } from './Components';
-import { Ecommerce, Dashboard, Orders, Calendar, Employees, Stacked, Pyramid, Customers, Kanban, Line, Area, Bar, Pie, Financial, ColorPicker, ColorMapping, Editor, DerivativeNifty, DerivativeBankNifty, DerivativeFinNifty, DerivativeMidCapNifty } from './Pages';
-import './App.css';
+// Import all middleware
+import Authmiddleware from "./routes/route";
 
-import { useStateContext } from './Contexts/ContextProvider';
+// layouts Format
+import VerticalLayout from "./components/VerticalLayout/";
+import HorizontalLayout from "./components/HorizontalLayout/";
+import NonAuthLayout from "./components/NonAuthLayout";
+
+// Import scss
+import "./assets/scss/theme.scss";
+
+// Import Firebase Configuration file
+// import { initFirebaseBackend } from "./helpers/firebase_helper";
+
+import fakeBackend from "./helpers/AuthType/fakeBackend";
+
+// Activating fake backend
+fakeBackend();
+
+// const firebaseConfig = {
+//   apiKey: process.env.REACT_APP_APIKEY,
+//   authDomain: process.env.REACT_APP_AUTHDOMAIN,
+//   databaseURL: process.env.REACT_APP_DATABASEURL,
+//   projectId: process.env.REACT_APP_PROJECTID,
+//   storageBucket: process.env.REACT_APP_STORAGEBUCKET,
+//   messagingSenderId: process.env.REACT_APP_MESSAGINGSENDERID,
+//   appId: process.env.REACT_APP_APPID,
+//   measurementId: process.env.REACT_APP_MEASUREMENTID,
+// };
+
+// init firebase backend
+// initFirebaseBackend(firebaseConfig);
+
+
+const getLayout = (layoutType) => {
+  let Layout = VerticalLayout;
+  switch (layoutType) {
+    case layoutTypes.VERTICAL:
+      Layout = VerticalLayout;
+      break;
+    case layoutTypes.HORIZONTAL:
+      Layout = HorizontalLayout;
+      break;
+    default:
+      break;
+  }
+  return Layout;
+};
 
 const App = () => {
-  const { setCurrentColor, setCurrentMode, currentMode, activeMenu, currentColor, themeSettings, setThemeSettings } = useStateContext();
 
-  useEffect(() => {
-    const currentThemeColor = localStorage.getItem('colorMode');
-    const currentThemeMode = localStorage.getItem('themeMode');
-    if (currentThemeColor && currentThemeMode) {
-      setCurrentColor(currentThemeColor);
-      setCurrentMode(currentThemeMode);
-    }
-  }, []);
+
+  const selectLayoutState = (state) => state.Layout;
+  const LayoutProperties = createSelector(
+    selectLayoutState,
+      (layout) => ({
+        layoutType: layout.layoutType,
+      })
+  );
+
+    const {
+      layoutType
+  } = useSelector(LayoutProperties);
+
+  const Layout = getLayout(layoutType);
 
   return (
-    <div className={currentMode === 'Dark' ? 'dark' : ''}>
-      <BrowserRouter>
-        <div className="flex relative dark:bg-main-dark-bg">
-          <div className="fixed right-4 bottom-4" style={{ zIndex: '1000' }}>
-            <TooltipComponent
-              content="Settings"
-              position="Top"
-            >
-              <button
-                type="button"
-                onClick={() => setThemeSettings(true)}
-                style={{ background: currentColor, borderRadius: '50%' }}
-                className="text-3xl text-white p-3 hover:drop-shadow-xl hover:bg-light-gray"
-              >
-                <FiSettings />
-              </button>
-
-            </TooltipComponent>
-          </div>
-          {activeMenu ? (
-            <div className="w-72 fixed sidebar dark:bg-secondary-dark-bg bg-white ">
-              <Sidebar />
-            </div>
-          ) : (
-            <div className="w-0 dark:bg-secondary-dark-bg">
-              <Sidebar />
-            </div>
-          )}
-          <div
-            className={
-              activeMenu
-                ? 'dark:bg-main-dark-bg  bg-main-bg min-h-screen md:ml-72 w-full  '
-                : 'bg-main-bg dark:bg-main-dark-bg  w-full min-h-screen flex-2 '
+    <React.Fragment>
+      <Routes>
+        {publicRoutes.map((route, idx) => (
+          <Route
+            path={route.path}
+            element={
+              <NonAuthLayout>
+                {route.component}
+              </NonAuthLayout>
             }
-          >
-            <div className="fixed md:static bg-main-bg dark:bg-main-dark-bg navbar w-full ">
-              <Navbar />
-            </div>
-            <div>
-              {themeSettings && (<ThemeSettings />)}
+            key={idx}
+            exact={true}
+          />
+        ))}
 
-              <Routes>
-                {/* dashboard  */}
-                <Route path="/Dashboard" element={(<Dashboard />)} />
-                <Route path="/ecommerce" element={(<Ecommerce />)} />
-
-                {/* pages  */}
-                <Route path="/Nifty" element={<DerivativeNifty />} />
-                <Route path="/BankNifty" element={<DerivativeBankNifty />} />
-                <Route path="/FinNifty" element={<DerivativeFinNifty />} />
-                <Route path="/MidCapNifty" element={<DerivativeMidCapNifty />} />
-                <Route path="/orders" element={<Orders />} />
-                <Route path="/employees" element={<Employees />} />
-                <Route path="/customers" element={<Customers />} />
-
-                {/* apps  */}
-                <Route path="/kanban" element={<Kanban />} />
-                <Route path="/editor" element={<Editor />} />
-                <Route path="/calendar" element={<Calendar />} />
-                <Route path="/color-picker" element={<ColorPicker />} />
-
-                {/* charts  */}
-                <Route path="/line" element={<Line />} />
-                <Route path="/area" element={<Area />} />
-                <Route path="/bar" element={<Bar />} />
-                <Route path="/pie" element={<Pie />} /> 
-                <Route path="/financial" element={<Financial />} />
-                <Route path="/color-mapping" element={<ColorMapping />} />
-                <Route path="/pyramid" element={<Pyramid />} />
-                <Route path="/stacked" element={<Stacked />} />
-
-              </Routes>
-            </div>
-            <Footer />
-          </div>
-        </div>
-      </BrowserRouter>
-    </div>
+        {authProtectedRoutes.map((route, idx) => (
+          <Route
+            path={route.path}
+            element={
+              <Authmiddleware>
+                <Layout>{route.component}</Layout>
+              </Authmiddleware>}
+            key={idx}
+            exact={true}
+          />
+        ))}
+      </Routes>
+    </React.Fragment>
   );
+};
+
+App.propTypes = {
+  layout: PropTypes.any
 };
 
 export default App;
