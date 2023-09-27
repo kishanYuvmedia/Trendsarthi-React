@@ -1,0 +1,19 @@
+{
+  "db": {
+    "name": "db",
+    "connector": "memory"
+  },
+  "mongoDB": {
+    "url": "mongodb://127.0.0.1:27017/tradsathi",
+    "name": "mongoDB",
+    "useNewUrlParser": true,
+    "connector": "mongodb"
+  },
+  "awsStorage": {
+    "name": "awsStorage",
+    "connector": "loopback-component-storage",
+    "provider": "amazon",
+    "key": "",
+    "keyId": ""
+  }
+}

@@ -20,4 +20,5 @@ TS-frontend/.env.production.local
 TS-frontend/npm-debug.log*
 TS-frontend/yarn-debug.log*
 TS-frontend/yarn-error.log*
-
+TS-api/package-lock.json
+TS-api/node_modules
