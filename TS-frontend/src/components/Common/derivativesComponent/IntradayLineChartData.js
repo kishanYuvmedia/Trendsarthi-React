@@ -1,37 +1,33 @@
 import React from "react"
 import { Line } from "react-chartjs-2"
-import getChartColorsArray from "../../../components/Common/ChartsDynamicColor";
+import getChartColorsArray from "../ChartsDynamicColor";
 
 const LineChart = ({dataColors}) => {
   var lineChartColor =  getChartColorsArray(dataColors);
   const data = {
     labels: [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
+      "Session 1",
+      "Session 2",
+      "Session 3",
+      "Session 4",
+      "Session 5",
     ],
     datasets: [
       {
-        label: "Sales Analytics",
+        label: "Option Data",
         fill: true,
         lineTension: 0.5,
-        backgroundColor: lineChartColor[0],
-        borderColor: lineChartColor[1],
+        // backgroundColor: lineChartColor[0],
+        backgroundColor: "#00ff0000",
+        borderColor: "green",
         borderCapStyle: "butt",
         borderDash: [],
         borderDashOffset: 0.0,
         borderJoinStyle: "miter",
-        pointBorderColor: lineChartColor[1],
-        pointBackgroundColor: "#fff",
-        pointBorderWidth: 1,
-        pointHoverRadius: 5,
+        pointBorderColor: "green",
+        pointBackgroundColor: "green",
+        pointBorderWidth: 7,
+        pointHoverRadius: 10,
         pointHoverBackgroundColor: lineChartColor[1],
         pointHoverBorderColor: "#fff",
         pointHoverBorderWidth: 2,
@@ -40,19 +36,19 @@ const LineChart = ({dataColors}) => {
         data: [65, 59, 80, 81, 56, 55, 40, 55, 30, 80],
       },
       {
-        label: "Monthly Earnings",
+        label: "Zero Line",
         fill: true,
         lineTension: 0.5,
-        backgroundColor: "rgba(235, 239, 242, 0.2)",
-        borderColor: "#ebeff2",
+        backgroundColor: "rgba(235, 239, 242, 0.0)",
+        borderColor: "red",
         borderCapStyle: "butt",
         borderDash: [],
         borderDashOffset: 0.0,
         borderJoinStyle: "miter",
-        pointBorderColor: "#ebeff2",
+        pointBorderColor: "red",
         pointBackgroundColor: "#fff",
-        pointBorderWidth: 1,
-        pointHoverRadius: 5,
+        pointBorderWidth: 7,
+        pointHoverRadius: 10,
         pointHoverBackgroundColor: "#ebeff2",
         pointHoverBorderColor: "#eef0f2",
         pointHoverBorderWidth: 2,
@@ -67,7 +63,7 @@ const LineChart = ({dataColors}) => {
       yAxes: [{
         ticks: {
           max: 100,
-          min: 20,
+          min: 0,
           stepSize: 10
         }
       }]

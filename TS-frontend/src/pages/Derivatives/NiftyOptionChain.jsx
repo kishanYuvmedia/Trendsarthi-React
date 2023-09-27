@@ -20,7 +20,8 @@ import IntradayTableContainer from '../../components/Common/derivativesComponent
 
 import {columnsNiftyIntraday, dataNiftyIntraday} from './intradayData.js'
 import {columnsNiftyOption, dataNiftyOption} from './optionChainData.js'
-import NiftyIntradayTrend from 'components/Common/derivativesComponent/NiftyIntradayTrend';
+import NiftyIntradayChart from 'components/Common/derivativesComponent/NiftyIntradayChart';
+import PCR from 'components/Common/derivativesComponent/PCR';
 
 
 const NiftyOptionChain = () => {
@@ -31,37 +32,10 @@ const NiftyOptionChain = () => {
   return (
     <div className="page-content">
       <div className="container-fluid">
-        <Breadcrumbs title="Tables" breadcrumbItem="Nifty Option Chain" />
+        <Breadcrumbs title="Derivatives" breadcrumbItem="Nifty Option Chain" />
 
-
-        <Row>
-            <Col xl={2}>
-              <Card>
-                <CardBody>
-                  <CardTitle className="h4 text-center">PCR</CardTitle>
-                  <div className="table-responsive">
-                    <Table className="table mb-0 table-bordered ">
-
-                      <thead>
-                        <tr>
-                          <th>PCR</th>
-                          <th>PCR Strength</th>
-                        </tr>
-                      </thead>
-
-                      <tbody className='table-striped'>
-                        <tr>
-                          <th scope="row">1</th>
-                          <td>Bearish</td>
-                        </tr>
-                      </tbody>
-                    </Table>
-                  </div>
-                </CardBody>
-              </Card>
-            </Col>
-          </Row>
-
+        {/* PCR Component */}
+        <PCR />
 
         {/* Option chain table */}
         <OptionChainTableContainer
@@ -95,7 +69,7 @@ const NiftyOptionChain = () => {
 
         {/* graph */}
 
-        
+        <NiftyIntradayChart />
 
       </div>
     </div>
