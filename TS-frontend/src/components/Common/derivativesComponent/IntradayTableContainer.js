@@ -82,11 +82,12 @@ const IntradayTableContainer = ({
       initialState: {
         pageIndex: 0,
         pageSize: customPageSize,
-        sortBy: [
-          {
-            desc: true,
-          },
-        ],
+        // sortBy: [
+        //   {
+        //     id: 'sr',
+        //     desc: false,
+        //   },
+        // ],
       },
     },
     useGlobalFilter,
@@ -103,16 +104,6 @@ const IntradayTableContainer = ({
   const onChangeInSelect = event => {
     setPageSize(Number(event.target.value))
   }
-
-  // Calculate the total sums for "Open Int. CE" and "Open Int. PE" columns.
-  const totalOpenIntCE = data.reduce((sum, item) => sum + parseFloat(item.openIntCE), 0);
-  const totalOpenIntPE = data.reduce((sum, item) => sum + parseFloat(item.openIntPE), 0);
-  const totalQtyTradedCE = data.reduce((sum, item) => sum + parseFloat(item.totalQtyTradedCE), 0);
-  const totalQtyTradedPE = data.reduce((sum, item) => sum + parseFloat(item.totalQtyTradedPE), 0);
-
-  // Calculate the total sums for "Open Interest Change CE" and "Open Interest Change PE" columns.
-  const totalOpenInterestChangeCE = data.reduce((sum, item) => sum + parseFloat(item.openInterestChangeCE), 0);
-  const totalOpenInterestChangePE = data.reduce((sum, item) => sum + parseFloat(item.openInterestChangePE), 0);
 
 
   return (
@@ -189,8 +180,9 @@ const IntradayTableContainer = ({
         )}
       </Row>
 
+          {/* table starting */}
       <div className="table-responsive">
-        <Table {...getTableProps()} className={tableClass}>
+        <Table {...getTableProps()} className={`${tableClass} bdr`}>
           <thead className={theadClass}>
             <tr>
               <th colSpan={12} className="text-white fw-bold">Intraday Data </th>

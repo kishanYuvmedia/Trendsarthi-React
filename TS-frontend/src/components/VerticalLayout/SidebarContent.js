@@ -169,13 +169,13 @@ const SidebarContent = props => {
                   <Link to="/NiftyOptionChain">{props.t("NIFTY")}</Link>
                 </li>
                 <li>
-                  <Link to="/ecommerce-orders">{props.t("BANKNIFTY")}</Link>
+                  <Link to="/BankNiftyOptionChain">{props.t("BANKNIFTY")}</Link>
                 </li>
                 <li>
-                  <Link to="/ecommerce-customers">{props.t("FINNIFTY")}</Link>
+                  <Link to="/FinNiftyOptionChain">{props.t("FINNIFTY")}</Link>
                 </li>
                 <li>
-                  <Link to="/ecommerce-cart">{props.t("MIDCAP")}</Link>
+                  <Link to="/MidCapOptionChain">{props.t("MIDCAP")}</Link>
                 </li>
                 
               </ul>

@@ -34,6 +34,7 @@ function GlobalFilter({
     </React.Fragment>
   )
 }
+const customStrikePriceClass = 'customStrikePriceClass-bg';
 
 const OptionChainTableContainer = ({
   columns,
@@ -82,11 +83,16 @@ const OptionChainTableContainer = ({
       initialState: {
         pageIndex: 0,
         pageSize: customPageSize,
-        sortBy: [
-          {
-            desc: true,
-          },
-        ],
+        // sortBy: [
+        //   {
+        //     id: 'sr',
+        //     desc: false,
+        //   },
+        //   {
+        //     id: 'openIntCE',
+        //     desc: false,
+        //   },
+        // ],
       },
     },
     useGlobalFilter,
@@ -190,7 +196,7 @@ const OptionChainTableContainer = ({
       </Row>
 
       <div className="table-responsive">
-        <Table {...getTableProps()} className={` ${tableClass} `}>
+        <Table {...getTableProps()} className={` ${tableClass} bdr`}>
           <thead className={theadClass}>
             <tr>
               <th colSpan={6} className="text-white fw-bold">Call Option <i className="bx bxs-up-arrow text-success"></i></th> 
@@ -200,9 +206,11 @@ const OptionChainTableContainer = ({
               <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map(column => (
                   <th key={column.id} className={`${column.isSort ? "sorting" : ""
-                    } text-white text-uppercase text-center align-middle`}>
+                    } text-white text-uppercase text-center align-middle ${
+                    column.id === 'strikePrice' ? customStrikePriceClass : ''}`}>
                     <div className="m-0" {...column.getSortByToggleProps()}>
                       {column.render("Header")}
+                      {generateSortingIndicator(column)}
                     </div>
                     {/* <Filter column={column} /> */}
                   </th>
@@ -245,7 +253,7 @@ const OptionChainTableContainer = ({
               <td className="fw-bold text-warning text-center align-middle">{totalQtyTradedCE}</td>
               <td className="text-center align-middle">{/* Add other total sums here */}</td>
               <td className="text-center align-middle">{/* Add other total sums here */}</td>
-              <td className="fw-bold text-warning text-center align-middle ">TOTAL</td>
+              <td className="fw-bold bg-warning text-black text-center align-middle ">TOTAL</td>
               <td className="text-center align-middle">{/* Add other total sums here */}</td>
               <td className="text-center align-middle">{/* Add other total sums here */}</td>
               <td className="fw-bold text-warning text-center align-middle">{totalQtyTradedPE}</td>

@@ -78,6 +78,9 @@ import DashboardJob from "../pages/DashboardJob/index";
 
 // Derivatives
 import NiftyOptionChain from "pages/Derivatives/NiftyOptionChain";
+import BankNiftyOptionChain from "pages/Derivatives/BankNiftyOptionChain";
+import FinNiftyOptionChain from "pages/Derivatives/FinNiftyOptionChain";
+import MidCapOptionChain from "pages/Derivatives/MidCapOptionChain";
 
 //Crypto
 import CryptoWallet from "../pages/Crypto/CryptoWallet/crypto-wallet";
@@ -183,6 +186,9 @@ const authProtectedRoutes = [
 
   // derivatives
   { path: "/NiftyOptionChain", component: <NiftyOptionChain />},
+  { path: "/BankNiftyOptionChain", component: <BankNiftyOptionChain />},
+  { path: "/FinNiftyOptionChain", component: <FinNiftyOptionChain />},
+  { path: "/MidCapOptionChain", component: <MidCapOptionChain />},
 
   //Crypto
   { path: "/crypto-wallet", component: <CryptoWallet /> },
