@@ -9,7 +9,7 @@ import {
   usePagination,
 } from "react-table"
 import { Table, Row, Col, Button } from "reactstrap"
-import JobListGlobalFilter from "../../components/Common/GlobalSearchFilter"
+import JobListGlobalFilter from "../GlobalSearchFilter"
 import { Link } from "react-router-dom"
 
 // Define a default UI for filtering
@@ -35,7 +35,7 @@ function GlobalFilter({
   )
 }
 
-const TableContainer = ({
+const OptionChainTableContainer = ({
   columns,
   data,
   isGlobalFilter,
@@ -54,6 +54,7 @@ const TableContainer = ({
   paginationDiv,
   pagination,
   tableClass,
+  tbodyClass,
   theadClass
 }) => {
   const {
@@ -77,7 +78,7 @@ const TableContainer = ({
     {
       columns,
       data,
-      // defaultColumn: { Filter: DefaultColumnFilter },
+      // defaultColumn: { Filter: DefaultColumnFi lter },
       initialState: {
         pageIndex: 0,
         pageSize: customPageSize,
@@ -102,6 +103,17 @@ const TableContainer = ({
   const onChangeInSelect = event => {
     setPageSize(Number(event.target.value))
   }
+
+  // Calculate the total sums for "Open Int. CE" and "Open Int. PE" columns.
+  const totalOpenIntCE = data.reduce((sum, item) => sum + parseFloat(item.openIntCE), 0);
+  const totalOpenIntPE = data.reduce((sum, item) => sum + parseFloat(item.openIntPE), 0);
+  const totalQtyTradedCE = data.reduce((sum, item) => sum + parseFloat(item.totalQtyTradedCE), 0);
+  const totalQtyTradedPE = data.reduce((sum, item) => sum + parseFloat(item.totalQtyTradedPE), 0);
+
+  // Calculate the total sums for "Open Interest Change CE" and "Open Interest Change PE" columns.
+  const totalOpenInterestChangeCE = data.reduce((sum, item) => sum + parseFloat(item.openInterestChangeCE), 0);
+  const totalOpenInterestChangePE = data.reduce((sum, item) => sum + parseFloat(item.openInterestChangePE), 0);
+
 
   return (
     <Fragment>
@@ -178,12 +190,17 @@ const TableContainer = ({
       </Row>
 
       <div className="table-responsive">
-        <Table {...getTableProps()} className={tableClass}>
+        <Table {...getTableProps()} className={` ${tableClass} `}>
           <thead className={theadClass}>
+            <tr>
+              <th colSpan={6} className="text-white fw-bold">Call Option <i className="bx bxs-up-arrow text-success"></i></th> 
+              <th colSpan={6} className="text-end text-white fw-bold"><i className="bx bxs-down-arrow text-danger me-1"></i> Put Option</th> 
+            </tr>
             {headerGroups.map(headerGroup => (
               <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map(column => (
-                  <th key={column.id} className={column.isSort ? "sorting" : ''}>
+                  <th key={column.id} className={`${column.isSort ? "sorting" : ""
+                    } text-white text-uppercase text-center align-middle`}>
                     <div className="m-0" {...column.getSortByToggleProps()}>
                       {column.render("Header")}
                     </div>
@@ -194,15 +211,21 @@ const TableContainer = ({
             ))}
           </thead>
 
-          <tbody {...getTableBodyProps()}>
+          <tbody {...getTableBodyProps()} className={` ${tbodyClass} `}>
             {page.map(row => {
               prepareRow(row)
               return (
                 <Fragment key={row.getRowProps().key}>
                   <tr>
                     {row.cells.map(cell => {
+
+                      // Check if the column corresponds to "Strike Price"
+                      const isStrikePriceColumn = cell.column.id === 'strikePrice';
+
                       return (
-                        <td key={cell.id} {...cell.getCellProps()}>
+                        <td key={cell.id} {...cell.getCellProps()}
+                        className={`text-center align-middle ${isStrikePriceColumn ? 'custom-strike-price' : ''}`}
+                        >
                           {cell.render("Cell")}
                         </td>
                       )
@@ -212,6 +235,24 @@ const TableContainer = ({
               )
             })}
           </tbody>
+
+          {/* Display the total sums row in the table footer */}
+          <tfoot>
+            <tr>
+              <td className="text-center align-middle">{/* Add other total sums here */}</td>
+              <td className="fw-bold text-warning text-center align-middle">{totalOpenIntCE}</td>
+              <td className="fw-bold text-warning text-center align-middle">{totalOpenInterestChangeCE}</td>
+              <td className="fw-bold text-warning text-center align-middle">{totalQtyTradedCE}</td>
+              <td className="text-center align-middle">{/* Add other total sums here */}</td>
+              <td className="text-center align-middle">{/* Add other total sums here */}</td>
+              <td className="fw-bold text-warning text-center align-middle ">TOTAL</td>
+              <td className="text-center align-middle">{/* Add other total sums here */}</td>
+              <td className="text-center align-middle">{/* Add other total sums here */}</td>
+              <td className="fw-bold text-warning text-center align-middle">{totalQtyTradedPE}</td>
+              <td className="fw-bold text-warning text-center align-middle">{totalOpenInterestChangePE}</td>
+              <td className="fw-bold text-warning text-center align-middle">{totalOpenIntPE}</td>
+            </tr>
+          </tfoot>
         </Table>
       </div>
 
@@ -249,8 +290,8 @@ const TableContainer = ({
   )
 }
 
-TableContainer.propTypes = {
+OptionChainTableContainer.propTypes = {
   preGlobalFilteredRows: PropTypes.any,
 }
 
-export default TableContainer
+export default OptionChainTableContainer

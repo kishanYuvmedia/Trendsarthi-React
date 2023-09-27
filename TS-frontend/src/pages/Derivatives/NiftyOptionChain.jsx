@@ -9,137 +9,21 @@ import {
   CardBody,
   CardTitle,
   CardSubtitle,
+  Container,
 } from "reactstrap"
 
 //import components
 import Breadcrumbs from '../../components/Common/Breadcrumb';
-import TableContainer from '../../components/Common/TableContainer';
+
+import OptionChainTableContainer from '../../components/Common/derivativesComponent/OptionChainTableContainer';
+import IntradayTableContainer from '../../components/Common/derivativesComponent/IntradayTableContainer';
+
+import {columnsNiftyIntraday, dataNiftyIntraday} from './intradayData.js'
+import {columnsNiftyOption, dataNiftyOption} from './optionChainData.js'
+import NiftyIntradayTrend from 'components/Common/derivativesComponent/NiftyIntradayTrend';
 
 
 const NiftyOptionChain = () => {
-
-  const columns = useMemo(
-    () => [
-      {
-        Header: 'SR',
-        accessor: 'sr',
-      },
-      {
-        Header: 'Open Int.',
-        accessor: 'openIntCE'
-      },
-      {
-        Header: 'Open Interest Change',
-        accessor: 'openInterestChangeCE'
-      },
-      {
-        Header: 'Total Qty Traded',
-        accessor: 'totalQtyTradedCE'
-      },
-      {
-        Header: 'Price Change %',
-        accessor: 'priceChangeCE'
-      },
-      {
-        Header: 'Last Traded Price',
-        accessor: 'lastTradedPriceCE'
-      },
-      {
-        Header: 'Strike Price',
-        accessor: 'strikePrice',
-        
-      },
-      {
-        Header: 'Last Traded Price',
-        accessor: 'lastTradedPricePE'
-      },
-      {
-        Header: 'Price Change %',
-        accessor: 'priceChangePE'
-      },
-      {
-        Header: 'Total Qty Traded',
-        accessor: 'totalQtyTradedPE'
-      },
-      {
-        Header: 'Open Interest Change',
-        accessor: 'openInterestChangePE'
-      },
-      {
-        Header: 'Open Int.',
-        accessor: 'openIntPE'
-      },
-    ],
-    []
-  );
-
-  const data = [
-    {
-      sr: "1",
-      openIntCE: "4789",
-      openInterestChangeCE: "35900",
-      totalQtyTradedCE: "18987",
-      priceChangeCE: "987%",
-      lastTradedPriceCE: "9875",
-
-      strikePrice: "18950",
-
-      lastTradedPricePE: "19.65",
-      priceChangePE: "43%",
-      totalQtyTradedPE: "32883650",
-      openInterestChangePE: "481100",
-      openIntPE: "1658050",
-    },
-    {
-      sr: "2",
-      openIntCE: "4789",
-      openInterestChangeCE: "35900",
-      totalQtyTradedCE: "18987",
-      priceChangeCE: "987%",
-      lastTradedPriceCE: "9875",
-
-      strikePrice: "18950",
-
-      lastTradedPricePE: "19.65",
-      priceChangePE: "43%",
-      totalQtyTradedPE: "32883650",
-      openInterestChangePE: "481100",
-      openIntPE: "1658050",
-    },
-    {
-      sr: "3",
-      openIntCE: "4789",
-      openInterestChangeCE: "35900",
-      totalQtyTradedCE: "18987",
-      priceChangeCE: "987%",
-      lastTradedPriceCE: "9875",
-
-      strikePrice: "18950",
-
-      lastTradedPricePE: "19.65",
-      priceChangePE: "43%",
-      totalQtyTradedPE: "32883650",
-      openInterestChangePE: "481100",
-      openIntPE: "1658050",
-    },
-    {
-      sr: "4",
-      openIntCE: "4789",
-      openInterestChangeCE: "35900",
-      totalQtyTradedCE: "18987",
-      priceChangeCE: "987%",
-      lastTradedPriceCE: "9875",
-
-      strikePrice: "18950",
-
-      lastTradedPricePE: "19.65",
-      priceChangePE: "43%",
-      totalQtyTradedPE: "32883650",
-      openInterestChangePE: "481100",
-      openIntPE: "1658050",
-    },
-
-  ];
 
   //meta title
   document.title = "Derivatives | Nifty Option Chain";
@@ -168,7 +52,7 @@ const NiftyOptionChain = () => {
                       <tbody className='table-striped'>
                         <tr>
                           <th scope="row">1</th>
-                          <td>Mark</td>
+                          <td>Bearish</td>
                         </tr>
                       </tbody>
                     </Table>
@@ -176,24 +60,42 @@ const NiftyOptionChain = () => {
                 </CardBody>
               </Card>
             </Col>
-
           </Row>
 
 
-        {/* <Table columns={columns} data={data} /> */}
-        <TableContainer
-          columns={columns}
-          data={data}
-          isGlobalFilter={true}
+        {/* Option chain table */}
+        <OptionChainTableContainer
+          columns={columnsNiftyOption}
+          data={dataNiftyOption}
+          isGlobalFilter={false}
           isAddOptions={false}
           customPageSize={10}
-          isPagination={true}
+          isPagination={false}
           tableClass="align-middle table-nowrap table-check table-hover table"
           theadClass="table-light"
           tbodyClass="table-striped"
           paginationDiv="col-12"
           pagination="justify-content-center pagination pagination-rounded"
         />
+
+        {/* Intraday table */}
+        <IntradayTableContainer
+          columns={columnsNiftyIntraday}
+          data={dataNiftyIntraday}
+          isGlobalFilter={false}
+          isAddOptions={false}
+          customPageSize={10}
+          isPagination={false}
+          tableClass="align-middle table-nowrap table-check table-hover table"
+          theadClass="table-light"
+          tbodyClass="table-striped"
+          paginationDiv="col-12"
+          pagination="justify-content-center pagination pagination-rounded"
+        />
+
+        {/* graph */}
+
+        
 
       </div>
     </div>
