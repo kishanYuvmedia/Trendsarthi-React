@@ -1,0 +1,15 @@
+.custom-strike-price {
+  background-color: #22262E !important;
+  color: white !important;
+}
+
+.bdr {
+  border-radius: 10px;
+  overflow: hidden;
+  /* box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.5); */
+}
+
+.customStrikePriceClass-bg {
+  background-color: #F1B44C !important;
+  color: black !important;
+}
