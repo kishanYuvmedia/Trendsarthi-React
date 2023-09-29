@@ -2,10 +2,10 @@ import React from "react"
 import { Doughnut } from "react-chartjs-2"
 import getChartColorsArray from "../../../components/Common/ChartsDynamicColor";
 
-const DountChart = ({dataColors}) => {
+const DountChart = ({dataColors, labelData}) => {
   var doughnutChartColors =  getChartColorsArray(dataColors); 
   const data = {
-    labels: ["Desktops", "Tablets"],
+    labels: labelData,
     datasets: [
       {
         data: [300, 210],

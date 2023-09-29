@@ -15,12 +15,13 @@ import {
 } from "reactstrap"
 
 import BarChart from "../../AllCharts/chartjs/barchart"
+import DountChart from "pages/AllCharts/chartjs/dountchart"
 
 
 const FilterTabs = () => {
   return (
     <React.Fragment>
-      <Col xl={4}>
+      <Col xl={5}>
         <Card>
           <CardBody>
             <CardTitle>Chart Options</CardTitle>
@@ -81,12 +82,15 @@ const FilterTabs = () => {
               <div className="col-md-6">
                 <p className="text-muted mb-1">Bar Chart</p>
 
-                <BarChart dataColors='["--bs-success-rgb, 0.8", "--bs-success"]' />
+                <BarChart
+                  dataColors='["--bs-success-rgb, 0.8", "--bs-info", "--bs-danger", "--bs-warning"]'
+                  height={400} />
+
               </div>
               <div className="col-md-6">
 
                 <div className="text-center text-muted fw-bold fs-6 text-white mb-1">Change In CE/PE</div>
-                <div className="row flex flex-wrap p-3">
+                <div className="row flex-wrap p-3">
 
                   <div className="col text-center">
                     <div className="text-success fw-bold">Change PE OI</div>
@@ -113,21 +117,21 @@ const FilterTabs = () => {
 
             <div className="d-flex flex-wrap">
               <div className="col-md-6">
-                <p className="text-muted mb-1">Pie Chart</p>
+                <p className="text-muted mb-1"></p>
 
-                <BarChart dataColors='["--bs-success-rgb, 0.8", "--bs-success"]' />
+                <DountChart labelData={["Total Call", "Total Put"]} dataColors='["--bs-success", "--bs-danger"]' />
               </div>
               <div className="col-md-6">
 
                 <div className="text-center text-muted fw-bold fs-6 text-white mb-1">P/C Ratio Net</div>
-                <div className=" p-3">
+                <div className="row p-3">
 
-                  <div className=" text-center">
+                  <div className="col text-center">
                     <div className="text-success fw-bold">Total PE OI</div>
                     <Badge color="success" className=" fs-6 px-3 py-2 mt-2">123456</Badge>
                   </div>
 
-                  <div className=" text-center">
+                  <div className="col text-center">
                     <div className="text-danger fw-bold">Total CE OI</div>
                     <Badge color="danger" className=" fs-6 px-3 py-2 mt-2">123456</Badge>
                   </div>
@@ -138,7 +142,7 @@ const FilterTabs = () => {
           </CardBody>
         </Card>
 
-        
+
       </Col>
     </React.Fragment>
   )

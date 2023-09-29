@@ -91,7 +91,7 @@ const IODecode = ({ dataColors }) => {
 
   return (
     <React.Fragment>
-      <Col xl={8}>
+      <Col xl={7}>
         {/* <Row>
           {(blodStatsData || []).map((stat, index) => (
             <Col lg={4} key={index}>
