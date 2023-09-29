@@ -51,7 +51,7 @@ import { ToastContainer } from "react-toastify";
 function JobList() {
 
     //meta title
-    document.title = "Jobs List | Skote - React Admin & Dashboard Template";
+    document.title = "Jobs List | Scalping- React Admin & Dashboard Template";
 
     const [modal, setModal] = useState(false);
     const [isEdit, setIsEdit] = useState(false);

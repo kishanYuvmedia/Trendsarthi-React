@@ -70,7 +70,7 @@ const ProjectStatus = ({ status }) => {
 const ProjectsList = () => {
 
   //meta title
-  document.title = "Project List | Skote - React Admin & Dashboard Template";
+  document.title = "Project List | Scalping- React Admin & Dashboard Template";
 
   const dispatch = useDispatch();
   const [project, setProject] = useState();

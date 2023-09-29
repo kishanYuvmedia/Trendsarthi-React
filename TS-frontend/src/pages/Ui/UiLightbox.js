@@ -42,7 +42,7 @@ const UiLightbox = (props) => {
   const selectedPlace = {}
 
   //meta title
-  document.title = "Lightbox | Skote - React Admin & Dashboard Template";
+  document.title = "Lightbox | Scalping- React Admin & Dashboard Template";
 
   const [photoIndex, setphotoIndex] = useState(0);
   const [isFits, setisFits] = useState(false);

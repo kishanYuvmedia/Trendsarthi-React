@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-import { Col, Row, Card, CardBody, CardTitle, Container } from "reactstrap";
 import {
-  Button,
+  Col, Row, Card, CardBody, CardTitle, Container, Button,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
   ButtonDropdown,
 } from "reactstrap";
+
 
 //Import Breadcrumb
 import Breadcrumbs from "../../components/Common/Breadcrumb";
@@ -16,7 +16,7 @@ import Breadcrumbs from "../../components/Common/Breadcrumb";
 const UiButtons = () => {
 
   //meta title
-  document.title = "Buttons | Skote - React Admin & Dashboard Template";
+  document.title = "Buttons | Scalping- React Admin & Dashboard Template";
 
   const [drp_link, setdrp_link] = useState(false);
 
@@ -998,60 +998,60 @@ const UiButtons = () => {
               </Card>
             </Col>
           </Row>
-                    <Row>
-                            <Col xl={6}>
-                                <Card>
-                                    <CardBody>
-                                        <CardTitle>Focus ring</CardTitle>
-                                        <p className="card-title-desc">Click directly on the link below to see the focus ring in action, or into the example below and then press <kbd>Tab</kbd>.</p>
-                                        <div>
-                                            <Link to="#!" className="d-inline-flex focus-ring py-1 px-2 text-decoration-none border rounded-2">
-                                                Custom focus ring
-                                            </Link>
-                                        </div>
-                                    </CardBody>
-                                </Card>
-                            </Col>
-                            <Col xl={6}>
-                                <Card>
-                                    <CardBody>
-                                        <CardTitle>CSS variables</CardTitle>
-                                        <p className="card-title-desc">Modify the <code>--bs-focus-ring-*</code> CSS variables as needed to change the default appearance.</p>
-                                        <div>
-                                            <Link to="#!" className="d-inline-flex focus-ring py-1 px-2 text-decoration-none border rounded-2" style={buttonStyle}>
-                                                Green focus ring
-                                            </Link>
-                                        </div>
-                                    </CardBody>
-                                </Card>
-                            </Col>
-                        </Row>
+          <Row>
+            <Col xl={6}>
+              <Card>
+                <CardBody>
+                  <CardTitle>Focus ring</CardTitle>
+                  <p className="card-title-desc">Click directly on the link below to see the focus ring in action, or into the example below and then press <kbd>Tab</kbd>.</p>
+                  <div>
+                    <Link to="#!" className="d-inline-flex focus-ring py-1 px-2 text-decoration-none border rounded-2">
+                      Custom focus ring
+                    </Link>
+                  </div>
+                </CardBody>
+              </Card>
+            </Col>
+            <Col xl={6}>
+              <Card>
+                <CardBody>
+                  <CardTitle>CSS variables</CardTitle>
+                  <p className="card-title-desc">Modify the <code>--bs-focus-ring-*</code> CSS variables as needed to change the default appearance.</p>
+                  <div>
+                    <Link to="#!" className="d-inline-flex focus-ring py-1 px-2 text-decoration-none border rounded-2" style={buttonStyle}>
+                      Green focus ring
+                    </Link>
+                  </div>
+                </CardBody>
+              </Card>
+            </Col>
+          </Row>
 
-                        <Row>
-                            <Col xl={12}>
-                                <Card>
-                                    <CardBody>
-                                        <CardTitle>Sass utilities API</CardTitle>
-                                        <p className="card-title-desc">In addition to <code>.focus-ring</code>, we have several <code>.focus-ring-*</code> utilities to modify the helper class defaults. Modify the color with any of our <a href="https://getbootstrap.com/docs/5.3/customize/color/#theme-colors">theme colors</a>. Note that the light and dark variants may not be visible on all background colors given current color mode support.</p>
-                                        <Row>
-                                            <Col xl={6}>
-                                                <p><Link to="#!" className="d-inline-flex focus-ring focus-ring-primary py-1 px-2 text-decoration-none border rounded-2">Primary focus</Link></p>
-                                                <p><Link to="#!" className="d-inline-flex focus-ring focus-ring-secondary py-1 px-2 text-decoration-none border rounded-2">Secondary focus</Link></p>
-                                                <p><Link to="#!" className="d-inline-flex focus-ring focus-ring-success py-1 px-2 text-decoration-none border rounded-2">Success focus</Link></p>
-                                                <p><Link to="#!" className="d-inline-flex focus-ring focus-ring-danger py-1 px-2 text-decoration-none border rounded-2">Danger focus</Link></p>
-                                            </Col>
-                                            <Col xl={6}>
-                                                <p><Link to="#!" className="d-inline-flex focus-ring focus-ring-warning py-1 px-2 text-decoration-none border rounded-2">Warning focus</Link></p>
-                                                <p><Link to="#!" className="d-inline-flex focus-ring focus-ring-info py-1 px-2 text-decoration-none border rounded-2">Info focus</Link></p>
-                                                <p><Link to="#!" className="d-inline-flex focus-ring focus-ring-light py-1 px-2 text-decoration-none border rounded-2">Light focus</Link></p>
-                                                <p><Link to="#!" className="d-inline-flex focus-ring focus-ring-dark py-1 px-2 text-decoration-none border rounded-2">Dark focus</Link></p>
-                                            </Col>
-                                        </Row>
-                                    </CardBody>
-                                </Card>
-                            </Col>
-                        </Row>
-        </Container> 
+          <Row>
+            <Col xl={12}>
+              <Card>
+                <CardBody>
+                  <CardTitle>Sass utilities API</CardTitle>
+                  <p className="card-title-desc">In addition to <code>.focus-ring</code>, we have several <code>.focus-ring-*</code> utilities to modify the helper class defaults. Modify the color with any of our <a href="https://getbootstrap.com/docs/5.3/customize/color/#theme-colors">theme colors</a>. Note that the light and dark variants may not be visible on all background colors given current color mode support.</p>
+                  <Row>
+                    <Col xl={6}>
+                      <p><Link to="#!" className="d-inline-flex focus-ring focus-ring-primary py-1 px-2 text-decoration-none border rounded-2">Primary focus</Link></p>
+                      <p><Link to="#!" className="d-inline-flex focus-ring focus-ring-secondary py-1 px-2 text-decoration-none border rounded-2">Secondary focus</Link></p>
+                      <p><Link to="#!" className="d-inline-flex focus-ring focus-ring-success py-1 px-2 text-decoration-none border rounded-2">Success focus</Link></p>
+                      <p><Link to="#!" className="d-inline-flex focus-ring focus-ring-danger py-1 px-2 text-decoration-none border rounded-2">Danger focus</Link></p>
+                    </Col>
+                    <Col xl={6}>
+                      <p><Link to="#!" className="d-inline-flex focus-ring focus-ring-warning py-1 px-2 text-decoration-none border rounded-2">Warning focus</Link></p>
+                      <p><Link to="#!" className="d-inline-flex focus-ring focus-ring-info py-1 px-2 text-decoration-none border rounded-2">Info focus</Link></p>
+                      <p><Link to="#!" className="d-inline-flex focus-ring focus-ring-light py-1 px-2 text-decoration-none border rounded-2">Light focus</Link></p>
+                      <p><Link to="#!" className="d-inline-flex focus-ring focus-ring-dark py-1 px-2 text-decoration-none border rounded-2">Dark focus</Link></p>
+                    </Col>
+                  </Row>
+                </CardBody>
+              </Card>
+            </Col>
+          </Row>
+        </Container>
       </div>
     </React.Fragment>
   );

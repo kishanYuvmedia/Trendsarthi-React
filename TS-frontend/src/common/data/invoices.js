@@ -4,7 +4,7 @@ const invoiceList = [
     founder: "Marion Burton",
     founderAt: "Skote",
     invoiceID: "14251",
-    company: "Skote Dashboard UI",
+    company: "ScalpingDashboard UI",
     invoicePrice: "1455",
     date: "10 Oct, 19",
     color: "primary",
@@ -18,12 +18,12 @@ const invoiceList = [
       items: [
         {
           id: 1,
-          item: "Skote - Admin Dashboard Template",
+          item: "Scalping- Admin Dashboard Template",
           price: "$499.00",
         },
         {
           id: 2,
-          item: "Skote - Landing Template",
+          item: "Scalping- Landing Template",
           price: "$399.00",
         },
         {
@@ -56,12 +56,12 @@ const invoiceList = [
       items: [
         {
           id: 1,
-          item: "Skote - Bootstrap 4 Admin Dashboard",
+          item: "Scalping- Bootstrap 4 Admin Dashboard",
           price: "$499.00",
         },
         {
           id: 2,
-          item: "Skote - Bootstrap 4 Landing Template",
+          item: "Scalping- Bootstrap 4 Landing Template",
           price: "$399.00",
         },
         {
@@ -94,12 +94,12 @@ const invoiceList = [
       items: [
         {
           id: 1,
-          item: "Skote - Bootstrap 4 Admin Dashboard",
+          item: "Scalping- Bootstrap 4 Admin Dashboard",
           price: "$499.00",
         },
         {
           id: 2,
-          item: "Skote - Bootstrap 4 Landing Template",
+          item: "Scalping- Bootstrap 4 Landing Template",
           price: "$399.00",
         },
         {
@@ -132,12 +132,12 @@ const invoiceList = [
       items: [
         {
           id: 1,
-          item: "Skote - Bootstrap 4 Admin Dashboard",
+          item: "Scalping- Bootstrap 4 Admin Dashboard",
           price: "$499.00",
         },
         {
           id: 2,
-          item: "Skote - Bootstrap 4 Landing Template",
+          item: "Scalping- Bootstrap 4 Landing Template",
           price: "$399.00",
         },
         {
@@ -170,12 +170,12 @@ const invoiceList = [
       items: [
         {
           id: 1,
-          item: "Skote - Bootstrap 4 Admin Dashboard",
+          item: "Scalping- Bootstrap 4 Admin Dashboard",
           price: "$499.00",
         },
         {
           id: 2,
-          item: "Skote - Bootstrap 4 Landing Template",
+          item: "Scalping- Bootstrap 4 Landing Template",
           price: "$399.00",
         },
         {
@@ -208,12 +208,12 @@ const invoiceList = [
       items: [
         {
           id: 1,
-          item: "Skote - Bootstrap 4 Admin Dashboard",
+          item: "Scalping- Bootstrap 4 Admin Dashboard",
           price: "$499.00",
         },
         {
           id: 2,
-          item: "Skote - Bootstrap 4 Landing Template",
+          item: "Scalping- Bootstrap 4 Landing Template",
           price: "$399.00",
         },
         {
@@ -246,12 +246,12 @@ const invoiceList = [
       items: [
         {
           id: 1,
-          item: "Skote - Bootstrap 4 Admin Dashboard",
+          item: "Scalping- Bootstrap 4 Admin Dashboard",
           price: "$499.00",
         },
         {
           id: 2,
-          item: "Skote - Bootstrap 4 Landing Template",
+          item: "Scalping- Bootstrap 4 Landing Template",
           price: "$399.00",
         },
         {
@@ -284,12 +284,12 @@ const invoiceList = [
       items: [
         {
           id: 1,
-          item: "Skote - Bootstrap 4 Admin Dashboard",
+          item: "Scalping- Bootstrap 4 Admin Dashboard",
           price: "$499.00",
         },
         {
           id: 2,
-          item: "Skote - Bootstrap 4 Landing Template",
+          item: "Scalping- Bootstrap 4 Landing Template",
           price: "$399.00",
         },
         {
@@ -322,12 +322,12 @@ const invoiceList = [
       items: [
         {
           id: 1,
-          item: "Skote - Bootstrap 4 Admin Dashboard",
+          item: "Scalping- Bootstrap 4 Admin Dashboard",
           price: "$499.00",
         },
         {
           id: 2,
-          item: "Skote - Bootstrap 4 Landing Template",
+          item: "Scalping- Bootstrap 4 Landing Template",
           price: "$399.00",
         },
         {

@@ -19,7 +19,7 @@ import { createSelector } from "reselect";
 const InvoiceDetail = props => {
 
   //meta title
-  document.title = "Invoice Detail | Skote - React Admin & Dashboard Template";
+  document.title = "Invoice Detail | Scalping- React Admin & Dashboard Template";
 
   const dispatch = useDispatch();
 

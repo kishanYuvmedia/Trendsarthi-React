@@ -10,7 +10,7 @@ import { Link } from "react-router-dom"
 const TwostepVerification2 = () => {
 
   //meta title
-  document.title = "Two Step Verification 2 | Skote - React Admin & Dashboard Template";
+  document.title = "Two Step Verification 2 | Scalping- React Admin & Dashboard Template";
 
   return (
     <React.Fragment>

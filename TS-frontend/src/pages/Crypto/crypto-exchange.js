@@ -36,7 +36,7 @@ import { orderbookData } from "common/data"
 const CryptoExchange = props => {
 
   //meta title
-  document.title = "Exchange | Skote - React Admin & Dashboard Template";
+  document.title = "Exchange | Scalping- React Admin & Dashboard Template";
 
   const options = {
     chart: {

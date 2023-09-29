@@ -19,7 +19,7 @@ import Breadcrumbs from "../../components/Common/Breadcrumb";
 const CryptoLending = () => {
 
   //meta title
-  document.title = "Lending | Skote - React Admin & Dashboard Template";
+  document.title = "Lending | Scalping- React Admin & Dashboard Template";
 
   const [assets] = useState([
     {

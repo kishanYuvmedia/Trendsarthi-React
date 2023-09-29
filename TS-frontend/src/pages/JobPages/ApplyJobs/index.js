@@ -30,7 +30,7 @@ import { ToastContainer } from "react-toastify"
 
 const ApplyJobs = () => {
   //meta title
-  document.title = "Job Apply | Skote - React Admin & Dashboard Template"
+  document.title = "Job Apply | Scalping- React Admin & Dashboard Template"
 
   const dispatch = useDispatch()
 

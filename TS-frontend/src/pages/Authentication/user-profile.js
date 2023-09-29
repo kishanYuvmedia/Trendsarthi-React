@@ -32,7 +32,7 @@ import { editProfile, resetProfileFlag } from "../../store/actions";
 const UserProfile = () => {
 
   //meta title
-  document.title = "Profile | Skote - React Admin & Dashboard Template";
+  document.title = "Profile | Scalping- React Admin & Dashboard Template";
 
   const dispatch = useDispatch();
 

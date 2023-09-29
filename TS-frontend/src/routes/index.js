@@ -77,6 +77,7 @@ import Blog from "../pages/Dashboard-Blog/index";
 import DashboardJob from "../pages/DashboardJob/index";
 
 // Derivatives
+import DerivativeDashboard from "pages/Derivatives/DerivativeDashboard";
 import NiftyOptionChain from "pages/Derivatives/NiftyOptionChain";
 import BankNiftyOptionChain from "pages/Derivatives/BankNiftyOptionChain";
 import FinNiftyOptionChain from "pages/Derivatives/FinNiftyOptionChain";
@@ -185,6 +186,7 @@ const authProtectedRoutes = [
   { path: "/dashboard-job", component: <DashboardJob /> },
 
   // derivatives
+  { path: "/DerivativeDashboard", component: <DerivativeDashboard />},
   { path: "/NiftyOptionChain", component: <NiftyOptionChain />},
   { path: "/BankNiftyOptionChain", component: <BankNiftyOptionChain />},
   { path: "/FinNiftyOptionChain", component: <FinNiftyOptionChain />},

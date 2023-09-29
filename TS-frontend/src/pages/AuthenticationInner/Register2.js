@@ -14,7 +14,7 @@ import CarouselPage from "./CarouselPage";
 const Register2 = () => {
 
   //meta title
-  document.title="Register 2 | Skote - React Admin & Dashboard Template";
+  document.title="Register 2 | Scalping- React Admin & Dashboard Template";
 
   //form validation
   const validation = useFormik({
@@ -65,7 +65,7 @@ const Register2 = () => {
                       <div>
                         <h5 className="text-primary">Register account</h5>
                         <p className="text-muted">
-                          Get your free Skote account now.
+                          Get your free Scalpingaccount now.
                         </p>
                       </div>
 

@@ -6,7 +6,7 @@ import Breadcrumbs from "../../components/Common/Breadcrumb";
 
 const EmailTemplateBilling = props => {
    //meta title
-   document.title="Billing Email | Skote - React Admin & Dashboard Template";
+   document.title="Billing Email | Scalping- React Admin & Dashboard Template";
   return (
     <React.Fragment>
       <div className="page-content">
@@ -582,7 +582,7 @@ const EmailTemplateBilling = props => {
                                         align="center"
                                         valign="top"
                                       >
-                                        Skote Inc. 2896 Howell Rd,
+                                        ScalpingInc. 2896 Howell Rd,
                                         Russellville, AR, 72823
                                       </td>
                                     </tr>

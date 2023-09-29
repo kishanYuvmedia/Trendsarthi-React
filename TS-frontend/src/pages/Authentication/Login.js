@@ -23,7 +23,7 @@ import logo from "assets/images/logo.svg";
 const Login = props => {
 
   //meta title
-  document.title = "Login | Skote - React Admin & Dashboard Template";
+  document.title = "Login | Scalping- React Admin & Dashboard Template";
 
   const dispatch = useDispatch();
 

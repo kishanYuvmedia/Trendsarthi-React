@@ -9,7 +9,7 @@ import RightBar from "../BlogList/RightBar"
 
 const Index = props => {
     //meta title
-    document.title="Blog Grid | Skote - React Admin & Dashboard Template";
+    document.title="Blog Grid | Scalping- React Admin & Dashboard Template";
   return (
     <React.Fragment>
       <div className="page-content">
