@@ -16,7 +16,7 @@ import { createSelector } from "reselect";
 
 const TasksList = () => {
   //meta title
-  document.title = "Task List | Skote - React Admin & Dashboard Template";
+  document.title = "Task List | Scalping- React Admin & Dashboard Template";
 
   const dispatch = useDispatch();
 

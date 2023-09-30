@@ -19,7 +19,7 @@ import Spinners from "components/Common/Spinner"
 const EcommerceShops = () => {
 
   //meta title
-  document.title = "Shops | Skote - React Admin & Dashboard Template";
+  document.title = "Shops | Scalping- React Admin & Dashboard Template";
 
   const dispatch = useDispatch()
 

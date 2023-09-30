@@ -16,7 +16,7 @@ import Breadcrumbs from "../../components/Common/Breadcrumb"
 const BasicTable = () => {
 
   //meta title
-  document.title = "Basic Tables | Skote - React Admin & Dashboard Template";
+  document.title = "Basic Tables | Scalping- React Admin & Dashboard Template";
 
   return (
     <React.Fragment>

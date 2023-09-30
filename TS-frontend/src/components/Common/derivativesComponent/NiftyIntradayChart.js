@@ -11,13 +11,13 @@ import LineChart from "../derivativesComponent/IntradayLineChartData"
 
 const NiftyIntradayChart = () => {
     //meta title
-    document.title = "Chartjs Charts | Skote - React Admin & Dashboard Template"
+    // document.title = "Derivatives | NIFTY INTRADAY TREND"
 
     return (
         <React.Fragment>
             <div className="">
-                <Container fluid={true}>
-                    {/* <Breadcrumbs title="Charts" breadcrumbItem="Chartjs Charts" /> */}
+                <Container fluid={true} className="mt-3">
+                    {/* <Breadcrumbs title="Derivatives" breadcrumbItem="NIFTY INTRADAY TREND" /> */}
                     <Row>
                         <Col lg={6}>
                             <Card>

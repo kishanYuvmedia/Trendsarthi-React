@@ -26,7 +26,7 @@ import Breadcrumbs from "../../components/Common/Breadcrumb";
 const UiGeneral = () => {
 
   //meta title
-  document.title = "General | Skote - React Admin & Dashboard Template";
+  document.title = "General | Scalping- React Admin & Dashboard Template";
 
   const [popovertop, setpopovertop] = useState(false);
   const [popoverleft, setpopoverleft] = useState(false);
@@ -84,7 +84,7 @@ const UiGeneral = () => {
                             <Badge className="badge-soft-primary me-1">
                               Primary
                             </Badge>
-                            <Badge className="badge-soft-success me-1">
+                            <Badge className="   me-1">
                               Success
                             </Badge>
                             <Badge className="badge-soft-info me-1">

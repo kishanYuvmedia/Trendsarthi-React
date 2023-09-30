@@ -34,7 +34,7 @@ import Breadcrumbs from "../../components/Common/Breadcrumb";
 const UiCards = () => {
 
   //meta title
-  document.title = "Cards | Skote - React Admin & Dashboard Template";
+  document.title = "Cards | Scalping- React Admin & Dashboard Template";
 
   return (
     <React.Fragment>

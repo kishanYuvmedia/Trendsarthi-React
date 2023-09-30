@@ -112,7 +112,7 @@ const Dashboard = () => {
   ];
 
   //meta title
-  document.title = "Crypto Dashboard | Skote - React Admin & Dashboard Template";
+  document.title = "Crypto Dashboard | Scalping- React Admin & Dashboard Template";
 
   return (
     <React.Fragment>

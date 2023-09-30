@@ -16,7 +16,7 @@ import EmailSideBar from "./email-sidebar";
 const EmailRead = () => {
 
    //meta title
-  document.title="Read Email | Skote - React Admin & Dashboard Template";
+  document.title="Read Email | Scalping- React Admin & Dashboard Template";
 
   return (
     <React.Fragment>

@@ -45,7 +45,7 @@ import { createSelector } from "reselect";
 const EcommerceProductDetail = props => {
 
   //meta title
-  document.title = "Product Details | Skote - React Admin & Dashboard Template";
+  document.title = "Product Details | Scalping- React Admin & Dashboard Template";
 
   const dispatch = useDispatch();
 

@@ -22,8 +22,8 @@ import dropbox from "../../assets/images/brands/dropbox.png";
 import mail_chimp from "../../assets/images/brands/mail_chimp.png";
 import slack from "../../assets/images/brands/slack.png";
 
-import logo from "../../assets/images/logo.svg";
-import logoLightSvg from "../../assets/images/logo-light.svg";
+import logo from "../../assets/images/scalping-logo.webp";
+import logoLightSvg from "../../assets/images/scalping-logo.webp";
 
 //i18n
 import { withTranslation } from "react-i18next";
@@ -88,12 +88,14 @@ const Header = props => {
               <Link to="/" className="logo logo-dark">
                 <span className="logo-sm">
                   <img src={logo} alt="" height="22" />
+                  
                 </span>
               </Link>
 
               <Link to="/" className="logo logo-light">
                 <span className="logo-sm">
                   <img src={logoLightSvg} alt="" height="22" />
+                  
                 </span>
               </Link>
             </div>

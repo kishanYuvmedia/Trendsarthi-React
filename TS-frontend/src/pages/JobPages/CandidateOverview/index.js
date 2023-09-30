@@ -7,7 +7,7 @@ import AboutUs from './AboutUs';
 import Sidebar from './Sidebar';
 
 const CandidateOverview = () => {
-    document.title = "Candidate Overview | Skote - React Admin & Dashboard Template";
+    document.title = "Candidate Overview | Scalping- React Admin & Dashboard Template";
     return (
         <React.Fragment>
             <div className="page-content">

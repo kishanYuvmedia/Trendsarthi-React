@@ -16,7 +16,7 @@ import lightlogo from "../../assets/images/logo-light.svg";
 const Register = () => {
 
   //meta title
-  document.title="Register | Skote - React Admin & Dashboard Template";
+  document.title="Register | Scalping- React Admin & Dashboard Template";
 
   //form validation
   const validation = useFormik({
@@ -48,7 +48,7 @@ const Register = () => {
                     <Col className="col-7">
                       <div className="text-primary p-4">
                         <h5 className="text-primary">Free Register</h5>
-                        <p>Get your free Skote account now.</p>
+                        <p>Get your free Scalpingaccount now.</p>
                       </div>
                     </Col>
                     <Col className="col-5 align-self-end">

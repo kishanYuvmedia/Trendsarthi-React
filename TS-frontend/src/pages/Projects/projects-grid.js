@@ -27,7 +27,7 @@ import Paginations from "components/Common/Pagination";
 const ProjectsGrid = props => {
 
   //meta title
-  document.title = "Projects Grid | Skote - React Admin & Dashboard Template";
+  document.title = "Projects Grid | Scalping- React Admin & Dashboard Template";
 
   const dispatch = useDispatch();
 
