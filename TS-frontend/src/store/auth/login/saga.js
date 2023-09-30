@@ -1,88 +1,43 @@
-import { call, put, takeEvery, takeLatest } from "redux-saga/effects";
-
+import { takeEvery, fork, put, all } from "redux-saga/effects"
 // Login Redux States
-import { LOGIN_USER, LOGOUT_USER, SOCIAL_LOGIN } from "./actionTypes";
-import { apiError, loginSuccess, logoutUserSuccess } from "./actions";
+import { LOGIN_USER, LOGOUT_USER } from "./actionTypes"
+import { loginSuccess, logoutUserSuccess, apiError } from "./actions"
 
-//Include Both Helper File with needed methods
-import { getFirebaseBackend } from "../../../helpers/firebase_helper";
-import {
-  postFakeLogin,
-  postJwtLogin,
-  postSocialLogin,
-} from "../../../helpers/fakebackend_helper";
-
-const fireBaseBackend = getFirebaseBackend();
-
+import { authenticationService } from "../../../services/api/auth-service"
+// const fireBaseBackend = getFirebaseBackend();
 function* loginUser({ payload: { user, history } }) {
   try {
-    if (process.env.REACT_APP_DEFAULTAUTH === "firebase") {
-      const response = yield call(
-        fireBaseBackend.loginUser,
-        user.email,
-        user.password
-      );
-      yield put(loginSuccess(response));
-    } else if (process.env.REACT_APP_DEFAULTAUTH === "jwt") {
-      const response = yield call(postJwtLogin, {
-        email: user.email,
-        password: user.password,
-      });
-      localStorage.setItem("authUser", JSON.stringify(response));
-      yield put(loginSuccess(response));
-    } else if (process.env.REACT_APP_DEFAULTAUTH === "fake") {
-      const response = yield call(postFakeLogin, {
-        email: user.email,
-        password: user.password,
-      });
-      localStorage.setItem("authUser", JSON.stringify(response));
-      yield put(loginSuccess(response));
-    }
-    history('/dashboard');
+    authenticationService.login(user.username, user.password).then(response => {
+      localStorage.setItem("authUser", JSON.stringify(response))
+      loginSuccess(response)
+      history("/dashboard")
+    })
   } catch (error) {
-    yield put(apiError(error));
+    yield put(apiError(error))
   }
 }
 
 function* logoutUser({ payload: { history } }) {
   try {
-    localStorage.removeItem("authUser");
-
-    if (process.env.REACT_APP_DEFAULTAUTH === "firebase") {
-      const response = yield call(fireBaseBackend.logout);
-      yield put(logoutUserSuccess(response));
-    }
-    history('/login');
+    authenticationService.logout().then(response => {
+      logoutUserSuccess(response)
+      history("/login")
+    })
   } catch (error) {
-    yield put(apiError(error));
+    yield put(apiError(error))
   }
 }
 
-function* socialLogin({ payload: { type, history } }) {
-  try {
-    if (process.env.REACT_APP_DEFAULTAUTH === "firebase") {
-      const fireBaseBackend = getFirebaseBackend();
-      const response = yield call(fireBaseBackend.socialLoginUser, type);
-      if (response) {
-        history("/dashboard");
-      } else {
-        history("/login");
-      }
-      localStorage.setItem("authUser", JSON.stringify(response));
-      yield put(loginSuccess(response));
-    }
-    if(response)
-    history("/dashboard");
-  } catch (error) {
-    console.log("error",error)
-    yield put(apiError(error));
-  }
+export function* watchUserLogin() {
+  yield takeEvery(LOGIN_USER, loginUser)
+}
+
+export function* watchUserLogout() {
+  yield takeEvery(LOGOUT_USER, logoutUser)
 }
 
 function* authSaga() {
-  yield takeEvery(LOGIN_USER, loginUser);
-  yield takeLatest(SOCIAL_LOGIN, socialLogin);
-  yield takeEvery(LOGOUT_USER, logoutUser);
+  yield all([fork(watchUserLogin), fork(watchUserLogout)])
 }
 
-export default authSaga;
+export default authSaga

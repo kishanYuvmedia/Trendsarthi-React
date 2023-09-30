@@ -6,7 +6,7 @@ const _ = require("lodash");
 const moment = require("moment");
 module.exports = function (TdDerivatives) {
   TdDerivatives.strikeprice = (type, callback) => {
-    const currenturl = `${configt.stock.connector}/GetLastQuote/?accessKey=${configt.stock.key}&exchange=NFO&instrumentIdentifier=${type}`;
+    const currenturl = `${configt.stock.connector}/GetLastQuote/?accessKey=${configt.stock.key}&exchange=NFO&instrumentIdentifier=${type}-I`;
     request(currenturl, function (error, response, body) {
       if (!error && response.statusCode == 200) {
         const jsonData = JSON.parse(body);
@@ -97,7 +97,7 @@ module.exports = function (TdDerivatives) {
           const nearestValue = result.nearestValue;
           if (index !== -1) {
             const dataList = [];
-            for (let i = index - 6; i < index + 7; i++) {
+            for (let i = index - 5; i < index + 5; i++) {
               dataList.push({
                 put: putArr[i],
                 call: callArr[i],

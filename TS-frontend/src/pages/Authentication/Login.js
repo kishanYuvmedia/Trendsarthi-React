@@ -25,7 +25,7 @@ import * as Yup from "yup"
 import { useFormik } from "formik"
 
 // actions
-import { loginUser, socialLogin } from "../../store/actions"
+import { loginUser } from "../../store/actions"
 
 // import images
 import profile from "assets/images/profile-img.png"
@@ -38,15 +38,14 @@ const Login = props => {
   const dispatch = useDispatch()
 
   const validation = useFormik({
-    // enableReinitialize : use this  flag when initial values needs to be changed
     enableReinitialize: true,
 
     initialValues: {
-      email: "admin@themesbrand.com" || "",
-      password: "123456" || "",
+      username: "",
+      password: "",
     },
     validationSchema: Yup.object({
-      email: Yup.string().required("Please Enter Your Email"),
+      username: Yup.string().required("Please Enter Your username"),
       password: Yup.string().required("Please Enter Your Password"),
     }),
     onSubmit: values => {
@@ -60,18 +59,6 @@ const Login = props => {
   }))
 
   const { error } = useSelector(LoginProperties)
-
-  const signIn = type => {
-    dispatch(socialLogin(type, props.router.navigate))
-  }
-
-  //for facebook and google authentication
-  const socialResponse = type => {
-    signIn(type)
-  }
-
-  //handleTwitterLoginResponse
-  // const twitterResponse = e => {}
 
   return (
     <React.Fragment>
@@ -120,24 +107,26 @@ const Login = props => {
                       {error ? <Alert color="danger">{error}</Alert> : null}
 
                       <div className="mb-3">
-                        <Label className="form-label">Email</Label>
+                        <Label className="form-label">username</Label>
                         <Input
-                          name="email"
+                          name="username"
                           className="form-control"
-                          placeholder="Enter email"
+                          placeholder="Enter Email Address"
                           type="email"
                           onChange={validation.handleChange}
                           onBlur={validation.handleBlur}
-                          value={validation.values.email || ""}
+                          value={validation.values.username || ""}
                           invalid={
-                            validation.touched.email && validation.errors.email
+                            validation.touched.username &&
+                            validation.errors.username
                               ? true
                               : false
                           }
                         />
-                        {validation.touched.email && validation.errors.email ? (
+                        {validation.touched.username &&
+                        validation.errors.username ? (
                           <FormFeedback type="invalid">
-                            {validation.errors.email}
+                            {validation.errors.username}
                           </FormFeedback>
                         ) : null}
                       </div>

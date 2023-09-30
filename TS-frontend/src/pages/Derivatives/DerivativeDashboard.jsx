@@ -10,14 +10,17 @@ import Breadcrumbs from "../../components/Common/Breadcrumb"
 
 const index = () => {
   //meta title
-  document.title = "Derivative Dashboard";
+  document.title = "Derivative Dashboard"
 
   return (
     <React.Fragment>
       <div className="page-content">
         <Container fluid>
           {/* Render Breadcrumb */}
-          <Breadcrumbs title="Derivative" breadcrumbItem="Derivative Dashboard" />
+          <Breadcrumbs
+            title="Derivative"
+            breadcrumbItem="Derivative Dashboard"
+          />
           <Row>
             {/* IO Decode Chart */}
             <IODecode dataColors='["--bs-primary", "--bs-danger"]' />
@@ -25,7 +28,6 @@ const index = () => {
             {/* Nifty bankNifty btns */}
             <Settings />
           </Row>
-          
         </Container>
       </div>
     </React.Fragment>

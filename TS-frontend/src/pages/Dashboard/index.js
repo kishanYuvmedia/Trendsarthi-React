@@ -1,5 +1,5 @@
-import PropTypes from "prop-types";
-import React, { useEffect, useState } from "react";
+import PropTypes from "prop-types"
+import React, { useEffect, useState } from "react"
 import {
   Container,
   Row,
@@ -13,53 +13,51 @@ import {
   ModalBody,
   ModalFooter,
   Table,
-} from "reactstrap";
-import { Link } from "react-router-dom";
+} from "reactstrap"
+import { Link } from "react-router-dom"
 
-import classNames from "classnames";
+import classNames from "classnames"
 
 //import Charts
-import StackedColumnChart from "./StackedColumnChart";
+import StackedColumnChart from "./StackedColumnChart"
 
 //import action
-import { getChartsData as onGetChartsData } from "../../store/actions";
+import { getChartsData as onGetChartsData } from "../../store/actions"
 
-import modalimage1 from "../../assets/images/product/img-7.png";
-import modalimage2 from "../../assets/images/product/img-4.png";
+import modalimage1 from "../../assets/images/product/img-7.png"
+import modalimage2 from "../../assets/images/product/img-4.png"
 
 // Pages Components
-import WelcomeComp from "./WelcomeComp";
-import MonthlyEarning from "./MonthlyEarning";
-import SocialSource from "./SocialSource";
-import ActivityComp from "./ActivityComp";
-import TopCities from "./TopCities";
-import LatestTranaction from "./LatestTranaction";
+import WelcomeComp from "./WelcomeComp"
+import MonthlyEarning from "./MonthlyEarning"
+import SocialSource from "./SocialSource"
+import ActivityComp from "./ActivityComp"
+import TopCities from "./TopCities"
+import LatestTranaction from "./LatestTranaction"
 
 //Import Breadcrumb
-import Breadcrumbs from "../../components/Common/Breadcrumb";
+import Breadcrumbs from "../../components/Common/Breadcrumb"
 
 //i18n
-import { withTranslation } from "react-i18next";
+import { withTranslation } from "react-i18next"
 
 //redux
-import { useSelector, useDispatch } from "react-redux";
-import { createSelector } from "reselect";
+import { useSelector, useDispatch } from "react-redux"
+import { createSelector } from "reselect"
 
 const Dashboard = props => {
-  const [modal, setmodal] = useState(false);
-  const [subscribemodal, setSubscribemodal] = useState(false);
+  const [modal, setmodal] = useState(false)
+  const [subscribemodal, setSubscribemodal] = useState(false)
 
-  const selectDashboardState = (state) => state.Dashboard;
+  const selectDashboardState = state => state.Dashboard
   const DashboardProperties = createSelector(
     selectDashboardState,
-      (dashboard) => ({
-        chartsData: dashboard.chartsData
-      })
-  );
+    dashboard => ({
+      chartsData: dashboard.chartsData,
+    })
+  )
 
-  const {
-      chartsData
-  } = useSelector(DashboardProperties);
+  const { chartsData } = useSelector(DashboardProperties)
 
   const reports = [
     { title: "Orders", iconClass: "bx-copy-alt", description: "1,235" },
@@ -69,33 +67,33 @@ const Dashboard = props => {
       iconClass: "bx-purchase-tag-alt",
       description: "$16.2",
     },
-  ];
+  ]
 
   useEffect(() => {
     setTimeout(() => {
-      setSubscribemodal(true);
-    }, 2000);
-  }, []);
+      setSubscribemodal(true)
+    }, 2000)
+  }, [])
 
-  const [periodData, setPeriodData] = useState([]);
-  const [periodType, setPeriodType] = useState("yearly");
+  const [periodData, setPeriodData] = useState([])
+  const [periodType, setPeriodType] = useState("yearly")
 
   useEffect(() => {
-    setPeriodData(chartsData);
-  }, [chartsData]);
+    setPeriodData(chartsData)
+  }, [chartsData])
 
   const onChangeChartPeriod = pType => {
-    setPeriodType(pType);
-    dispatch(onGetChartsData(pType));
-  };
+    setPeriodType(pType)
+    dispatch(onGetChartsData(pType))
+  }
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
   useEffect(() => {
-    dispatch(onGetChartsData("yearly"));
-  }, [dispatch]);
+    dispatch(onGetChartsData("yearly"))
+  }, [dispatch])
 
   //meta title
-  document.title = "Dashboard | Scalping- React Admin & Dashboard Template";
+  document.title = "Dashboard | Scalping- React Admin & Dashboard Template"
 
   return (
     <React.Fragment>
@@ -156,7 +154,7 @@ const Dashboard = props => {
                               "nav-link"
                             )}
                             onClick={() => {
-                              onChangeChartPeriod("weekly");
+                              onChangeChartPeriod("weekly")
                             }}
                             id="one_month"
                           >
@@ -171,7 +169,7 @@ const Dashboard = props => {
                               "nav-link"
                             )}
                             onClick={() => {
-                              onChangeChartPeriod("monthly");
+                              onChangeChartPeriod("monthly")
                             }}
                             id="one_month"
                           >
@@ -186,7 +184,7 @@ const Dashboard = props => {
                               "nav-link"
                             )}
                             onClick={() => {
-                              onChangeChartPeriod("yearly");
+                              onChangeChartPeriod("yearly")
                             }}
                             id="one_month"
                           >
@@ -197,7 +195,10 @@ const Dashboard = props => {
                     </div>
                   </div>
                   {/* <div className="clearfix"></div> */}
-                  <StackedColumnChart periodData={periodData} dataColors='["--bs-primary", "--bs-warning", "--bs-success"]' />
+                  <StackedColumnChart
+                    periodData={periodData}
+                    dataColors='["--bs-primary", "--bs-warning", "--bs-success"]'
+                  />
                 </CardBody>
               </Card>
             </Col>
@@ -232,14 +233,14 @@ const Dashboard = props => {
         centered
         data-toggle="modal"
         toggle={() => {
-          setSubscribemodal(!subscribemodal);
+          setSubscribemodal(!subscribemodal)
         }}
       >
         <div>
           <ModalHeader
             className="border-bottom-0"
             toggle={() => {
-              setSubscribemodal(!subscribemodal);
+              setSubscribemodal(!subscribemodal)
             }}
           ></ModalHeader>
         </div>
@@ -258,9 +259,7 @@ const Dashboard = props => {
                   Subscribe our newsletter and get notification to stay update.
                 </p>
 
-                <div
-                  className="input-group rounded bg-light"
-                >
+                <div className="input-group rounded bg-light">
                   <Input
                     type="email"
                     className="form-control bg-transparent border-0"
@@ -284,13 +283,13 @@ const Dashboard = props => {
         className="exampleModal"
         tabIndex="-1"
         toggle={() => {
-          setmodal(!modal);
+          setmodal(!modal)
         }}
       >
         <div>
           <ModalHeader
             toggle={() => {
-              setmodal(!modal);
+              setmodal(!modal)
             }}
           >
             Order Details
@@ -372,7 +371,7 @@ const Dashboard = props => {
               type="button"
               color="secondary"
               onClick={() => {
-                setmodal(!modal);
+                setmodal(!modal)
               }}
             >
               Close
@@ -381,13 +380,13 @@ const Dashboard = props => {
         </div>
       </Modal>
     </React.Fragment>
-  );
-};
+  )
+}
 
 Dashboard.propTypes = {
   t: PropTypes.any,
   chartsData: PropTypes.any,
   onGetChartsData: PropTypes.func,
-};
+}
 
-export default withTranslation()(Dashboard);
+export default withTranslation()(Dashboard)
