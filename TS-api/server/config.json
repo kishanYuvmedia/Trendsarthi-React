@@ -21,5 +21,11 @@
   },
   "debugMode": false,
   "provideContactDetails": true,
-  "debugPhoneNumber": "8104035107"
+  "debugPhoneNumber": "8104035107",
+  "stock": {
+    "name": "stock",
+    "connector": "http://nimblerest.lisuns.com:4531",
+    "provider": "globelapi",
+    "key": "988dcf72-de6b-4637-9af7-fddbe9bfa7cd"
+  }
 }

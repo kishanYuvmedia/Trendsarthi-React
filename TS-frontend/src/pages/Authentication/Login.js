@@ -1,70 +1,74 @@
-import PropTypes from "prop-types";
-import React from "react";
+import PropTypes from "prop-types"
+import React from "react"
 
-import { Row, Col, CardBody, Card, Alert, Container, Form, Input, FormFeedback, Label } from "reactstrap";
+import {
+  Row,
+  Col,
+  CardBody,
+  Card,
+  Alert,
+  Container,
+  Form,
+  Input,
+  FormFeedback,
+  Label,
+} from "reactstrap"
 
 //redux
-import { useSelector, useDispatch } from "react-redux";
-import { createSelector } from "reselect";
-import { Link } from "react-router-dom";
-import withRouter from "components/Common/withRouter";
+import { useSelector, useDispatch } from "react-redux"
+import { createSelector } from "reselect"
+import { Link } from "react-router-dom"
+import withRouter from "components/Common/withRouter"
 
 // Formik validation
-import * as Yup from "yup";
-import { useFormik } from "formik";
+import * as Yup from "yup"
+import { useFormik } from "formik"
 
 // actions
-import { loginUser, socialLogin } from "../../store/actions";
+import { loginUser, socialLogin } from "../../store/actions"
 
 // import images
-import profile from "assets/images/profile-img.png";
-import logo from "assets/images/logo.svg";
+import profile from "assets/images/profile-img.png"
+import logo from "assets/images/logo.svg"
 
 const Login = props => {
-
   //meta title
-  document.title = "Login | Skote - React Admin & Dashboard Template";
+  document.title = "Login | Skote - React Admin & Dashboard Template"
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   const validation = useFormik({
     // enableReinitialize : use this  flag when initial values needs to be changed
     enableReinitialize: true,
 
     initialValues: {
-      email: "admin@themesbrand.com" || '',
-      password: "123456" || '',
+      email: "admin@themesbrand.com" || "",
+      password: "123456" || "",
     },
     validationSchema: Yup.object({
       email: Yup.string().required("Please Enter Your Email"),
       password: Yup.string().required("Please Enter Your Password"),
     }),
-    onSubmit: (values) => {
-      dispatch(loginUser(values, props.router.navigate));
-    }
-  });
+    onSubmit: values => {
+      dispatch(loginUser(values, props.router.navigate))
+    },
+  })
 
+  const selectLoginState = state => state.Login
+  const LoginProperties = createSelector(selectLoginState, login => ({
+    error: login.error,
+  }))
 
-  const selectLoginState = (state) => state.Login;
-    const LoginProperties = createSelector(
-      selectLoginState,
-        (login) => ({
-          error: login.error          
-        })
-    );
+  const { error } = useSelector(LoginProperties)
 
-    const {
-      error
-  } = useSelector(LoginProperties);
-
-    const signIn = type => {
-        dispatch(socialLogin(type, props.router.navigate));
-    };
+  const signIn = type => {
+    dispatch(socialLogin(type, props.router.navigate))
+  }
 
   //for facebook and google authentication
   const socialResponse = type => {
-    signIn(type);
-  };
+    signIn(type)
+  }
 
   //handleTwitterLoginResponse
   // const twitterResponse = e => {}
@@ -78,7 +82,7 @@ const Login = props => {
               <Card className="overflow-hidden">
                 <div className="bg-primary-subtle">
                   <Row>
-                  <Col className="col-7">
+                    <Col className="col-7">
                       <div className="text-primary p-4">
                         <h5 className="text-primary">Welcome Back !</h5>
                         <p>Sign in to continue to Skote.</p>
@@ -94,7 +98,7 @@ const Login = props => {
                     <Link to="/" className="logo-light-element">
                       <div className="avatar-md profile-user-wid mb-4">
                         <span className="avatar-title rounded-circle bg-light">
-                        <img
+                          <img
                             src={logo}
                             alt=""
                             className="rounded-circle"
@@ -107,10 +111,10 @@ const Login = props => {
                   <div className="p-2">
                     <Form
                       className="form-horizontal"
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        validation.handleSubmit();
-                        return false;
+                      onSubmit={e => {
+                        e.preventDefault()
+                        validation.handleSubmit()
+                        return false
                       }}
                     >
                       {error ? <Alert color="danger">{error}</Alert> : null}
@@ -126,11 +130,15 @@ const Login = props => {
                           onBlur={validation.handleBlur}
                           value={validation.values.email || ""}
                           invalid={
-                            validation.touched.email && validation.errors.email ? true : false
+                            validation.touched.email && validation.errors.email
+                              ? true
+                              : false
                           }
                         />
                         {validation.touched.email && validation.errors.email ? (
-                          <FormFeedback type="invalid">{validation.errors.email}</FormFeedback>
+                          <FormFeedback type="invalid">
+                            {validation.errors.email}
+                          </FormFeedback>
                         ) : null}
                       </div>
 
@@ -144,11 +152,17 @@ const Login = props => {
                           onChange={validation.handleChange}
                           onBlur={validation.handleBlur}
                           invalid={
-                            validation.touched.password && validation.errors.password ? true : false
+                            validation.touched.password &&
+                            validation.errors.password
+                              ? true
+                              : false
                           }
                         />
-                        {validation.touched.password && validation.errors.password ? (
-                          <FormFeedback type="invalid">{validation.errors.password}</FormFeedback>
+                        {validation.touched.password &&
+                        validation.errors.password ? (
+                          <FormFeedback type="invalid">
+                            {validation.errors.password}
+                          </FormFeedback>
                         ) : null}
                       </div>
 
@@ -174,59 +188,6 @@ const Login = props => {
                           Log In
                         </button>
                       </div>
-
-                      <div className="mt-4 text-center">
-                        <h5 className="font-size-14 mb-3">Sign in with</h5>
-
-                        <ul className="list-inline">
-                          <li className="list-inline-item">
-                          <Link
-                              to="#"
-                              className="social-list-item bg-primary text-white border-primary"
-                              onClick={e => {
-                                e.preventDefault();
-                                socialResponse("facebook");
-                              }}
-                            >
-                              <i className="mdi mdi-facebook" />
-                            </Link>
-                          </li>
-                          {/*<li className="list-inline-item">*/}
-                          {/*  <TwitterLogin*/}
-                          {/*    loginUrl={*/}
-                          {/*      "http://localhost:4000/api/v1/auth/twitter"*/}
-                          {/*    }*/}
-                          {/*    onSuccess={this.twitterResponse}*/}
-                          {/*    onFailure={this.onFailure}*/}
-                          {/*    requestTokenUrl={*/}
-                          {/*      "http://localhost:4000/api/v1/auth/twitter/revers"*/}
-                          {/*    }*/}
-                          {/*    showIcon={false}*/}
-                          {/*    tag={"div"}*/}
-                          {/*  >*/}
-                          {/*    <a*/}
-                          {/*      href=""*/}
-                          {/*      className="social-list-item bg-info text-white border-info"*/}
-                          {/*    >*/}
-                          {/*      <i className="mdi mdi-twitter"/>*/}
-                          {/*    </a>*/}
-                          {/*  </TwitterLogin>*/}
-                          {/*</li>*/}
-                          <li className="list-inline-item">
-                          <Link
-                              to="#"
-                              className="social-list-item bg-danger text-white border-danger"
-                              onClick={e => {
-                                e.preventDefault();
-                                socialResponse("google");
-                              }}
-                            >
-                              <i className="mdi mdi-google" />
-                            </Link>
-                          </li>
-                        </ul>
-                      </div>
-
                       <div className="mt-4 text-center">
                         <Link to="/forgot-password" className="text-muted">
                           <i className="mdi mdi-lock me-1" />
@@ -255,11 +216,11 @@ const Login = props => {
         </Container>
       </div>
     </React.Fragment>
-  );
-};
+  )
+}
 
-export default withRouter(Login);
+export default withRouter(Login)
 
 Login.propTypes = {
   history: PropTypes.object,
-};
+}

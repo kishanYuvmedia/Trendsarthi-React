@@ -23,7 +23,7 @@
     "loopback-component-storage": "^3.7.0",
     "loopback-connector-mongodb": "^4.2.0",
     "loopback-connector-rest": "^3.7.0",
-    "moment": "^2.29.1",
+    "moment": "^2.29.4",
     "moment-timezone": "^0.5.32",
     "morgan": "^1.10.0",
     "request": "^2.88.2",

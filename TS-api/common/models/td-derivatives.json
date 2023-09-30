@@ -42,7 +42,7 @@
     "relations": {},
     "acls": [],
     "methods": {
-        "derivativestype": {
+        "strikeprice": {
             "accepts": [
                 {
                     "arg": "type",
@@ -58,7 +58,90 @@
             "description": "",
             "http": [
                 {
-                    "path": "/derivativestype",
+                    "path": "/strikeprice",
+                    "verb": "get"
+                }
+            ]
+        },
+        "productexpirydate": {
+            "accepts": [
+                {
+                    "arg": "type",
+                    "type": "string",
+                    "required": true
+                }
+            ],
+            "returns": {
+                "type": "object",
+                "arg": "response",
+                "root": true
+            },
+            "description": "",
+            "http": [
+                {
+                    "path": "/productexpirydate",
+                    "verb": "get"
+                }
+            ]
+        },
+        "optiondata": {
+            "accepts": [
+                {
+                    "arg": "type",
+                    "type": "string",
+                    "required": true
+                },
+                {
+                    "arg": "expairdate",
+                    "type": "string",
+                    "required": true
+                },
+                {
+                    "arg": "strickPrice",
+                    "type": "number",
+                    "required": true
+                }
+            ],
+            "returns": {
+                "type": "object",
+                "arg": "response",
+                "root": true
+            },
+            "description": "",
+            "http": [
+                {
+                    "path": "/optiondata",
+                    "verb": "get"
+                }
+            ]
+        },
+        "optionChartdata": {
+            "accepts": [
+                {
+                    "arg": "type",
+                    "type": "string",
+                    "required": true
+                },
+                {
+                    "arg": "expairdate",
+                    "type": "string",
+                    "required": true
+                },
+                {
+                    "arg": "strickPrice",
+                    "type": "number",
+                    "required": true
+                }
+            ],
+            "returns": {
+                "type": "object",
+                "arg": "response",
+                "root": true
+            },
+            "description": "",
+            "http": [
+                {
+                    "path": "/optionChartdata",
                     "verb": "get"
                 }
             ]
