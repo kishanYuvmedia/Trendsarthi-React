@@ -6,7 +6,6 @@ import Breadcrumbs from "../../components/Common/Breadcrumb"
 
 import OptionChainTableContainer from "../../components/Common/derivativesComponent/OptionChainTableContainer"
 import IntradayTableContainer from "../../components/Common/derivativesComponent/IntradayTableContainer"
-
 import { columnsNiftyIntraday, dataNiftyIntraday } from "./intradayData.js"
 import { columnsNiftyOption, dataNiftyOption } from "./optionChainData.js"
 import NiftyIntradayChart from "components/Common/derivativesComponent/NiftyIntradayChart"

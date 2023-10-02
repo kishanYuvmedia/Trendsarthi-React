@@ -154,7 +154,9 @@ const OptionChainTableContainer = ({
 
   return (
     <>
-      <PCR totalOpenIntCE={totalOpenIntCE} totalOpenIntPE={totalOpenIntPE} />
+      {totalOpenIntCE && (
+        <PCR totalOpenIntCE={totalOpenIntCE} totalOpenIntPE={totalOpenIntPE} />
+      )}
       <Fragment>
         <div className="table-responsive">
           <Table {...getTableProps()} className={` ${tableClass} bdr`}>
@@ -228,7 +230,7 @@ const OptionChainTableContainer = ({
                                 : ""
                             }`}
                           >
-                            {cell.render("Cell")}
+                            {cell.value != 0 ? cell.render("Cell") : "-"}
                           </td>
                         )
                       })}

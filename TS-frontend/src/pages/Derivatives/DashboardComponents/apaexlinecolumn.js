@@ -1,17 +1,24 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import ReactApexChart from "react-apexcharts"
 import getChartColorsArray from "../../../components/Common/ChartsDynamicColor"
-
-const Apaexlinecolumn = ({ dataColors }) => {
+const Apaexlinecolumn = ({
+  dataColors,
+  dataCallValue,
+  dataPutValue,
+  categoryValue,
+}) => {
   const apaexlineColumnColors = getChartColorsArray(dataColors)
+  const [callData] = useState(dataCallValue)
+  const [putData] = useState(dataPutValue)
+  const [categorylist] = useState(categoryValue)
   const series = [
     {
       name: "Call",
-      data: [-46, 57, 59, 54, 62, 58, 64, 60, 66],
+      data: callData,
     },
     {
       name: "Put",
-      data: [74, 83, 102, -97, 86, 106, 93, 114, 94],
+      data: putData,
     },
   ]
   const options = {
@@ -38,17 +45,7 @@ const Apaexlinecolumn = ({ dataColors }) => {
 
     colors: apaexlineColumnColors,
     xaxis: {
-      categories: [
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-      ],
+      categories: categorylist,
     },
     yaxis: {
       title: {
@@ -69,9 +66,15 @@ const Apaexlinecolumn = ({ dataColors }) => {
       },
     },
   }
-
   return (
-    <ReactApexChart options={options} series={series} type="bar" height={500} />
+    <>
+      <ReactApexChart
+        options={options}
+        series={series}
+        type="bar"
+        height={500}
+      />
+    </>
   )
 }
 

@@ -12,7 +12,6 @@ import {
 //SimpleBar
 import SimpleBar from "simplebar-react"
 import { commentsData } from "common/data"
-
 const Comments = () => {
   return (
     <React.Fragment>
@@ -68,13 +67,13 @@ const Comments = () => {
                             {comment.time}
                           </small>
                         </h5>
-                        <p className="text-muted">
-                          {comment.content}
-                        </p>
+                        <p className="text-muted">{comment.content}</p>
                         {comment.replies && (
                           <>
                             <div>
-                              <Link to="#" className="text-success"><i className="mdi mdi-reply"></i> Reply</Link>
+                              <Link to="#" className="text-success">
+                                <i className="mdi mdi-reply"></i> Reply
+                              </Link>
                             </div>
                             <div className="d-flex pt-3">
                               <div className="flex-shrink-0 me-3">
@@ -99,20 +98,21 @@ const Comments = () => {
                                   </div>
                                 ))}
                                 <div>
-                                  <Link to="#" className="text-success"><i className="mdi mdi-reply"></i> Reply</Link>
+                                  <Link to="#" className="text-success">
+                                    <i className="mdi mdi-reply"></i> Reply
+                                  </Link>
                                 </div>
                               </div>
                             </div>
                           </>
                         )}
-                        {
-                          !comment.replies &&
+                        {!comment.replies && (
                           <div>
                             <Link to="#" className="text-success">
                               <i className="mdi mdi-reply me-1"></i> Reply
                             </Link>
                           </div>
-                        }
+                        )}
                       </div>
                     </div>
                   </li>

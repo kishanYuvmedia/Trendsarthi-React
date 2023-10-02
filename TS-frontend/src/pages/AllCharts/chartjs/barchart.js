@@ -1,11 +1,11 @@
-import React from "react";
-import { Bar } from "react-chartjs-2";
-import getChartColorsArray from "../../../components/Common/ChartsDynamicColor";
+import React from "react"
+import { Bar } from "react-chartjs-2"
+import getChartColorsArray from "../../../components/Common/ChartsDynamicColor"
 
-const BarChart = ({ dataColors, height }) => {
-  var barChartColor = getChartColorsArray(dataColors);
+const BarChart = ({ dataColors, height, totalcal, totalput }) => {
+  var barChartColor = getChartColorsArray(dataColors)
   const data = {
-    labels: ["Total Call", "Total Put"],
+    labels: ["Total Call/Put"],
     datasets: [
       {
         label: "Total Call",
@@ -14,7 +14,7 @@ const BarChart = ({ dataColors, height }) => {
         borderWidth: 1,
         hoverBackgroundColor: barChartColor[1],
         hoverBorderColor: barChartColor[1],
-        data: [65, 0],
+        data: [totalcal],
       },
       {
         label: "Total Put",
@@ -23,10 +23,10 @@ const BarChart = ({ dataColors, height }) => {
         borderWidth: 1,
         hoverBackgroundColor: barChartColor[3],
         hoverBorderColor: barChartColor[3],
-        data: [35, 0],
+        data: [totalput],
       },
     ],
-  };
+  }
 
   const options = {
     scales: {
@@ -38,9 +38,9 @@ const BarChart = ({ dataColors, height }) => {
         beginAtZero: true,
       },
     },
-  };
+  }
 
-  return <Bar width={751} height={height} data={data} options={options} />;
-};
+  return <Bar width={751} height={height} data={data} options={options} />
+}
 
-export default BarChart;
+export default BarChart

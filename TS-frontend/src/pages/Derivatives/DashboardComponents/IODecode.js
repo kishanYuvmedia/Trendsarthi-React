@@ -1,48 +1,46 @@
-import React, { useEffect, useState } from "react";
-import PropTypes from 'prop-types';
-import { Card, CardBody, Col, Row } from "reactstrap";
-import ReactApexChart from "react-apexcharts";
-import getChartColorsArray from "../../../components/Common/ChartsDynamicColor";
-import { useSelector, useDispatch } from 'react-redux';
-import { createSelector } from "reselect";
-import { dashboardBlogVisitorData } from '../../../store/actions';
-import { blodStatsData } from "common/data";
+import React, { useEffect, useState } from "react"
+import PropTypes from "prop-types"
+import { Card, CardBody, Col, Row } from "reactstrap"
+import ReactApexChart from "react-apexcharts"
+import getChartColorsArray from "../../../components/Common/ChartsDynamicColor"
+import { useSelector, useDispatch } from "react-redux"
+import { createSelector } from "reselect"
+import { dashboardBlogVisitorData } from "../../../store/actions"
+import { blodStatsData } from "common/data"
 
 const IODecode = ({ dataColors }) => {
-  const apexIODecodeChartColors = getChartColorsArray(dataColors);
-  const [duration, setDuration] = useState("year");
-  const dispatch = useDispatch();
-  const visitorDurationData = (duration) => {
-    setDuration(duration);
-    dispatch(dashboardBlogVisitorData(duration));
-  };
+  const apexIODecodeChartColors = getChartColorsArray(dataColors)
+  const [duration, setDuration] = useState("year")
+  const dispatch = useDispatch()
+  const visitorDurationData = duration => {
+    setDuration(duration)
+    dispatch(dashboardBlogVisitorData(duration))
+  }
 
   useEffect(() => {
-    dispatch(dashboardBlogVisitorData("year"));
-  }, [dispatch]);
+    dispatch(dashboardBlogVisitorData("year"))
+  }, [dispatch])
 
-  const selectDashboardblogState = (state) => state.DashboardBlog;
+  const selectDashboardblogState = state => state.DashboardBlog
   const DashboardblogProperties = createSelector(
     selectDashboardblogState,
-    (dashboardBlog) => ({
-      visitor: dashboardBlog.visitor
+    dashboardBlog => ({
+      visitor: dashboardBlog.visitor,
     })
-  );
+  )
 
-  const {
-    visitor
-  } = useSelector(DashboardblogProperties);
+  const { visitor } = useSelector(DashboardblogProperties)
 
   const series = [
     {
       name: "Current",
-      data: (visitor.Currentdata || []),
+      data: visitor.Currentdata || [],
     },
     {
       name: "Previous",
-      data: (visitor.Previousdata || []),
+      data: visitor.Previousdata || [],
     },
-  ];
+  ]
 
   const options = {
     chart: {
@@ -71,7 +69,7 @@ const IODecode = ({ dataColors }) => {
       },
     },
     xaxis: {
-      categories: (visitor.categories || []),
+      categories: visitor.categories || [],
     },
 
     markers: {
@@ -87,92 +85,15 @@ const IODecode = ({ dataColors }) => {
       position: "top",
       horizontalAlign: "right",
     },
-  };
+  }
 
   return (
     <React.Fragment>
       <Col xl={7}>
-        {/* <Row>
-          {(blodStatsData || []).map((stat, index) => (
-            <Col lg={4} key={index}>
-              <Card className="blog-stats-wid">
-                <CardBody>
-                  <div className="d-flex flex-wrap">
-                    <div className="me-3">
-                      <p className="text-muted mb-2">{stat.title}</p>
-                      <h5 className="mb-0">{stat.value}</h5>
-                    </div>
-                    <div className="avatar-sm ms-auto">
-                      <div className="avatar-title bg-light rounded-circle text-primary font-size-20">
-                        <i className={stat.icon}></i>
-                      </div>
-                    </div>
-                  </div>
-                </CardBody>
-              </Card>
-            </Col>
-          ))}
-
-        </Row> */}
-
         <Card>
           <CardBody>
-              <h5 className="card-title me-2">IO Decode</h5>
-            {/* <div className="d-flex flex-wrap">
-              <div className="ms-auto">
-                <div className="toolbar d-flex flex-wrap gap-2 text-end">
-                  <button type="button" className="btn btn-light btn-sm" onClick={() => visitorDurationData('all')}>
-                    ALL
-                  </button>{" "}
-                  <button type="button" className="btn btn-light btn-sm" onClick={() => visitorDurationData('onemonth')}>
-                    1M
-                  </button>{" "}
-                  <button type="button" className="btn btn-light btn-sm" onClick={() => visitorDurationData('sixmonth')}>
-                    6M
-                  </button>{" "}
-                  <button type="button" className="btn btn-light btn-sm active" onClick={() => visitorDurationData('year')}>
-                    1Y
-                  </button>{" "}
-                </div>
-              </div>
-            </div> */}
-
-            {/* <Row className="text-center">
-              <Col lg={4}>
-                <div className="mt-4">
-                  <p className="text-muted mb-1">Today</p>
-                  <h5>1024</h5>
-                </div>
-              </Col>
-
-              <Col lg={4}>
-                <div className="mt-4">
-                  <p className="text-muted mb-1">This Month</p>
-                  <h5>
-                    12356{" "}
-                    <span className="text-success font-size-13">
-                      0.2 % <i className="mdi mdi-arrow-up ms-1"></i>
-                    </span>
-                  </h5>
-                </div>
-              </Col>
-
-              <Col lg={4}>
-                <div className="mt-4">
-                  <p className="text-muted mb-1">This Year</p>
-                  <h5>
-                    102354{" "}
-                    <span className="text-success font-size-13">
-                      0.1 % <i className="mdi mdi-arrow-up ms-1"></i>
-                    </span>
-                  </h5>
-                </div>
-              </Col>
-            </Row> */}
-
+            <h5 className="card-title me-2">IO Decode</h5>
             <hr className="mb-4" />
-
-            {/* Apex Chart */}
             <div id="area-chart" dir="ltr">
               <ReactApexChart
                 options={options}
@@ -182,17 +103,16 @@ const IODecode = ({ dataColors }) => {
                 className="apex-charts"
               />
             </div>
-
           </CardBody>
         </Card>
       </Col>
     </React.Fragment>
-  );
-};
+  )
+}
 
 IODecode.propTypes = {
   options: PropTypes.any,
-  series: PropTypes.any
-};
+  series: PropTypes.any,
+}
 
-export default IODecode;
+export default IODecode
