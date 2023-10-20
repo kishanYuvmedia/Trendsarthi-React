@@ -3,71 +3,119 @@ import React, { useEffect, useState } from "react"
 import PropTypes from "prop-types"
 //import components
 import Breadcrumbs from "../../components/Common/Breadcrumb"
-
+import { Row, Col } from "reactstrap"
 import OptionChainTableContainer from "../../components/Common/derivativesComponent/OptionChainTableContainer"
 import IntradayTableContainer from "../../components/Common/derivativesComponent/IntradayTableContainer"
-import { columnsNiftyIntraday, dataNiftyIntraday } from "./intradayData.js"
-import { columnsNiftyOption, dataNiftyOption } from "./optionChainData.js"
+import { columnsNiftyOption } from "./optionChainData.js"
 import NiftyIntradayChart from "components/Common/derivativesComponent/NiftyIntradayChart"
 import {
   getStrikePrice,
   getExpairDate,
   getOptionDataTable,
+  geIntradayData,
 } from "../../services/api/api-service"
+import { composeInitialProps } from "react-i18next"
 const OptionChain = props => {
   //meta title
   document.title = `Derivatives | ${props.type} Option Chain`
+  const type = props.type
   const [strickPrice, setStrikePrice] = useState(0)
   const [list, setlist] = useState([])
+  const [intradayList, setintradayList] = useState([])
+  const [dataArray, setDataArray] = useState([])
+  const [timeArray, setTimeArray] = useState([])
+  const [zerolistArray, setzerolistArray] = useState([])
   useEffect(() => {
-    getStrikePrice(props.type)
+    getStrikePrice(type)
       .then(resultStrike => {
-        setTimeout(() => {
-          //console.log(resultStrike.StrikePrice.value)
-          getExpairDate(props.type)
-            .then(result => {
-              //console.log(result.today)
-              getOptionDataTable(
-                props.type,
-                result.today,
-                resultStrike.StrikePrice.value
-              )
-                .then(result1 => {
-                  const data = []
-                  result1.list.map(item => {
-                    //console.log(item)
-                    data.push({
-                      openIntCE: item.call.OPENINTEREST,
-                      openInterestChangeCE: item.call.OPENINTERESTCHANGE,
-                      totalQtyTradedCE: item.call.TOTALQTYTRADED,
-                      priceChangeCE: item.call.PRICECHANGE,
-                      lastTradedPriceCE: item.call.LASTTRADEPRICE,
-                      strikePrice: item.call.value,
-                      stricke: item.strike,
-                      lastTradedPricePE: item.put.LASTTRADEPRICE,
-                      priceChangePE: item.put.PRICECHANGE,
-                      totalQtyTradedPE: item.put.LASTTRADEPRICE,
-                      openInterestChangePE: item.put.OPENINTERESTCHANGE,
-                      openIntPE: item.put.OPENINTEREST,
-                    })
+        getExpairDate(type)
+          .then(result => {
+            getOptionDataTable(
+              type,
+              result.today,
+              resultStrike.StrikePrice.value
+            )
+              .then(result1 => {
+                const data = []
+                result1.list.map(item => {
+                  data.push({
+                    openIntCE: item.call.OPENINTEREST,
+                    openInterestChangeCE: item.call.OPENINTERESTCHANGE,
+                    totalQtyTradedCE: item.call.TOTALQTYTRADED,
+                    priceChangeCE: item.call.PRICECHANGE,
+                    lastTradedPriceCE: item.call.LASTTRADEPRICE,
+                    strikePrice: item.call.value,
+                    stricke: item.strike,
+                    lastTradedPricePE: item.put.LASTTRADEPRICE,
+                    priceChangePE: item.put.PRICECHANGE,
+                    totalQtyTradedPE: item.put.LASTTRADEPRICE,
+                    openInterestChangePE: item.put.OPENINTERESTCHANGE,
+                    openIntPE: item.put.OPENINTEREST,
                   })
-                  setlist(data)
-                  //console.log("data", result1.strike)
-                  setStrikePrice(result1.strike)
                 })
-                .catch(err => {
-                  console.error("Error fetching getOptionDataTable:", err)
-                })
-            })
-            .catch(err => {
-              console.error("Error fetching getExpairDate:", err)
-            })
-        }, 1000)
+                setlist(data)
+                setStrikePrice(result1.strike)
+              })
+              .catch(err => {
+                console.error("Error fetching getOptionDataTable:", err)
+              })
+          })
+          .catch(err => {
+            console.error("Error fetching getExpairDate:", err)
+          })
       })
       .catch(err => {
         console.error("Error fetching getStrikePrice:", err)
       })
-  }, [props.type])
+    getIntraday()
+  }, [type])
+  function getIntraday() {
+    geIntradayData(type)
+      .then(result => {
+        if (!_.isEmpty(result)) {
+          const timevalue = []
+          const dataValue = []
+          const zerolist = []
+          result.map(item => {
+            intradayList.push({
+              time: item.time,
+              call: item.callTotal,
+              put: item.putTotal,
+              difference: Number(item.putTotal) - Number(item.callTotal),
+              pcr: (Number(item.putTotal) / Number(item.callTotal)).toFixed(2),
+              optionSignal:
+                Number(Number(item.putTotal) / Number(item.callTotal)).toFixed(
+                  2
+                ) > 1
+                  ? "SELL"
+                  : "BUY",
+              vwap: item.AVERAGETRADEDPRICE,
+              price: item.BUYPRICE,
+              vwapSignal:
+                Number(
+                  Number(item.AVERAGETRADEDPRICE) < Number(item.BUYPRICE)
+                ).toFixed(2) > 1
+                  ? "SELL"
+                  : "BUY",
+            })
+            dataValue.push(
+              Number(item.putTotal) || 0 - Number(item.callTotal) || 0
+            )
+            timevalue.push(item.time)
+            zerolist.push(0)
+          })
+
+          setDataArray(dataValue)
+          setTimeArray(timevalue)
+          setzerolistArray(zerolist)
+          console.log("Zero", zerolistArray)
+        }
+      })
+      .catch(err => {
+        console.error("Error fetching getStrikePrice:", err)
+      })
+  }
+
   return (
     <div className="page-content">
       <div className="container-fluid">
@@ -75,7 +123,6 @@ const OptionChain = props => {
           title="Derivatives"
           breadcrumbItem={`${props.type} Option Chain`}
         />
-        {/* Option chain table */}
         <OptionChainTableContainer
           columns={columnsNiftyOption}
           data={list}
@@ -92,23 +139,14 @@ const OptionChain = props => {
         />
 
         {/* Intraday table */}
-        <IntradayTableContainer
-          columns={columnsNiftyIntraday}
-          data={dataNiftyIntraday}
-          isGlobalFilter={false}
-          isAddOptions={false}
-          customPageSize={10}
-          isPagination={false}
-          tableClass="align-middle table-nowrap table-check table-hover table"
-          theadClass="table-light"
-          tbodyClass="table-striped"
-          paginationDiv="col-12"
-          pagination="justify-content-center pagination pagination-rounded"
+        <IntradayTableContainer data={intradayList} />
+        <NiftyIntradayChart
+          title={type}
+          datalist={dataArray}
+          timeValue={timeArray}
+          zerolist={zerolistArray}
         />
-
         {/* graph */}
-
-        <NiftyIntradayChart />
       </div>
     </div>
   )

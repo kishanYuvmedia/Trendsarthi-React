@@ -1,21 +1,8 @@
 import React from "react"
-import { Link } from "react-router-dom"
-import {
-  Card,
-  CardBody,
-  Col,
-  UncontrolledDropdown,
-  DropdownMenu,
-  DropdownToggle,
-  Row,
-  DropdownItem,
-  Badge,
-  Button,
-  CardTitle,
-} from "reactstrap"
+import { Card, CardBody, Badge, Button, CardTitle } from "reactstrap"
 
-import BarChart from "../../AllCharts/chartjs/barchart"
-import DountChart from "pages/AllCharts/chartjs/dountchart"
+import BarChart from "../../AllCharts/apex/barchart"
+import DountChart from "../../AllCharts/apex/dountchart"
 const DateDropdown = ({ dates }) => {
   return (
     <select className="form-control">

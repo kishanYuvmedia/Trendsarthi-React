@@ -16,7 +16,6 @@ export const getSystemList = type => {
       where: { listType: type },
       order: "label asc",
     }).then(data => {
-      // storeCachedData(`${type}List`, data)
       resolve(data)
     })
   })
@@ -50,4 +49,21 @@ export const getOptionDataTable = (type, expairdate, strickPrice) => {
     { type, expairdate, strickPrice },
     true
   )
+}
+export const geIntradayData = type => {
+  const currentDate = new Date() // Create a Date object for the current date
+  const startOfToday = new Date(currentDate) // Clone the current date
+  startOfToday.setHours(0, 0, 0, 0) // Set the time to 00:00:00.000
+  const endOfToday = new Date(currentDate) // Clone the current date
+  endOfToday.setHours(23, 59, 59, 999) // Set the time to 23:59:59.999
+  return find("TdDerivatives", {
+    where: {
+      INSTRUMENTIDENTIFIER: `${type}-I`,
+      and: [
+        { createdAt: { gte: startOfToday } },
+        { createdAt: { lte: endOfToday } },
+      ],
+    },
+    order: "id desc",
+  })
 }

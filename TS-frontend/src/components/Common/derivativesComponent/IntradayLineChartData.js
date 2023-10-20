@@ -1,23 +1,21 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { Line } from "react-chartjs-2"
-import getChartColorsArray from "../ChartsDynamicColor";
+import getChartColorsArray from "../ChartsDynamicColor"
 
-const LineChart = ({dataColors}) => {
-  var lineChartColor =  getChartColorsArray(dataColors);
+const LineChart = ({ dataColors, datalist, timelist, zerolistv }) => {
+  var lineChartColor = getChartColorsArray(dataColors)
+  console.log("final data", datalist)
+  console.log("final timelist", timelist)
+  console.log("final zerolist", zerolistv)
+  const result = findHighestAndLowest(datalist)
+
   const data = {
-    labels: [
-      "Session 1",
-      "Session 2",
-      "Session 3",
-      "Session 4",
-      "Session 5",
-    ],
+    labels: timelist,
     datasets: [
       {
         label: "Option Data",
         fill: true,
         lineTension: 0.5,
-        // backgroundColor: lineChartColor[0],
         backgroundColor: "#00ff0000",
         borderColor: "green",
         borderCapStyle: "butt",
@@ -33,7 +31,7 @@ const LineChart = ({dataColors}) => {
         pointHoverBorderWidth: 2,
         pointRadius: 1,
         pointHitRadius: 10,
-        data: [65, 59, 80, 81, 56, 55, 40, 55, 30, 80],
+        data: datalist,
       },
       {
         label: "Zero Line",
@@ -54,23 +52,43 @@ const LineChart = ({dataColors}) => {
         pointHoverBorderWidth: 2,
         pointRadius: 1,
         pointHitRadius: 10,
-        data: [80, 23, 56, 65, 23, 35, 85, 25, 92, 36],
+        data: zerolistv,
       },
     ],
   }
   var option = {
     scales: {
-      yAxes: [{
-        ticks: {
-          max: 100,
-          min: 0,
-          stepSize: 10
-        }
-      }]
-    }
+      yAxes: [
+        {
+          ticks: {
+            max: result.highest,
+            min: 0,
+            stepSize: result.highest / 10,
+          },
+        },
+      ],
+    },
   }
+  function findHighestAndLowest(arr) {
+    if (arr.length === 0) {
+      return { highest: undefined, lowest: undefined }
+    }
 
+    let highest = arr[0]
+    let lowest = arr[0]
+
+    for (let i = 1; i < arr.length; i++) {
+      if (arr[i] > highest) {
+        highest = arr[i]
+      }
+      if (arr[i] < lowest) {
+        lowest = arr[i]
+      }
+    }
+
+    return { highest, lowest }
+  }
   return <Line width={751} height={300} data={data} options={option} />
 }
 
-export default LineChart;
+export default LineChart

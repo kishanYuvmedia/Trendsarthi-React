@@ -1,9 +1,5 @@
 const columnsNiftyIntraday = [
   {
-    Header: "SR",
-    accessor: "sr",
-  },
-  {
     Header: "Time",
     accessor: "time",
   },
@@ -40,64 +36,4 @@ const columnsNiftyIntraday = [
     accessor: "vwapSignal",
   },
 ]
-
-const dataNiftyIntraday = [
-  {
-    sr: "1",
-    time: "16:00",
-    call: "35900",
-    put: "18987",
-    difference: "987%",
-    pcr: "0.36",
-
-    optionSignal: "SELL",
-
-    vwap: "19.65",
-    price: "43%",
-    vwapSignal: "SELL",
-  },
-  {
-    sr: "2",
-    time: "16:00",
-    call: "35900",
-    put: "18987",
-    difference: "987%",
-    pcr: "0.36",
-
-    optionSignal: "SELL",
-
-    vwap: "19.65",
-    price: "43%",
-    vwapSignal: "SELL",
-  },
-  {
-    sr: "3",
-    time: "16:00",
-    call: "35900",
-    put: "18987",
-    difference: "987%",
-    pcr: "0.36",
-
-    optionSignal: "SELL",
-
-    vwap: "19.65",
-    price: "43%",
-    vwapSignal: "SELL",
-  },
-  {
-    sr: "4",
-    time: "16:00",
-    call: "35900",
-    put: "18987",
-    difference: "987%",
-    pcr: "0.36",
-
-    optionSignal: "SELL",
-
-    vwap: "19.65",
-    price: "43%",
-    vwapSignal: "SELL",
-  },
-]
-
-export { dataNiftyIntraday, columnsNiftyIntraday }
+export { columnsNiftyIntraday }

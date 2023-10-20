@@ -1,53 +1,46 @@
 import React from "react"
-import ReactApexChart from "react-apexcharts"
-import getChartColorsArray from "../../../components/Common/ChartsDynamicColor";
+import { Bar } from "react-chartjs-2"
+import getChartColorsArray from "../../../components/Common/ChartsDynamicColor"
 
-const barchart = ({dataColors}) => {
-  const spineareaChartColors = getChartColorsArray(dataColors);
+const BarChart = ({ dataColors, height, totalcal, totalput }) => {
+  var barChartColor = getChartColorsArray(dataColors)
+  const data = {
+    labels: ["Total Call/Put"],
+    datasets: [
+      {
+        label: "Total Call",
+        backgroundColor: barChartColor[0],
+        borderColor: barChartColor[0],
+        borderWidth: 1,
+        hoverBackgroundColor: barChartColor[1],
+        hoverBorderColor: barChartColor[1],
+        data: [totalcal],
+      },
+      {
+        label: "Total Put",
+        backgroundColor: barChartColor[2],
+        borderColor: barChartColor[2],
+        borderWidth: 1,
+        hoverBackgroundColor: barChartColor[3],
+        hoverBorderColor: barChartColor[3],
+        data: [totalput],
+      },
+    ],
+  }
 
-  const series = [
-    {
-      data: [380, 430, 450, 475, 550, 584, 780, 1100, 1220, 1365],
-    },
-  ]
   const options = {
-    chart: {
-      toolbar: {
-        show: false,
+    scales: {
+      x: {
+        stacked: true,
+        beginAtZero: true,
       },
-    },
-    plotOptions: {
-      bar: {
-        horizontal: true,
+      y: {
+        beginAtZero: true,
       },
-    },
-    dataLabels: {
-      enabled: false,
-    },
-
-    colors: spineareaChartColors,
-    grid: {
-      borderColor: "#f1f1f1",
-    },
-    xaxis: {
-      categories: [
-        "South Korea",
-        "Canada",
-        "United Kingdom",
-        "Netherlands",
-        "Italy",
-        "France",
-        "Japan",
-        "United States",
-        "China",
-        "Germany",
-      ],
     },
   }
 
-  return (
-    <ReactApexChart options={options} series={series} type="bar" height="350" />
-  )
+  return <Bar width={751} height={height} data={data} options={options} />
 }
 
-export default barchart
+export default BarChart
