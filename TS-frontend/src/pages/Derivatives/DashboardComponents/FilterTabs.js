@@ -14,7 +14,7 @@ const DateDropdown = ({ dates }) => {
     </select>
   )
 }
-const FilterTabs = ({ totalput, totalcal, putPers, callPers, expdatelist }) => {
+const FilterTabs = ({ totalput, totalcal, putPers, callPers, expdatelist,settype }) => {
   return (
     <React.Fragment>
       <Card>
@@ -26,34 +26,38 @@ const FilterTabs = ({ totalput, totalcal, putPers, callPers, expdatelist }) => {
               <div className="d-flex flex-wrap gap-2">
                 <Button
                   color="primary"
+                  onClick={()=>settype('NIFTY')}
                   className="btn btn-soft-info waves-effect waves-light w-lg fs-5 rounded fw-bold"
                 >
                   NIFTY
                 </Button>
                 <Button
                   color="success"
+                  onClick={()=>settype('BANKNIFTY')}
                   className="btn btn-soft-success waves-effect waves-light w-lg fs-5 rounded fw-bold"
                 >
                   BANK NIFTY
                 </Button>
                 <Button
                   color="warning"
+                  onClick={()=>settype('MIDCPNIFTY')}
                   className="btn btn-soft-warning waves-effect waves-light w-lg fs-5 rounded fw-bold"
                 >
                   MIDCAP NIFTY
                 </Button>
                 <Button
                   color="danger"
+                  onClick={()=>settype('FINNIFTY')}
                   className="btn btn-soft-danger waves-effect waves-light w-lg fs-5 rounded fw-bold"
                 >
                   FIN NIFTY
                 </Button>
               </div>
               <div>
-                <div className="col-md-6">
+                {/* <div className="col-md-6">
                   <label className="col-md-2 col-form-label">Expiry</label>
                   <DateDropdown dates={expdatelist} />
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

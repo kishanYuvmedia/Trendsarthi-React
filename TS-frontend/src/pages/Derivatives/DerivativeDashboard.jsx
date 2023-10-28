@@ -2,8 +2,10 @@ import React, { useState } from "react"
 import { Container, Row, Col } from "reactstrap"
 import Settings from "./DashboardComponents/FilterTabs"
 import Apaexlinecolumn from "./DashboardComponents/apaexlinecolumn"
+import OptionChainTableContainer from "../../components/Common/derivativesComponent/OptionChainTableContainer"
 //Import Breadcrumb
 import Breadcrumbs from "../../components/Common/Breadcrumb"
+import { columnsNiftyOption } from "./optionChainData.js"
 import { useEffect } from "react"
 import {
   getStrikePrice,
@@ -12,6 +14,8 @@ import {
 } from "../../services/api/api-service"
 const index = () => {
   //meta title
+  const [strickPrice, setStrikePrice] = useState(0)
+  const [list, setlist] = useState([])
   document.title = "Derivative Dashboard"
   const [type, settype] = useState("Nifty")
   const [dataCall, setdatacall] = useState([])
@@ -23,6 +27,9 @@ const index = () => {
   let [putPers, setputPers] = useState(0)
   const [expdatelist, setExpDate] = useState([])
   useEffect(() => {
+    console.log(type)
+    setdatacall([])
+    setdataput([])
     getStrikePrice(type)
       .then(resultStrike => {
         const explist = []
@@ -37,6 +44,26 @@ const index = () => {
                 resultStrike.StrikePrice.value
               )
                 .then(result1 => {
+                  const dataOption = []
+                  result1.list.map(item => {
+                    dataOption.push({
+                      openIntCE: item.call.OPENINTEREST,
+                      openInterestChangeCE: item.call.OPENINTERESTCHANGE,
+                      totalQtyTradedCE: item.call.TOTALQTYTRADED,
+                      priceChangeCE: item.call.PRICECHANGE,
+                      lastTradedPriceCE: item.call.LASTTRADEPRICE,
+                      strikePrice: item.call.value,
+                      stricke: item.strike,
+                      lastTradedPricePE: item.put.LASTTRADEPRICE,
+                      priceChangePE: item.put.PRICECHANGE,
+                      totalQtyTradedPE: item.put.LASTTRADEPRICE,
+                      openInterestChangePE: item.put.OPENINTERESTCHANGE,
+                      openIntPE: item.put.OPENINTEREST,
+                    })
+                  })
+                  setlist(dataOption)
+                  setStrikePrice(result1.strike)  
+
                   const datacl = []
                   const datap = []
                   const cdata = []
@@ -81,7 +108,7 @@ const index = () => {
       .catch(err => {
         console.error("Error fetching getStrikePrice:", err)
       })
-  }, [])
+  }, [type])
   return (
     <React.Fragment>
       <div className="page-content">
@@ -110,8 +137,28 @@ const index = () => {
                   totalput={totalput}
                   putPers={putPers}
                   callPers={callPers}
+                  settype={settype}
                 />
               )}
+            </Col>
+            <Col md={12}
+            >
+              <OptionChainTableContainer
+                columns={columnsNiftyOption}
+                data={list}
+                isGlobalFilter={false}
+                isAddOptions={false}
+                strickP={strickPrice}
+                customPageSize={10}
+                isPagination={false}
+                tableClass="align-middle table-nowrap table-check table-hover table"
+                theadClass="table-light"
+                tbodyClass="table-striped"
+                paginationDiv="col-12"
+                pagination="justify-content-center pagination pagination-rounded"
+                PCRstatus={false}
+              />
+
             </Col>
           </Row>
         </Container>

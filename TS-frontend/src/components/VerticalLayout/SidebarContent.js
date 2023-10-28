@@ -175,7 +175,17 @@ const SidebarContent = props => {
                 </li>
               </ul>
             </li>
-
+            <li>
+              <Link to="/#" className="has-arrow">
+                <i className="bx bx-store"></i>
+                <span>{props.t("MustWatch")}</span>
+              </Link>
+              <ul className="sub-menu">
+                <li>
+                  <Link to="/mustwatch">{props.t("FNO Ranking")}</Link>
+                </li>
+              </ul>
+            </li>
             {/* 
             <li className="menu-title">{props.t("Appss")}</li>
 

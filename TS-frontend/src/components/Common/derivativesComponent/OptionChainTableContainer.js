@@ -71,6 +71,7 @@ const OptionChainTableContainer = ({
   tbodyClass,
   theadClass,
   strickP,
+  PCRstatus,
 }) => {
   const {
     getTableProps,
@@ -154,9 +155,14 @@ const OptionChainTableContainer = ({
 
   return (
     <>
-      {totalOpenIntCE && (
-        <PCR totalOpenIntCE={totalOpenIntCE} totalOpenIntPE={totalOpenIntPE} />
-      )}
+    {PCRstatus && 
+    <div>
+    {totalOpenIntCE && (
+      <PCR totalOpenIntCE={totalOpenIntCE} totalOpenIntPE={totalOpenIntPE} />
+    )}
+    </div>
+    }
+     
       <Fragment>
         <div className="table-responsive">
           <Table {...getTableProps()} className={` ${tableClass} bdr`}>

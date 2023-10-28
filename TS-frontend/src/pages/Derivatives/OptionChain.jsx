@@ -136,6 +136,7 @@ const OptionChain = props => {
           tbodyClass="table-striped"
           paginationDiv="col-12"
           pagination="justify-content-center pagination pagination-rounded"
+          PCRstatus={true}
         />
 
         {/* Intraday table */}
