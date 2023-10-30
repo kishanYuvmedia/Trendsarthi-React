@@ -375,4 +375,18 @@ module.exports = function (TdDerivatives) {
       });
     }
   });
+  TdDerivatives.getProductList=(callback)=>{
+    getIntradayData.getProductList((err, response) => {
+      if (_.isEmpty(response)) {
+        callback(null, {
+          result: { status: "0", message: "Data not find", list: [] },
+        });
+      } else {
+        callback(null, {
+          result: { status: "1", message: "Get Product List", list:response.PRODUCTS },
+        });
+      }
+    }
+    )
+  }
 };

@@ -58,7 +58,6 @@ const columnsNiftyOption = [
     canSort: true,
   },
 ]
-
 const dataNiftyOption = [
   {
     sr: "1",
@@ -205,5 +204,43 @@ const dataNiftyOption = [
     openIntPE: "1658050",
   },
 ]
-
-export { dataNiftyOption, columnsNiftyOption }
+const FnocolumnsNiftyOption = [
+  {
+    Header: "Last",
+    accessor: "lastTradedPriceCE",
+    canSort: true,
+  },
+  {
+    Header: "Open Int.",
+    accessor: "openIntCE",
+    canSort: true,
+  },
+  {
+    Header: "Open Int.Chg",
+    accessor: "openInterestChangeCE",
+    canSort: true,
+  },
+  
+  {
+    Header: "Strike",
+    accessor: "strikePrice",
+    className: "",
+    canSort: true,
+  },
+  {
+    Header: "Open Int. Chg.",
+    accessor: "openInterestChangePE",
+    canSort: true,
+  },
+  {
+    Header: "Open Int.",
+    accessor: "openIntPE",
+    canSort: true,
+  },
+  {
+    Header: "Last",
+    accessor: "lastTradedPricePE",
+    canSort: true,
+  },
+]
+export { dataNiftyOption, columnsNiftyOption,FnocolumnsNiftyOption }

@@ -10,6 +10,7 @@ import Dashboard from "../pages/Dashboard/index"
 import DerivativeDashboard from "pages/Derivatives/DerivativeDashboard"
 import OptionChain from "pages/Derivatives/OptionChain"
 import {Mustwatch} from "pages/MustWatch/mustwatch"
+import Sectors from "pages/MustWatch/sectors"
 const authProtectedRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
   // derivatives
@@ -21,7 +22,8 @@ const authProtectedRoutes = [
   },
   { path: "/FinNiftyOptionChain", component: <OptionChain type="FINNIFTY" /> },
   { path: "/MidCapOptionChain", component: <OptionChain type="MIDCPNIFTY" /> },
-  {path:"/mustwatch", component:<Mustwatch/>}
+  {path:"/mustwatch", component:<Mustwatch/>},
+  {path:"/sectors/:product", component:<Sectors/>},
 ]
 
 const publicRoutes = [
