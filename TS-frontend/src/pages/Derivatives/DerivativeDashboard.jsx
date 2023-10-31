@@ -118,6 +118,7 @@ const index = () => {
             title="Derivative"
             breadcrumbItem="Derivative Dashboard"
           />
+          
           <Row>
             <Col md={7}>
               {!_.isEmpty(dataCall) && (
@@ -125,6 +126,8 @@ const index = () => {
                   dataCallValue={dataCall}
                   dataPutValue={dataPut}
                   categoryValue={category}
+                  titleName={'Intraday data chart'}
+                  horizontal={true}
                   dataColors='["#ed0c00","#8afff3"]'
                 />
               )}

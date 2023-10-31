@@ -4,7 +4,7 @@
     "connector": "memory"
   },
   "mongoDB": {
-    "url": "mongodb://rootUser:rootUser1234@15.206.185.30:27017/apitrading?authSource=apitrading",
+    "url": "mongodb://127.0.0.1:27017/apitrading",
     "name": "mongoDB",
     "useNewUrlParser": true,
     "connector": "mongodb"
@@ -134,6 +134,16 @@
           "getOptionDataToday": [
             "type",
             "expirydate"
+          ]
+        }
+      },
+      {
+        "template": {
+          "method": "GET",
+          "url": "http://nimblerest.lisuns.com:4531/GetProducts/?accessKey=988dcf72-de6b-4637-9af7-fddbe9bfa7cd&exchange=NFO"
+        },
+        "functions": {
+          "getProductList": [
           ]
         }
       }

@@ -27,7 +27,6 @@ const IntradayTableContainer = ({ data }) => {
     <Fragment>
       <Row className="mb-2">
         <Table dark responsive style={{ backgroundColor: "#2a3042" }}>
-        
           <thead>
             <tr>
               <th>Time</th>

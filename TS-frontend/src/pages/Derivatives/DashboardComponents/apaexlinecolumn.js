@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { Fragment, useState } from "react"
 import ReactApexChart from "react-apexcharts"
 import getChartColorsArray from "../../../components/Common/ChartsDynamicColor"
 const Apaexlinecolumn = ({
@@ -6,6 +6,8 @@ const Apaexlinecolumn = ({
   dataCallValue,
   dataPutValue,
   categoryValue,
+  horizontal,
+  titleName
 }) => {
   const apaexlineColumnColors = getChartColorsArray(dataColors)
   const [callData] = useState(dataCallValue)
@@ -24,13 +26,13 @@ const Apaexlinecolumn = ({
   const options = {
     chart: {
       toolbar: {
-        show: false,
+        show: true,
       },
     },
     plotOptions: {
       bar: {
-        horizontal: true,
-        columnWidth: "45%",
+        horizontal: horizontal,
+        columnWidth: "90%",
         endingShape: "rounded",
       },
     },
@@ -49,7 +51,7 @@ const Apaexlinecolumn = ({
     },
     yaxis: {
       title: {
-        text: "Intraday data chart",
+        text:titleName,
       },
     },
     grid: {
@@ -68,12 +70,14 @@ const Apaexlinecolumn = ({
   }
   return (
     <>
+    <Fragment>
       <ReactApexChart
         options={options}
         series={series}
         type="bar"
         height={500}
       />
+      </Fragment>
     </>
   )
 }

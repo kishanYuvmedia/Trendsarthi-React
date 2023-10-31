@@ -86,17 +86,17 @@ const OptionChain = props => {
               optionSignal:
                 Number(Number(item.putTotal) / Number(item.callTotal)).toFixed(
                   2
-                ) > 1
-                  ? "SELL"
-                  : "BUY",
+                ) > .50
+                  ? "BUY"
+                  : "SELL",
               vwap: item.AVERAGETRADEDPRICE,
               price: item.BUYPRICE,
               vwapSignal:
                 Number(
                   Number(item.AVERAGETRADEDPRICE) < Number(item.BUYPRICE)
-                ).toFixed(2) > 1
-                  ? "SELL"
-                  : "BUY",
+                ).toFixed(2) > .50
+                  ? "BUY"
+                  : "SELL",
             })
             dataValue.push(
               Number(item.putTotal) || 0 - Number(item.callTotal) || 0

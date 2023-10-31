@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react"
+import React, { Fragment, useEffect, useState } from "react"
 import PropTypes from "prop-types"
 import { Table, Row, Col, Button } from "reactstrap"
 const IntradayTableContainer = ({ data }) => {
@@ -18,6 +18,9 @@ const IntradayTableContainer = ({ data }) => {
     }, 1000)
     console.log("data time array", timeArray)
   }
+  useEffect(()=>{
+    handlerTime(15);
+  },[])
   const formatTime = date => {
     const hours = date.getHours().toString().padStart(2, "0")
     const minutes = date.getMinutes().toString().padStart(2, "0")

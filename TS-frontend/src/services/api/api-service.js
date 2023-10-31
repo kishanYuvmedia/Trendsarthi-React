@@ -67,3 +67,13 @@ export const geIntradayData = type => {
     order: "id desc",
   })
 }
+export const getProductsList = () => {
+  return axiosRequest(
+    "GET",
+    `${["TdDerivatives", "getProducts"].join("/")}`,
+    undefined,
+    undefined,
+    undefined,
+    true
+  )
+}
