@@ -9,6 +9,9 @@
         "createdAt": {
             "type": "date",
             "defaultFn": "now"
+        },
+        "currenttime":{
+            "type": "string"
         }
     },
     "validations": [],

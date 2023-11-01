@@ -18,7 +18,7 @@ export const FNO = ({ props }) => {
             setlist(data1)
         })
 
-    })
+    },[])
     return (<>
         <RankingTable type={"Strongest"} data={list} limit={25} title={'Strength Ranking'} top={5} />
         <RankingTable type={"Weakest"} data={list} limit={25} title={'Strength Ranking'} top={5} />

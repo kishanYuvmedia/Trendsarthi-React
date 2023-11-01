@@ -4,7 +4,7 @@ import FnoIntradayTableContainer from "../../components/Common/derivativesCompon
 import FnoOptionChainTableContainer from "../../components/Common/derivativesComponent/FnoOptionChainTableContainer"
 //Import Breadcrumb
 import Breadcrumbs from "../../components/Common/Breadcrumb"
-import {Row,Col,Card, CardBody, CardHeader,} from 'reactstrap';
+import { Row, Col, Card, CardBody, CardHeader, } from 'reactstrap';
 import { FnocolumnsNiftyOption } from "../Derivatives/optionChainData.js"
 import { useEffect } from "react"
 import Apaexlinecolumn from 'pages/Derivatives/DashboardComponents/apaexlinecolumn';
@@ -65,7 +65,7 @@ export default function Sectors() {
                   datacl.push(item.call.OPENINTERESTCHANGE)
                   datap.push(item.put.OPENINTERESTCHANGE)
                   cdata.push(item.put.value)
-            
+
                 })
                 setdatacall(datacl)
                 setdataput(datap)
@@ -89,13 +89,15 @@ export default function Sectors() {
   function getIntraday() {
     geIntradayData(type)
       .then(result => {
-        console.log(result);
+        console.log("result",result);
         if (!_.isEmpty(result)) {
-          const timevalue = []
-          const dataValue = []
-          const zerolist = []
+          const timevalue = [];
+          const dataValue = [];
+          const zerolist = [];
+          const IntraDay=[];
           result.map(item => {
-            intradayList.push({
+            
+            IntraDay.push({
               time: item.time,
               call: item.callTotal,
               put: item.putTotal,
@@ -122,7 +124,7 @@ export default function Sectors() {
             timevalue.push(item.time)
             zerolist.push(0)
           })
-
+          setintradayList(IntraDay)
           setDataArray(dataValue)
           setTimeArray(timevalue)
           setzerolistArray(zerolist)
@@ -140,7 +142,7 @@ export default function Sectors() {
           title="Derivatives"
           breadcrumbItem={`${product} FNO Dashboard`}
         />
-        <FnoHeader product={`${product}EQ`} strikePrice={strickPrice}/>
+        <FnoHeader product={`${product}EQ`} strikePrice={strickPrice} />
         <FnoIntradayTableContainer data={intradayList} />
         <FnoOptionChainTableContainer
           columns={FnocolumnsNiftyOption}
@@ -158,26 +160,26 @@ export default function Sectors() {
           PCRstatus={false}
         />
         <Row>
-            <Col md={12}>
+          <Col md={12}>
             <Card>
               <CardHeader>
-              OI-Concentration since Expiry
+                OI-Concentration since Expiry
               </CardHeader>
-        <CardBody>
+              <CardBody>
                 {!_.isEmpty(dataCall) && (
-                <Apaexlinecolumn
-                  dataCallValue={dataCall}
-                  dataPutValue={dataPut}
-                  categoryValue={category}
-                  horizontal={false}
-                  titleName={''}
-                  dataColors='["#ff0000","#00ff26"]'
-                />
-              )}
+                  <Apaexlinecolumn
+                    dataCallValue={dataCall}
+                    dataPutValue={dataPut}
+                    categoryValue={category}
+                    horizontal={false}
+                    titleName={''}
+                    dataColors='["#ff0000","#00ff26"]'
+                  />
+                )}
               </CardBody>
-              </Card>
-            </Col>
-            </Row>
+            </Card>
+          </Col>
+        </Row>
       </div>
     </div>
   )

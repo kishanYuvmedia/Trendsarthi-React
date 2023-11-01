@@ -73,11 +73,13 @@ const OptionChain = props => {
     geIntradayData(type)
       .then(result => {
         if (!_.isEmpty(result)) {
-          const timevalue = []
-          const dataValue = []
-          const zerolist = []
+          console.log("database",result);
+          const timevalue = [];
+          const dataValue = [];
+          const zerolist = [];
+          const IntraDay=[];
           result.map(item => {
-            intradayList.push({
+            IntraDay.push({
               time: item.time,
               call: item.callTotal,
               put: item.putTotal,
@@ -104,11 +106,11 @@ const OptionChain = props => {
             timevalue.push(item.time)
             zerolist.push(0)
           })
-
-          setDataArray(dataValue)
-          setTimeArray(timevalue)
-          setzerolistArray(zerolist)
-          console.log("Zero", zerolistArray)
+          setintradayList(IntraDay);
+          setDataArray(dataValue);
+          setTimeArray(timevalue);
+          setzerolistArray(zerolist);
+          console.log("Zero", zerolistArray);
         }
       })
       .catch(err => {

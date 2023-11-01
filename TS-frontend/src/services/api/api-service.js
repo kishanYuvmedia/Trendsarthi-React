@@ -9,7 +9,7 @@ import {
 import { getLocalData } from "../global-storage"
 import { retry } from "redux-saga/effects"
 import apiKit, { axiosRequest } from "./axios-base"
-
+import moment from "moment"
 export const getSystemList = type => {
   return new Promise((resolve, reject) => {
     find("MtSystemLists", {
@@ -53,14 +53,15 @@ export const getOptionDataTable = (type, expairdate, strickPrice) => {
 export const geIntradayData = type => {
   const currentDate = new Date() // Create a Date object for the current date
   const startOfToday = new Date(currentDate) // Clone the current date
-  startOfToday.setHours(0, 0, 0, 0) // Set the time to 00:00:00.000
+  startOfToday.setHours(9, 30, 0, 0) // Set the time to 00:00:00.000
+  console.log('cureent',startOfToday);
   const endOfToday = new Date(currentDate) // Clone the current date
-  endOfToday.setHours(23, 59, 59, 999) // Set the time to 23:59:59.999
+  endOfToday.setHours(15, 30, 59, 999) // Set the time to 23:59:59.999
   return find("TdDerivatives", {
     where: {
       INSTRUMENTIDENTIFIER: `${type}-I`,
       and: [
-        { createdAt: { gte: startOfToday } },
+        { createdAt: { gte: moment(startOfToday).format() } },
         { createdAt: { lte: endOfToday } },
       ],
     },

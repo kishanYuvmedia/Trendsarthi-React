@@ -1,13 +1,14 @@
 app = require("../server/server");
 loopback = require("loopback");
 const _ = require("lodash");
-const moment = require('moment'); 
+const moment = require('moment-timezone');
+const currentTime = moment().tz('Asia/Kolkata');
 var TdDerivatives = loopback.getModel("TdDerivatives");
 var globeldatasource = app.dataSources.globeldatasource;
 getfnoList();
 function getfnoList() {
     globeldatasource.getProductList((err, response) => {
-        if(!_.isEmpty(response)){
+        if (!_.isEmpty(response)) {
             const listType = response.PRODUCTS;
             for (const type of listType) {
                 getIntra(type);
@@ -92,7 +93,6 @@ function getIntra(type) {
                             }
                         }
                     }
-
                     const currentOptionStrike = strickPrice;
                     const result = findClosestItem(callArr, currentOptionStrike, "value");
                     const index = result.index;
@@ -105,15 +105,13 @@ function getIntra(type) {
                             putTotal += putArr[i].OPENINTERESTCHANGE;
                             callTotal += callArr[i].OPENINTERESTCHANGE;
                         }
-                        let currentDate = moment().format();
                         const datatoday = {
-                          ...currentdata,
-                          putTotal,
-                          callTotal,
-                          time,
-                          strike,
-                          ...{ createdAt: currentDate}
-                        };
+                            ...currentdata,
+                            putTotal,
+                            callTotal,
+                            strike,
+                            ...{ time: moment(currentTime).format('HH:mm') },
+                          };
                         if (!_.isEmpty(datatoday)) {
                             await new Promise((resolve, reject) => {
                                 TdDerivatives.create(datatoday, (err, data) => {
@@ -121,7 +119,7 @@ function getIntra(type) {
                                         console.error(err);
                                         reject(err);
                                     } else {
-                                        console.log("Data updated successfully.",type);
+                                        console.log("Data updated successfully.", type);
                                         resolve();
                                     }
                                 });
