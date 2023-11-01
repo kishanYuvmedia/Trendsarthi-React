@@ -4,12 +4,13 @@ const configt = require("../../server/config.json");
 const app = require("../../server/server");
 const _ = require("lodash");
 const cron = require("node-cron");
+const moment = require('moment'); 
 module.exports = function (TdDerivatives) {
   var getIntradayData = app.dataSources.getIntradayData;
   var getOptionExpiry = app.dataSources.getOptionExpiry;
   var getOptionData = app.dataSources.getOptionData;
   const schedule = "0-59/5 9-14 * * 0-5"; // Replace with your desired cron schedule
-  const scheduletwo = "0-59/30 9-14 * * 0-5"; 
+  const scheduletwo = "0-59/30 9-14 * * 0-5";
   TdDerivatives.strikeprice = (type, callback) => {
     const currenturl = `${configt.stock.connector}/GetLastQuote/?accessKey=${configt.stock.key}&exchange=NFO&instrumentIdentifier=${type}-I`;
     request(currenturl, function (error, response, body) {
@@ -345,12 +346,14 @@ module.exports = function (TdDerivatives) {
                   putTotal += putArr[i].OPENINTERESTCHANGE;
                   callTotal += callArr[i].OPENINTERESTCHANGE;
                 }
+                let currentDate = moment().format();
                 const datatoday = {
                   ...currentdata,
                   putTotal,
                   callTotal,
                   time,
                   strike,
+                  ...{ createdAt: currentDate}
                 };
 
                 if (!_.isEmpty(datatoday)) {
@@ -463,14 +466,15 @@ module.exports = function (TdDerivatives) {
                       putTotal += putArr[i].OPENINTERESTCHANGE;
                       callTotal += callArr[i].OPENINTERESTCHANGE;
                     }
+                    let currentDate = moment().format();
                     const datatoday = {
                       ...currentdata,
                       putTotal,
                       callTotal,
                       time,
                       strike,
+                      ...{ createdAt: currentDate}
                     };
-
                     if (!_.isEmpty(datatoday)) {
                       await new Promise((resolve, reject) => {
                         TdDerivatives.create(datatoday, (err, data) => {
@@ -510,4 +514,21 @@ module.exports = function (TdDerivatives) {
     }
     )
   }
+  TdDerivatives.getOptionTodayPeriod = (type, time, callback) => {
+    let currentDate = moment().format();
+    let fisttime =  moment(currentDate).add(time, 'minutes').format();
+    const filter = {
+      where: {
+        INSTRUMENTIDENTIFIER: `${type}-I`,
+        and: [
+          { createdAt: { gte: currentDate } },
+          { createdAt: { lte: fisttime } }
+        ]
+      }
+    };
+    TdDerivatives.find(filter)
+      .then((data) => {
+        callback(null, { result: {list: data } });
+      });
+  };
 };

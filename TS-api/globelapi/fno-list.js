@@ -1,6 +1,7 @@
 app = require("../server/server");
 loopback = require("loopback");
 const _ = require("lodash");
+const moment = require('moment'); 
 var TdDerivatives = loopback.getModel("TdDerivatives");
 var globeldatasource = app.dataSources.globeldatasource;
 getfnoList();
@@ -100,32 +101,19 @@ function getIntra(type) {
                     if (index !== -1) {
                         let putTotal = 0;
                         let callTotal = 0;
-                        const date = new Date();
-                        const time = date.getHours() + ":" + date.getMinutes();
-                        const options = {
-                            year: "numeric",
-                            month: "2-digit",
-                            day: "2-digit",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                            second: "2-digit",
-                            timeZoneName: "short",
-                        };
-                        const formattedDateTime = date.toLocaleString("en-US", options);
-                        //const istTime = date.toLocaleTimeString("en-IN", options);
                         for (let i = index - 5; i < index + 5; i++) {
                             putTotal += putArr[i].OPENINTERESTCHANGE;
                             callTotal += callArr[i].OPENINTERESTCHANGE;
                         }
+                        let currentDate = moment().format();
                         const datatoday = {
-                            ...currentdata,
-                            putTotal,
-                            callTotal,
-                            time,
-                            strike,
-                            ...{ createdAt: formattedDateTime },
+                          ...currentdata,
+                          putTotal,
+                          callTotal,
+                          time,
+                          strike,
+                          ...{ createdAt: currentDate}
                         };
-
                         if (!_.isEmpty(datatoday)) {
                             await new Promise((resolve, reject) => {
                                 TdDerivatives.create(datatoday, (err, data) => {
