@@ -14,11 +14,11 @@ import {
   getOptionDataTable,
   geIntradayData,
 } from "../../services/api/api-service"
-import { composeInitialProps } from "react-i18next"
 const OptionChain = props => {
   //meta title
   document.title = `Derivatives | ${props.type} Option Chain`
   const type = props.type
+  const [typeUpdate, setTypeUpdate] = useState(type)
   const [strickPrice, setStrikePrice] = useState(0)
   const [list, setlist] = useState([])
   const [intradayList, setintradayList] = useState([])
@@ -55,6 +55,7 @@ const OptionChain = props => {
                 })
                 setlist(data)
                 setStrikePrice(result1.strike)
+                
               })
               .catch(err => {
                 console.error("Error fetching getOptionDataTable:", err)
@@ -67,7 +68,7 @@ const OptionChain = props => {
       .catch(err => {
         console.error("Error fetching getStrikePrice:", err)
       })
-    getIntraday()
+      getIntraday()
   }, [type])
   function getIntraday() {
     geIntradayData(type)
@@ -123,7 +124,7 @@ const OptionChain = props => {
       <div className="container-fluid">
         <Breadcrumbs
           title="Derivatives"
-          breadcrumbItem={`${props.type} Option Chain`}
+          breadcrumbItem={`${type} Option Chain`}
         />
         <OptionChainTableContainer
           columns={columnsNiftyOption}
@@ -144,7 +145,7 @@ const OptionChain = props => {
         {/* Intraday table */}
         <IntradayTableContainer data={intradayList} />
         <NiftyIntradayChart
-          title={type}
+          title={typeUpdate}
           datalist={dataArray}
           timeValue={timeArray}
           zerolist={zerolistArray}

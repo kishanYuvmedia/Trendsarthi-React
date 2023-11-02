@@ -4,7 +4,8 @@ const configt = require("../../server/config.json");
 const app = require("../../server/server");
 const _ = require("lodash");
 const cron = require("node-cron");
-const moment = require('moment'); 
+const moment = require('moment-timezone');
+const currentTime = moment().tz('Asia/Kolkata');
 module.exports = function (TdDerivatives) {
   var getIntradayData = app.dataSources.getIntradayData;
   var getOptionExpiry = app.dataSources.getOptionExpiry;
@@ -228,8 +229,8 @@ module.exports = function (TdDerivatives) {
                 ...currentdata,
                 putTotal,
                 callTotal,
-                time,
                 strike,
+                ...{ time: moment(currentTime).format('HH:mm'),timeUpdate:moment().unix() },
               };
 
               if (!_.isEmpty(datatoday)) {
@@ -340,20 +341,16 @@ module.exports = function (TdDerivatives) {
               if (index !== -1) {
                 let putTotal = 0;
                 let callTotal = 0;
-                const date = new Date();
-                const time = date.getHours() + ":" + date.getMinutes();
                 for (let i = index - 5; i < index + 5; i++) {
                   putTotal += putArr[i].OPENINTERESTCHANGE;
                   callTotal += callArr[i].OPENINTERESTCHANGE;
                 }
-                let currentDate = moment().format();
                 const datatoday = {
                   ...currentdata,
                   putTotal,
                   callTotal,
-                  time,
                   strike,
-                  ...{ createdAt: currentDate}
+                  ...{ time: moment(currentTime).format('HH:mm'),timeUpdate:moment().unix() },
                 };
 
                 if (!_.isEmpty(datatoday)) {
@@ -405,9 +402,7 @@ module.exports = function (TdDerivatives) {
                       }
                     );
                   });
-
                   const expirydate = responsedate.EXPIRYDATES[0];
-
                   const responseOption = await new Promise((resolve, reject) => {
                     getOptionData.getOptionDataToday(
                       type,
@@ -421,11 +416,9 @@ module.exports = function (TdDerivatives) {
                       }
                     );
                   });
-
                   const apiResult = responseOption;
                   const putArr = [];
                   const callArr = [];
-
                   for (const result of apiResult) {
                     const identi = result.INSTRUMENTIDENTIFIER.split("_");
                     const value = parseInt(identi[4]);
@@ -447,7 +440,6 @@ module.exports = function (TdDerivatives) {
                       }
                     }
                   }
-
                   const currentOptionStrike = strickPrice;
                   const result = findClosestItem(
                     callArr,
@@ -456,24 +448,19 @@ module.exports = function (TdDerivatives) {
                   );
                   const index = result.index;
                   const strike = result.nearestValue;
-
                   if (index !== -1) {
                     let putTotal = 0;
                     let callTotal = 0;
-                    const date = new Date();
-                    const time = date.getHours() + ":" + date.getMinutes();
                     for (let i = index - 5; i < index + 5; i++) {
                       putTotal += putArr[i].OPENINTERESTCHANGE;
                       callTotal += callArr[i].OPENINTERESTCHANGE;
                     }
-                    let currentDate = moment().format();
                     const datatoday = {
                       ...currentdata,
                       putTotal,
                       callTotal,
-                      time,
                       strike,
-                      ...{ createdAt: currentDate}
+                      ...{ time: moment(currentTime).format('HH:mm'),timeUpdate:moment().unix() },
                     };
                     if (!_.isEmpty(datatoday)) {
                       await new Promise((resolve, reject) => {
@@ -500,6 +487,7 @@ module.exports = function (TdDerivatives) {
       }
     })
   });
+  
   TdDerivatives.getProductList = (callback) => {
     getIntradayData.getProductList((err, response) => {
       if (_.isEmpty(response)) {

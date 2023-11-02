@@ -53,15 +53,16 @@ export const getOptionDataTable = (type, expairdate, strickPrice) => {
 export const geIntradayData = type => {
   const currentDate = new Date() // Create a Date object for the current date
   const startOfToday = new Date(currentDate) // Clone the current date
-  startOfToday.setHours(9, 30, 0, 0) // Set the time to 00:00:00.000
+  startOfToday.setHours(9,29,0,0) // Set the time to 00:00:00.000
   console.log('cureent',startOfToday);
   const endOfToday = new Date(currentDate) // Clone the current date
-  endOfToday.setHours(15, 30, 59, 999) // Set the time to 23:59:59.999
+  endOfToday.setHours(15, 59, 59, 999) // Set the time to 23:59:59.999
+  console.log('endtime',endOfToday);
   return find("TdDerivatives", {
     where: {
       INSTRUMENTIDENTIFIER: `${type}-I`,
       and: [
-        { createdAt: { gte: moment(startOfToday).format() } },
+        { createdAt: { gte: startOfToday } },
         { createdAt: { lte: endOfToday } },
       ],
     },

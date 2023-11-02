@@ -9,7 +9,6 @@ const listType = ["NIFTY", "BANKNIFTY", "FINNIFTY", "MIDCPNIFTY"];
     for (const type of listType) {
       getIntra(type);
     }
-
 function findClosestItem(arr, value, key) {
   let closest = null;
   let index = -1;
@@ -104,7 +103,7 @@ function getIntra(type) {
               putTotal,
               callTotal,
               strike,
-              ...{ time: moment(currentTime).format('HH:mm') },
+              ...{ time: moment(currentTime).format('HH:mm'),timeUpdate:moment().unix() },
             };
             if (!_.isEmpty(datatoday)) {
               await new Promise((resolve, reject) => {

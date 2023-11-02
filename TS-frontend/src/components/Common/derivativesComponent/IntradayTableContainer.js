@@ -13,13 +13,11 @@ const IntradayTableContainer = ({ data }) => {
       times.push(formatTime(start))
       start.setMinutes(start.getMinutes() + time)
     }
-    setTimeout(() => {
-      setTimeArray(times)
-    }, 1000)
-    console.log("data time array", timeArray)
+    setTimeArray(times)
+    console.log("time set", times)
   }
-  useEffect(()=>{
-    handlerTime(15);
+  useEffect(() => {
+    handlerTime(5);
   },[])
   const formatTime = date => {
     const hours = date.getHours().toString().padStart(2, "0")

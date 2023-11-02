@@ -40,7 +40,7 @@ const PCR = props => {
   }
   useEffect(() => {
     setdata(calculatePCRStrength2(props.totalOpenIntCE, props.totalOpenIntPE))
-  })
+  },[])
   return (
     <div>
       <Row>

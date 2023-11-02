@@ -8,10 +8,11 @@
     "properties": {
         "createdAt": {
             "type": "date",
-            "defaultFn": "now"
+            "defaultFn": "now",
+            "data":"2023-11-02T06:39:09.101Z"
         },
-        "currenttime":{
-            "type": "string"
+        "timeUpdate": {
+            "type": "number"
         }
     },
     "validations": [],
@@ -129,29 +130,29 @@
         },
         "getOptionTodayPeriod": {
             "accepts": [
-              {
-                "arg": "type",
-                "type": "string",
-                "required": true
-              },
-              {
-                "arg": "time",
-                "type": "number",
-                "required": true
-              }
+                {
+                    "arg": "type",
+                    "type": "string",
+                    "required": true
+                },
+                {
+                    "arg": "time",
+                    "type": "number",
+                    "required": true
+                }
             ],
             "returns": {
-              "type": "object",
-              "arg": "response",
-              "root": true
+                "type": "object",
+                "arg": "response",
+                "root": true
             },
             "description": "",
             "http": [
-              {
-                "path": "/getOptionTodayPeriod",
-                "verb": "get"
-              }
+                {
+                    "path": "/getOptionTodayPeriod",
+                    "verb": "get"
+                }
             ]
-          }
+        }
     }
 }
