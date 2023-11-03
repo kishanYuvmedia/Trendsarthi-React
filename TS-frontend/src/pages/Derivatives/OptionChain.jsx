@@ -18,7 +18,6 @@ const OptionChain = props => {
   //meta title
   document.title = `Derivatives | ${props.type} Option Chain`
   const type = props.type
-  const [typeUpdate, setTypeUpdate] = useState(type)
   const [strickPrice, setStrikePrice] = useState(0)
   const [list, setlist] = useState([])
   const [intradayList, setintradayList] = useState([])
@@ -141,16 +140,13 @@ const OptionChain = props => {
           pagination="justify-content-center pagination pagination-rounded"
           PCRstatus={true}
         />
-
-        {/* Intraday table */}
         <IntradayTableContainer data={intradayList} />
         <NiftyIntradayChart
-          title={typeUpdate}
+          title={type}
           datalist={dataArray}
           timeValue={timeArray}
           zerolist={zerolistArray}
         />
-        {/* graph */}
       </div>
     </div>
   )

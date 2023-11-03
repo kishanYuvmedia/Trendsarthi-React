@@ -21,11 +21,9 @@ function GlobalFilter({
 }) {
   const count = preGlobalFilteredRows.length
   const [value, setValue] = React.useState(globalFilter)
-  const [PCRdata, setPCRdata] = useState(null)
   const onChange = useAsyncDebounce(value => {
     setGlobalFilter(value || undefined)
   }, 200)
-
   return (
     <React.Fragment>
       <Col xxl={3} lg={6}>
@@ -52,17 +50,7 @@ const customStrikePriceClass = "customStrikePriceClass-bg"
 const OptionChainTableContainer = ({
   columns,
   data,
-  isGlobalFilter,
-  isJobListGlobalFilter,
-  isAddOptions,
-  isAddUserList,
-  handleOrderClicks,
-  handleUserClick,
-  handleCustomerClick,
-  isAddCustList,
   customPageSize,
-  customPageSizeOptions,
-  iscustomPageSizeOptions,
   isPagination,
   isShowingPageLength,
   paginationDiv,
@@ -250,13 +238,13 @@ const OptionChainTableContainer = ({
             <tfoot>
               <tr>
                 <td className="fw-bold text-warning text-center align-middle">
-                  {totalOpenIntCE}
+                  {totalOpenIntCE.toFixed(2)}
                 </td>
                 <td className="fw-bold text-warning text-center align-middle">
-                  {totalOpenInterestChangeCE}
+                  {totalOpenInterestChangeCE.toFixed(2)}
                 </td>
                 <td className="fw-bold text-warning text-center align-middle">
-                  {totalQtyTradedCE}
+                  {totalQtyTradedCE.toFixed(2)}
                 </td>
                 <td className="text-center align-middle">
                   {/* Add other total sums here */}
@@ -274,13 +262,13 @@ const OptionChainTableContainer = ({
                   {/* Add other total sums here */}
                 </td>
                 <td className="fw-bold text-warning text-center align-middle">
-                  {totalQtyTradedPE}
+                  {totalQtyTradedPE.toFixed(2)}
                 </td>
                 <td className="fw-bold text-warning text-center align-middle">
-                  {totalOpenInterestChangePE}
+                  {totalOpenInterestChangePE.toFixed(2)}
                 </td>
                 <td className="fw-bold text-warning text-center align-middle">
-                  {totalOpenIntPE}
+                  {totalOpenIntPE.toFixed(2)}
                 </td>
               </tr>
             </tfoot>

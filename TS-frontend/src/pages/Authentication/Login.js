@@ -187,7 +187,7 @@ const Login = props => {
                           <p>
                             Don&apos;t have an account ?
                             <Link
-                              to="register"
+                              to="/register"
                               className="fw-medium text-danger"
                             >
                               Signup now

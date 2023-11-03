@@ -2,10 +2,13 @@ import React, { useEffect, useState } from "react"
 
 import { Table, Row, Col, Card, CardBody } from "reactstrap"
 
-const PCR = props => {
-  const [data, setdata] = useState([])
-  function calculatePCRStrength2(totalOpenIntCE, totalOpenIntPE) {
-    let PCR = totalOpenIntCE / totalOpenIntPE
+const PCR = (props) => {
+  const [data,setData]=useState({
+    PCR: 0,
+    PCRStrength: "NON",
+  });
+  function calculatePCRStrength2(vtotalOpenIntCE, vtotalOpenIntPE) {
+    let PCR = vtotalOpenIntPE / vtotalOpenIntCE
     if (PCR >= 3) {
       return {
         PCR: PCR,
@@ -38,9 +41,9 @@ const PCR = props => {
       }
     }
   }
-  useEffect(() => {
-    setdata(calculatePCRStrength2(props.totalOpenIntCE, props.totalOpenIntPE))
-  },[])
+  useEffect(()=>{
+  setData(calculatePCRStrength2(props.totalOpenIntCE,props.totalOpenIntPE))
+  },[props.totalOpenIntCE,props.totalOpenIntPE])
   return (
     <div>
       <Row>
@@ -50,7 +53,7 @@ const PCR = props => {
               <div className="d-flex">
                 <div className="flex-grow-1">
                   <p className="text-muted fw-medium">PCR</p>
-                  <h4 className="mb-0">{data.PCR}</h4>
+                  <h4 className="mb-0">{data.PCR.toFixed(2)}</h4>
                 </div>
                 <div className="avatar-sm rounded-circle bg-success align-self-center mini-stat-icon">
                   <span className="avatar-title rounded-circle bg-success">
