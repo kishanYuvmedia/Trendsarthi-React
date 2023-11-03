@@ -43,7 +43,7 @@ const Header = props => {
             <ProfileMenu />
           </div>
         </div>
-      </header>
+         </header>
     </React.Fragment>
   )
 }
