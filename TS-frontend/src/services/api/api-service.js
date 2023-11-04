@@ -79,3 +79,13 @@ export const getProductsList = () => {
     true
   )
 }
+export const getOptionDataList = (type, expairdate) => {
+  return axiosRequest(
+    "GET",
+    `${["TdDerivatives", "getOptionDataList"].join("/")}`,
+    undefined,
+    undefined,
+    { type, expairdate },
+    true
+  )
+}

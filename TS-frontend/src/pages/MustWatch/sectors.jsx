@@ -9,13 +9,15 @@ import { FnocolumnsNiftyOption } from "../Derivatives/optionChainData.js"
 import { useEffect } from "react"
 import Apaexlinecolumn from 'pages/Derivatives/DashboardComponents/apaexlinecolumn';
 import FnoHeader from './Section/fnoHeader';
+import { calculateMFI } from 'services/utilty';
 import {
   getStrikePrice,
   getExpairDate,
   getOptionDataTable,
   geIntradayData,
+  getOptionDataList
 } from "../../services/api/api-service"
-import { BarChartFNO } from 'components/Common/BarChartFNO';
+import { isEmpty } from 'lodash';
 export default function Sectors() {
   const [dataCall, setdatacall] = useState([])
   const [dataPut, setdataput] = useState([])
@@ -37,6 +39,11 @@ export default function Sectors() {
       .then(resultStrike => {
         getExpairDate(type)
           .then(result => {
+          //  getOptionDataList(type,result.today) .then(result1 => {
+          //     if(!isEmpty(result1)){
+          //       console.log("MFI Indicator-------------",calculateMFI(result1.List.data));
+          //     }
+          //   });
             getOptionDataTable(
               type,
               result.today,
@@ -65,7 +72,6 @@ export default function Sectors() {
                   datacl.push(item.call.OPENINTERESTCHANGE)
                   datap.push(item.put.OPENINTERESTCHANGE)
                   cdata.push(item.put.value)
-
                 })
                 setdatacall(datacl)
                 setdataput(datap)
@@ -85,6 +91,7 @@ export default function Sectors() {
         console.error("Error fetching getStrikePrice:", err)
       })
     getIntraday()
+  
   }, [type])
   function getIntraday() {
     geIntradayData(type)
@@ -143,24 +150,11 @@ export default function Sectors() {
           breadcrumbItem={`${product} FNO Dashboard`}
         />
         <FnoHeader product={`${product}EQ`} strikePrice={strickPrice} />
-        <FnoIntradayTableContainer data={intradayList} />
-        <FnoOptionChainTableContainer
-          columns={FnocolumnsNiftyOption}
-          data={list}
-          isGlobalFilter={false}
-          isAddOptions={false}
-          strickP={strickPrice}
-          customPageSize={10}
-          isPagination={false}
-          tableClass="align-middle table-nowrap table-check table-hover table"
-          theadClass="table-light"
-          tbodyClass="table-striped"
-          paginationDiv="col-12"
-          pagination="justify-content-center pagination pagination-rounded"
-          PCRstatus={false}
-        />
         <Row>
-          <Col md={12}>
+        <Col md={6}>
+        <FnoIntradayTableContainer data={intradayList} />
+        </Col>
+          <Col md={6}>
             <Card>
               <CardHeader>
                 OI-Concentration since Expiry
@@ -180,6 +174,21 @@ export default function Sectors() {
             </Card>
           </Col>
         </Row>
+        <FnoOptionChainTableContainer
+          columns={FnocolumnsNiftyOption}
+          data={list}
+          isGlobalFilter={false}
+          isAddOptions={false}
+          strickP={strickPrice}
+          customPageSize={10}
+          isPagination={false}
+          tableClass="align-middle table-nowrap table-check table-hover table"
+          theadClass="table-light"
+          tbodyClass="table-striped"
+          paginationDiv="col-12"
+          pagination="justify-content-center pagination pagination-rounded"
+          PCRstatus={false}
+        />
       </div>
     </div>
   )

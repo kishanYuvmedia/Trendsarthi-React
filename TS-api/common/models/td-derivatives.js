@@ -10,12 +10,6 @@ module.exports = function (TdDerivatives) {
   var getIntradayData = app.dataSources.getIntradayData;
   var getOptionExpiry = app.dataSources.getOptionExpiry;
   var getOptionData = app.dataSources.getOptionData;
-  // const schedule = "0-59/5 9-16 * * 0-5"; // Replace with your desired cron schedule
-  // const scheduletwo = "0-59/30 9-16 * * 0-5";
-  // const timeZoneview= {
-  //   scheduled: true,
-  //   timezone: "Asia/Kolkata"
-  // }
   TdDerivatives.strikeprice = (type, callback) => {
     const currenturl = `${configt.stock.connector}/GetLastQuote/?accessKey=${configt.stock.key}&exchange=NFO&instrumentIdentifier=${type}-I`;
     request(currenturl, function (error, response, body) {
@@ -506,21 +500,22 @@ module.exports = function (TdDerivatives) {
     }
     )
   }
-  TdDerivatives.getOptionTodayPeriod = (type, time, callback) => {
-    let currentDate = moment().format();
-    let fisttime =  moment(currentDate).add(time, 'minutes').format();
-    const filter = {
-      where: {
-        INSTRUMENTIDENTIFIER: `${type}-I`,
-        and: [
-          { createdAt: { gte: currentDate } },
-          { createdAt: { lte: fisttime } }
-        ]
+  TdDerivatives.getOptionDataList = (type, expairdate, callback) => {
+    const currenturl = `${configt.stock.connector}/GetLastQuoteOptionChain/?accessKey=${configt.stock.key}&exchange=NFO&product=${type}&expiry=${expairdate}`;
+    request(currenturl, function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        //console.log(currenturl);
+        if (_.isEmpty(body)) {
+          callback(null, {
+            List: { status: "0", message: "Data not find"},
+          });
+        } else {
+          callback(null, {
+            List: { status: "0", message: "data get successfully",data:JSON.parse(body)},
+          });
+        }
       }
-    };
-    TdDerivatives.find(filter)
-      .then((data) => {
-        callback(null, { result: {list: data } });
-      });
+    }
+    )
   };
 };
