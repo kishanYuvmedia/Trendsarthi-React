@@ -26,7 +26,7 @@ const RankingTable = ({ type,limit,title,data,top }) => {
             </tr>
           </thead>
           <tbody>
-          {data.slice(20, limit).map((list, index) => (
+          {data.slice(16, limit).map((list, index) => (
               <tr key={index}>
               <td>{index+1}</td>
               <td><Link to={`/sectors/${list.fitMin}`} style={{color:'#fff',fontWeight:'300'}}>{list.fitMin}</Link></td>

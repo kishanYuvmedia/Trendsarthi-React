@@ -86,7 +86,7 @@ const App = () => {
               </Authmiddleware>
             }
             key={idx}
-            exact={true}
+            exact={false}
           />
         ))}
       </Routes>
