@@ -2,6 +2,7 @@ app = require("../server/server");
 loopback = require("loopback");
 const _ = require("lodash");
 const moment = require('moment-timezone');
+const currentTime = moment().tz('Asia/Kolkata');
 var TdDerivatives = loopback.getModel("TdDerivatives");
 var globeldatasource = app.dataSources.globeldatasource;
 globeldatasource.getProductList((err, response) => {
@@ -106,7 +107,7 @@ function getIntra(type) {
                             putTotal,
                             callTotal,
                             strike,
-                            ...{ time: moment().format('HH:mm'),timeUpdate:moment().unix() },
+                            ...{ time: moment(currentTime).format('HH:mm'),timeUpdate:moment(currentTime).unix() },
                           };
                         if (!_.isEmpty(datatoday)) {
                             await new Promise((resolve, reject) => {
