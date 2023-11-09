@@ -22,7 +22,6 @@ const NiftyIntradayChart = ({ datalist, timeValue, zerolist, title }) => {
               <Card>
                 <CardBody>
                   <CardTitle className="mb-4">{title} INTRADAY TREND</CardTitle>
-
                   {/* NIFTY Chart */}
                   <LineChart
                     datalist={dataItem}

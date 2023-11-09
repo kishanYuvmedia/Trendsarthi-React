@@ -53,7 +53,7 @@ export const getOptionDataTable = (type, expairdate, strickPrice) => {
 export const geIntradayData = type => {
   const currentDate = new Date() // Create a Date object for the current date
   const startOfToday = new Date(currentDate) // Clone the current date
-  startOfToday.setHours(9,29,0,0) // Set the time to 00:00:00.000
+  startOfToday.setHours(9,0,0,0) // Set the time to 00:00:00.000
   console.log('cureent',startOfToday);
   const endOfToday = new Date(currentDate) // Clone the current date
   endOfToday.setHours(15, 59, 59, 999) // Set the time to 23:59:59.999

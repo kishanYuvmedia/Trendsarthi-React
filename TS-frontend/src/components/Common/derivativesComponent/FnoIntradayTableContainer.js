@@ -63,8 +63,8 @@ const IntradayTableContainer = ({ data }) => {
                     <td
                       className={
                         list.optionSignal === "BUY"
-                          ? "text-danger"
-                          : "text-success"
+                          ? "text-success"
+                          : "text-danger"
                       }
                     >
                       {list.optionSignal}

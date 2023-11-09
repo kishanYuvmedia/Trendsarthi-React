@@ -4,7 +4,7 @@
     "connector": "memory"
   },
   "mongoDB": {
-    "url": "mongodb://127.0.0.1:27017/apitrading",
+    "url": "mongodb://rootUser:rootUser1234@15.206.185.30:27017/apitrading?authSource=apitrading",
     "name": "mongoDB",
     "useNewUrlParser": true,
     "connector": "mongodb"

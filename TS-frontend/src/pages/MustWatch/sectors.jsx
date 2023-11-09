@@ -34,18 +34,17 @@ export default function Sectors() {
   const [zerolistArray, setzerolistArray] = useState([])
   const [signal, setSignal] = useState('');
   const [setPriceing, getPricing] = useState([]);
+  let [callPers, setcallPers] = useState(0)
+  let [putPers, setputPers] = useState(0)
+  const [dataStrikItem,setdataStrikItem]=useState([]);
   useEffect(() => {
     setdatacall([])
     setdataput([])
     getStrikePrice(type)
       .then(resultStrike => {
+        setdataStrikItem(resultStrike.StrikePrice.item);
         getExpairDate(type)
           .then(result => {
-          //  getOptionDataList(type,result.today) .then(result1 => {
-          //     if(!isEmpty(result1)){
-          //       console.log("MFI Indicator-------------",calculateMFI(result1.List.data));
-          //     }
-          //   });
             getOptionDataTable(
               type,
               result.today,
@@ -56,7 +55,15 @@ export default function Sectors() {
                 const datacl = []
                 const datap = []
                 const cdata = []
-                console.log("result one data",result1)
+                const pricingList = []
+                let ctotal = 0
+                let ptotal = 0
+                let totalCP = 0
+                let callP = 0
+                let putP = 0
+                let ciototal = 0
+                let piogetotal = 0
+                console.log("result one data", result1)
                 result1.list.map(item => {
                   data.push({
                     openIntCE: item.call.OPENINTEREST,
@@ -72,16 +79,26 @@ export default function Sectors() {
                     openInterestChangePE: item.put.OPENINTERESTCHANGE,
                     openIntPE: item.put.OPENINTEREST,
                   })
-                  getPricing(item.call.BUYPRICE)
+                  pricingList.push(item.call.BUYPRICE)
                   datacl.push(item.call.OPENINTERESTCHANGE)
                   datap.push(item.put.OPENINTERESTCHANGE)
                   cdata.push(item.put.value)
+                  ctotal += Number(item.call.OPENINTERESTCHANGE)
+                  ptotal += Number(item.put.OPENINTERESTCHANGE)
+                  ciototal += Number(item.call.OPENINTEREST)
+                  piogetotal += Number(item.put.OPENINTEREST)
                 })
+                getTechIndicator(pricingList);
+                totalCP = ciototal + piogetotal
+                callP = (ciototal / totalCP) * 100
+                putP = (piogetotal / totalCP) * 100
                 setdatacall(datacl)
                 setdataput(datap)
                 setcategory(cdata)
                 setlist(data)
                 setStrikePrice(result1.strike)
+                setcallPers(callP)
+                setputPers(putP)
               })
               .catch(err => {
                 console.error("Error fetching getOptionDataTable:", err)
@@ -99,12 +116,12 @@ export default function Sectors() {
   function getIntraday() {
     geIntradayData(type)
       .then(result => {
-        console.log("result",result);
+        console.log("result", result);
         if (!_.isEmpty(result)) {
           const timevalue = [];
           const dataValue = [];
           const zerolist = [];
-          const IntraDay=[];
+          const IntraDay = [];
           result.map(item => {
             IntraDay.push({
               time: item.time,
@@ -143,18 +160,19 @@ export default function Sectors() {
       .catch(err => {
         console.error("Error fetching getStrikePrice:", err)
       })
-      getTechIndicator(setPriceing)
+      console.log("Technical Indicatorsqqq",setPriceing);
+     
   }
   function getTechIndicator(priceData) {
     // Define the SMA period
     const smaPeriod = 5;
-  
+
     // Calculate SMA
     const smaData = calculateSMA(priceData, smaPeriod);
-  
+
     // Calculate the latest SMA value
     const latestSMAValue = smaData[smaData.length - 1];
-  
+
     // Generate buy and sell signals (example: crossover strategy)
     let generatedSignal = '';
     if (priceData[priceData.length - 1] > latestSMAValue) {
@@ -162,13 +180,11 @@ export default function Sectors() {
     } else if (priceData[priceData.length - 1] < latestSMAValue) {
       generatedSignal = 'Sell';
     }
-  
-    console.log(generatedSignal);
-  
+
     // You can return or use the generatedSignal as needed
     setSignal(generatedSignal);
   }
-  
+
   // Function to calculate SMA
   function calculateSMA(values, period) {
     const smaValues = [];
@@ -182,7 +198,7 @@ export default function Sectors() {
     }
     return smaValues;
   }
-  
+
   return (
     <div className="page-content">
       <div className="container-fluid">
@@ -190,11 +206,11 @@ export default function Sectors() {
           title="Derivatives"
           breadcrumbItem={`${product} FNO Dashboard`}
         />
-        <FnoHeader product={`${product}EQ`} strikePrice={strickPrice} signal={signal} />
+        <FnoHeader product={`${product}EQ`} strikePrice={strickPrice} callPers={callPers} putPers={putPers} signal={signal} strickData={dataStrikItem} />
         <Row>
-        <Col md={6}>
-        <FnoIntradayTableContainer data={intradayList} />
-        </Col>
+          <Col md={6}>
+            <FnoIntradayTableContainer data={intradayList} />
+          </Col>
           <Col md={6}>
             <Card>
               <CardHeader>

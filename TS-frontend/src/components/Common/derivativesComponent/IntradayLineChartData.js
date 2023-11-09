@@ -15,20 +15,19 @@ const LineChart = ({ dataColors, datalist, timelist, zerolistv }) => {
       {
         label: "Option Data",
         fill: true,
-        lineTension: 0.5,
-        backgroundColor: "#00ff0000",
-        borderColor: "green",
+        lineTension: 1,
         borderCapStyle: "butt",
         borderDash: [],
+        borderColor: "#0dff4d",
         borderDashOffset: 0.0,
         borderJoinStyle: "miter",
-        pointBorderColor: "green",
-        pointBackgroundColor: "green",
-        pointBorderWidth: 7,
+        pointBorderColor: "0dff4d",
+        pointBackgroundColor: "#0dff4d",
+        pointBorderWidth: 5,
         pointHoverRadius: 10,
         pointHoverBackgroundColor: lineChartColor[1],
         pointHoverBorderColor: "#fff",
-        pointHoverBorderWidth: 2,
+        pointHoverBorderWidth: 1,
         pointRadius: 1,
         pointHitRadius: 10,
         data: datalist,
@@ -36,19 +35,19 @@ const LineChart = ({ dataColors, datalist, timelist, zerolistv }) => {
       {
         label: "Zero Line",
         fill: true,
-        lineTension: 0.5,
+        lineTension: 1,
         backgroundColor: "rgba(235, 239, 242, 0.0)",
-        borderColor: "red",
+        borderColor: "#ff0d0d",
         borderCapStyle: "butt",
         borderDash: [],
         borderDashOffset: 0.0,
         borderJoinStyle: "miter",
-        pointBorderColor: "red",
-        pointBackgroundColor: "#fff",
-        pointBorderWidth: 7,
+        pointBorderColor: "#ff0d0d",
+        pointBackgroundColor: "#ff0d0d",
+        pointBorderWidth: 5,
         pointHoverRadius: 10,
-        pointHoverBackgroundColor: "#ebeff2",
-        pointHoverBorderColor: "#eef0f2",
+        pointHoverBackgroundColor: "#ff0d0d",
+        pointHoverBorderColor: "#ff0d0d",
         pointHoverBorderWidth: 2,
         pointRadius: 1,
         pointHitRadius: 10,
@@ -62,7 +61,7 @@ const LineChart = ({ dataColors, datalist, timelist, zerolistv }) => {
         {
           ticks: {
             max: result.highest,
-            min: 0,
+            min:result.lowest,
             stepSize: result.highest / 10,
           },
         },
@@ -88,7 +87,7 @@ const LineChart = ({ dataColors, datalist, timelist, zerolistv }) => {
 
     return { highest, lowest }
   }
-  return <Line width={751} height={300} data={data} options={option} />
+  return <Line data={data} options={option} />
 }
 
 export default LineChart

@@ -10,6 +10,8 @@ module.exports = function (TdDerivatives) {
   var getIntradayData = app.dataSources.getIntradayData;
   var getOptionExpiry = app.dataSources.getOptionExpiry;
   var getOptionData = app.dataSources.getOptionData;
+  var scheduletwo = '*/30 4-11 * * 1-5';
+  var scheduleone = '*/5 4-11 * * 1-5';
   TdDerivatives.strikeprice = (type, callback) => {
     const currenturl = `${configt.stock.connector}/GetLastQuote/?accessKey=${configt.stock.key}&exchange=NFO&instrumentIdentifier=${type}-I`;
     request(currenturl, function (error, response, body) {
@@ -25,6 +27,7 @@ module.exports = function (TdDerivatives) {
               status: "1",
               message: "success",
               value: jsonData.AVERAGETRADEDPRICE,
+              Item: jsonData,
             },
           });
         }
@@ -228,7 +231,7 @@ module.exports = function (TdDerivatives) {
                 putTotal,
                 callTotal,
                 strike,
-                ...{ time: moment(currentTime).format('HH:mm'),timeUpdate:moment(currentTime).unix() },
+                ...{ time: moment(currentTime).format('HH:mm'), timeUpdate: moment(currentTime).unix() },
               };
 
               if (!_.isEmpty(datatoday)) {
@@ -281,15 +284,298 @@ module.exports = function (TdDerivatives) {
         //console.log(currenturl);
         if (_.isEmpty(body)) {
           callback(null, {
-            List: { status: "0", message: "Data not find"},
+            List: { status: "0", message: "Data not find" },
           });
         } else {
           callback(null, {
-            List: { status: "0", message: "data get successfully",data:JSON.parse(body)},
+            List: { status: "0", message: "data get successfully", data: JSON.parse(body) },
           });
         }
       }
     }
     )
   };
+  TdDerivatives.getDerivativesData = (type, time, callback) => {
+    const startTime = 9 * 60; // Start time in minutes (9:00 AM)
+    const endTime = 15 * 60;  // End time in minutes (3:00 PM)
+    const increment = time;     // Increment in minutes
+    const timesArray = [];
+    for (let minutes = startTime; minutes <= endTime; minutes += increment) {
+      const hour = Math.floor(minutes / 60);
+      const minute = minutes % 60;
+      const formattedTime = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+      timesArray.push(formattedTime);
+    }
+    //console.log(timesArray);
+    const currentDate = new Date() // Create a Date object for the current date
+    const startOfToday = new Date(currentDate) // Clone the current date
+    startOfToday.setHours(0, 0, 0, 0) // Set the time to 00:00:00.000
+    const endOfToday = new Date(currentDate) // Clone the current date
+    endOfToday.setHours(23, 59, 59, 999) // Set the time to 23:59:59.999
+    let filter = {
+      where: {
+        INSTRUMENTIDENTIFIER: `${type}-I`,
+        and: [
+          { createdAt: { gte: startOfToday } },
+          { createdAt: { lte: endOfToday } },
+        ],
+      },
+      order: "id desc"
+    };
+    TdDerivatives.find(filter)
+      .then(JSON.toJSON)
+      .then(data => {
+        if (_.isEmpty(data)) {
+          callback(null, { list: [] });
+        } else {
+          const filedata = [];
+          for (let v = 0; v < timesArray.length; v++) {
+            for (const list of data) {
+              if (list.time === timesArray[v]) {
+                filedata.push(list)
+              }
+            }
+          }
+          callback(null, { list: filedata });
+        }
+      });
+  };
+  cron.schedule(scheduletwo, async () => {
+    const gettime = getTimeCurrent();
+    getIntradayData.getProductList((err, response) => {
+      if (!_.isEmpty(response)) {
+        const listType = response.PRODUCTS;
+        for (const type of listType.slice(16)) {
+          getIntradayData.getcurrentIntraday(type, (err, response) => {
+            if (_.isEmpty(response)) {
+              console.log("error 1");
+            } else {
+              const currentdata = response;
+              const strickPrice = response.AVERAGETRADEDPRICE;
+              // Wrap the whole operation in a Promise to handle the asynchronous calls
+              const processOptionData = async () => {
+                try {
+                  const responsedate = await new Promise((resolve, reject) => {
+                    getOptionExpiry.getOptionExpiryDates(
+                      type,
+                      (err, responsedate) => {
+                        if (_.isEmpty(responsedate)) {
+                          reject("Data not found");
+                        } else {
+                          resolve(responsedate);
+                        }
+                      }
+                    );
+                  });
+                  const expirydate = responsedate.EXPIRYDATES[0];
+                  const responseOption = await new Promise((resolve, reject) => {
+                    getOptionData.getOptionDataToday(
+                      type,
+                      expirydate,
+                      (err, responseOption) => {
+                        if (_.isEmpty(responseOption)) {
+                          reject("Data not found");
+                        } else {
+                          resolve(responseOption);
+                        }
+                      }
+                    );
+                  });
+                  const apiResult = responseOption;
+                  const putArr = [];
+                  const callArr = [];
+                  for (const result of apiResult) {
+                    const identi = result.INSTRUMENTIDENTIFIER.split("_");
+                    const value = parseInt(identi[4]);
+                    if (result.SERVERTIME > 0) {
+                      if (identi[3] === "CE") {
+                        callArr.push({
+                          ...result,
+                          value,
+                          optionType: identi[3],
+                          optionDate: identi[2],
+                        });
+                      } else if (identi[3] === "PE") {
+                        putArr.push({
+                          ...result,
+                          value,
+                          optionType: identi[3],
+                          optionDate: identi[2],
+                        });
+                      }
+                    }
+                  }
+                  const currentOptionStrike = strickPrice;
+                  const result = findClosestItem(
+                    callArr,
+                    currentOptionStrike,
+                    "value"
+                  );
+                  const index = result.index;
+                  const strike = result.nearestValue;
+                  if (index !== -1) {
+                    let putTotal = 0;
+                    let callTotal = 0;
+                    for (let i = index - 5; i < index + 5; i++) {
+                      putTotal += putArr[i].OPENINTERESTCHANGE;
+                      callTotal += callArr[i].OPENINTERESTCHANGE;
+                    }
+
+                    const datatoday = {
+                      ...currentdata,
+                      putTotal,
+                      callTotal,
+                      strike,
+                      time: gettime,
+                      timeUpdate: moment(currentTime).unix(),
+                    };
+                    if (!_.isEmpty(datatoday)) {
+                      await new Promise((resolve, reject) => {
+                        TdDerivatives.create(datatoday, (err, data) => {
+                          if (err) {
+                            console.error(err);
+                            reject(err);
+                          } else {
+                            console.log("Data updated successfully.");
+                            resolve();
+                          }
+                        });
+                      });
+                    }
+                  }
+                } catch (error) {
+                  console.error("Error:", error);
+                }
+              };
+              processOptionData();
+            }
+          });
+        }
+      }
+    })
+  });
+  cron.schedule(scheduleone, async () => {
+    const gettime = getTimeCurrent();
+    const listType = ["NIFTY", "BANKNIFTY", "FINNIFTY", "MIDCPNIFTY"];
+    for (const type of listType) {
+      getIntradayData.getcurrentIntraday(type, (err, response) => {
+        if (_.isEmpty(response)) {
+          console.log("error 1");
+        } else {
+          const currentdata = response;
+          const strickPrice = response.AVERAGETRADEDPRICE;
+          // Wrap the whole operation in a Promise to handle the asynchronous calls
+          const processOptionData = async () => {
+            try {
+              const responsedate = await new Promise((resolve, reject) => {
+                getOptionExpiry.getOptionExpiryDates(
+                  type,
+                  (err, responsedate) => {
+                    if (_.isEmpty(responsedate)) {
+                      reject("Data not found");
+                    } else {
+                      resolve(responsedate);
+                    }
+                  }
+                );
+              });
+
+              const expirydate = responsedate.EXPIRYDATES[0];
+
+              const responseOption = await new Promise((resolve, reject) => {
+                getOptionData.getOptionDataToday(
+                  type,
+                  expirydate,
+                  (err, responseOption) => {
+                    if (_.isEmpty(responseOption)) {
+                      reject("Data not found");
+                    } else {
+                      resolve(responseOption);
+                    }
+                  }
+                );
+              });
+
+              const apiResult = responseOption;
+              const putArr = [];
+              const callArr = [];
+              for (const result of apiResult) {
+
+                const identi = result.INSTRUMENTIDENTIFIER.split("_");
+                const value = parseInt(identi[4]);
+                if (result.SERVERTIME > 0) {
+                  if (identi[3] === "CE") {
+                    callArr.push({
+                      ...result,
+                      value,
+                      optionType: identi[3],
+                      optionDate: identi[2],
+                    });
+                  } else if (identi[3] === "PE") {
+                    putArr.push({
+                      ...result,
+                      value,
+                      optionType: identi[3],
+                      optionDate: identi[2],
+                    });
+                  }
+                }
+              }
+              const currentOptionStrike = strickPrice;
+              const result = findClosestItem(
+                callArr,
+                currentOptionStrike,
+                "value"
+              );
+              const index = result.index;
+              const strike = result.nearestValue;
+              if (index !== -1) {
+                let putTotal = 0;
+                let callTotal = 0;
+                for (let i = index - 5; i < index + 5; i++) {
+                  putTotal += putArr[i].OPENINTERESTCHANGE;
+                  callTotal += callArr[i].OPENINTERESTCHANGE;
+                }
+                const datatoday = {
+                  ...currentdata,
+                  putTotal,
+                  callTotal,
+                  strike,
+                  time: gettime,
+                  timeUpdate: moment(currentTime).unix(),
+                };
+                if (!_.isEmpty(datatoday)) {
+                  await new Promise((resolve, reject) => {
+                    TdDerivatives.create(datatoday, (err, data) => {
+                      if (err) {
+                        console.error(err);
+                        reject(err);
+                      } else {
+                        console.log("Data updated successfully.");
+                        resolve();
+                      }
+                    });
+                  });
+                }
+              }
+            } catch (error) {
+              console.error("Error:", error);
+            }
+          };
+          processOptionData();
+        }
+      });
+    }
+  });
+  function getTimeCurrent() {
+    let date_ob = new Date();
+    // Add 5 hours and 30 minutes
+    date_ob.setHours(date_ob.getHours() + 5);
+    date_ob.setMinutes(date_ob.getMinutes() + 30);
+    
+    // Get the updated hours and minutes
+    const hours = date_ob.getHours().toString().padStart(2, '0');
+    const minutes = date_ob.getMinutes().toString().padStart(2, '0');
+    return hours + ':' + minutes;
+  }
 };

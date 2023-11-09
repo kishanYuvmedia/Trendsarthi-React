@@ -17,8 +17,10 @@ async function processProduct() {
         }
       });
     });
-    for (const productType of productList.slice(16)) {
-      await getIntradayData(productType);
+    if (!_.isEmpty(productList)) {
+      for (const productType of productList.slice(16)) {
+        await getIntradayData(productType);
+      }
     }
   } catch (error) {
     console.error(error);
@@ -49,7 +51,7 @@ async function getIntradayData(type) {
     const optionDataToday = await new Promise((resolve, reject) => {
       globeldatasource.getOptionDataToday(type, expiryDate, (err, response) => {
         if (err || _.isEmpty(response)) {
-          reject("Error fetching option data for today",expiryDate);
+          reject("Error fetching option data for today", expiryDate);
         } else {
           resolve(response);
         }
@@ -101,6 +103,7 @@ async function getIntradayData(type) {
               reject(err);
             } else {
               console.log("Data updated successfully.", type);
+              console.log("Data updated time.", moment(currentTime).format('HH:mm'));
               resolve();
             }
           });
@@ -111,7 +114,6 @@ async function getIntradayData(type) {
     console.error("Error:", error);
   }
 }
-
 function findClosestItem(arr, value, key) {
   let closest = null;
   let index = -1;

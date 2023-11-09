@@ -100,9 +100,8 @@ const OptionChain = props => {
                   ? "BUY"
                   : "SELL",
             })
-            dataValue.push(
-              Number(item.putTotal) || 0 - Number(item.callTotal) || 0
-            )
+           
+            dataValue.push(Number(item.putTotal) - Number(item.callTotal))
             timevalue.push(item.time)
             zerolist.push(0)
           })
@@ -110,7 +109,6 @@ const OptionChain = props => {
           setDataArray(dataValue);
           setTimeArray(timevalue);
           setzerolistArray(zerolist);
-          console.log("Zero", zerolistArray);
         }
       })
       .catch(err => {

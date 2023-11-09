@@ -97,8 +97,8 @@ const IntradayTableContainer = ({ data }) => {
                     <td
                       className={
                         list.optionSignal === "BUY"
-                          ? "text-danger"
-                          : "text-success"
+                          ? "text-success"
+                          : "text-danger"
                       }
                     >
                       {list.optionSignal}
@@ -108,8 +108,8 @@ const IntradayTableContainer = ({ data }) => {
                     <td
                       className={
                         list.vwapSignal === "BUY"
-                          ? "text-danger"
-                          : "text-success"
+                        ? "text-success"
+                        : "text-danger"
                       }
                     >
                       {list.vwapSignal}
