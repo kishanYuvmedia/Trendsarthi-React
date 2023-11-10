@@ -16,10 +16,10 @@ import NotificationDropdown from "../CommonForBoth/TopbarDropdown/NotificationDr
 import ProfileMenu from "../CommonForBoth/TopbarDropdown/ProfileMenu";
 
 import megamenuImg from "../../assets/images/megamenu-img.png";
-import logo from "../../assets/images/scalping-logo.webp";
-import logoLight from "../../assets/images/scalping-logo.webp";
-import logoLightSvg from "../../assets/images/scalping-logo.webp";
-import logoDark from "../../assets/images/scalping-logo.webp";
+import logo from "../../assets/images/scalping-logo.png";
+import logoLight from "../../assets/images/scalping-logo.png";
+import logoLightSvg from "../../assets/images/scalping-logo.png";
+import logoDark from "../../assets/images/scalping-logo.png";
 
 // import images
 import github from "../../assets/images/brands/github.png";

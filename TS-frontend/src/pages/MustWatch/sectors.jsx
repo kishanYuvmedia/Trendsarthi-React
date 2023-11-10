@@ -9,15 +9,12 @@ import { FnocolumnsNiftyOption } from "../Derivatives/optionChainData.js"
 import { useEffect } from "react"
 import Apaexlinecolumn from 'pages/Derivatives/DashboardComponents/apaexlinecolumn';
 import FnoHeader from './Section/fnoHeader';
-import { calculateMFI } from 'services/utilty';
 import {
   getStrikePrice,
   getExpairDate,
   getOptionDataTable,
   geIntradayData,
-  getOptionDataList
 } from "../../services/api/api-service"
-import { isEmpty } from 'lodash';
 export default function Sectors() {
   const [dataCall, setdatacall] = useState([])
   const [dataPut, setdataput] = useState([])
@@ -36,7 +33,7 @@ export default function Sectors() {
   const [setPriceing, getPricing] = useState([]);
   let [callPers, setcallPers] = useState(0)
   let [putPers, setputPers] = useState(0)
-  const [dataStrikItem,setdataStrikItem]=useState([]);
+  const [dataStrikItem, setdataStrikItem] = useState([]);
   useEffect(() => {
     setdatacall([])
     setdataput([])
@@ -160,8 +157,8 @@ export default function Sectors() {
       .catch(err => {
         console.error("Error fetching getStrikePrice:", err)
       })
-      console.log("Technical Indicatorsqqq",setPriceing);
-     
+    console.log("Technical Indicatorsqqq", setPriceing);
+
   }
   function getTechIndicator(priceData) {
     // Define the SMA period
@@ -184,7 +181,6 @@ export default function Sectors() {
     // You can return or use the generatedSignal as needed
     setSignal(generatedSignal);
   }
-
   // Function to calculate SMA
   function calculateSMA(values, period) {
     const smaValues = [];
@@ -198,7 +194,6 @@ export default function Sectors() {
     }
     return smaValues;
   }
-
   return (
     <div className="page-content">
       <div className="container-fluid">

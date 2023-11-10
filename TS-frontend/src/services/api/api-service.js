@@ -89,3 +89,13 @@ export const getOptionDataList = (type, expairdate) => {
     true
   )
 }
+export const getDerivativesData = (type, time) => {
+  return axiosRequest(
+    "GET",
+    `${["TdDerivatives", "getDerivativesData"].join("/")}`,
+    undefined,
+    undefined,
+    { type, time },
+    true
+  )
+}

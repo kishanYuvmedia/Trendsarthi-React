@@ -6,8 +6,8 @@ import { Row, Col } from "reactstrap"
 import { Link } from "react-router-dom"
 import ProfileMenu from "../CommonForBoth/TopbarDropdown/ProfileMenu"
 
-import logo from "../../assets/images/scalping-logo.webp"
-import logoLightSvg from "../../assets/images/scalping-logo.webp"
+import logo from "../../assets/images/scalping-logo.png"
+import logoLightSvg from "../../assets/images/scalping-logo.png"
 
 //i18n
 import { withTranslation } from "react-i18next"

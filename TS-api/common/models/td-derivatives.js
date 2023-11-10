@@ -572,10 +572,121 @@ module.exports = function (TdDerivatives) {
     // Add 5 hours and 30 minutes
     date_ob.setHours(date_ob.getHours() + 5);
     date_ob.setMinutes(date_ob.getMinutes() + 30);
-    
+
     // Get the updated hours and minutes
     const hours = date_ob.getHours().toString().padStart(2, '0');
     const minutes = date_ob.getMinutes().toString().padStart(2, '0');
     return hours + ':' + minutes;
   }
+  TdDerivatives.indicatorView = (type, time, callback) => {
+    const startTime = 9 * 60; // Start time in minutes (9:00 AM)
+    const endTime = 15 * 60;  // End time in minutes (3:00 PM)
+    const increment = time;     // Increment in minutes
+    const timesArray = [];
+    for (let minutes = startTime; minutes <= endTime; minutes += increment) {
+      const hour = Math.floor(minutes / 60);
+      const minute = minutes % 60;
+      const formattedTime = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+      timesArray.push(formattedTime);
+    }
+    //console.log(timesArray);
+    const currentDate = new Date() // Create a Date object for the current date
+    const startOfToday = new Date(currentDate) // Clone the current date
+    startOfToday.setHours(0, 0, 0, 0) // Set the time to 00:00:00.000
+    const endOfToday = new Date(currentDate) // Clone the current date
+    endOfToday.setHours(23, 59, 59, 999) // Set the time to 23:59:59.999
+    let filter = {
+      where: {
+        INSTRUMENTIDENTIFIER: `${type}-I`,
+        and: [
+          { createdAt: { gte: startOfToday } },
+          { createdAt: { lte: endOfToday } },
+        ],
+      },
+      order: "id desc"
+    };
+    TdDerivatives.find(filter)
+      .then(JSON.toJSON)
+      .then(data => {
+        if (_.isEmpty(data)) {
+          callback(null, { list: [] });
+        } else {
+          const filedata = [];
+          const prices=[];
+          const closingPrices=[];
+          for (let v = 0; v < timesArray.length; v++) {
+            for (const list of data) {
+              if (list.time === timesArray[v]) {
+                filedata.push(list)
+                prices.push(list.BUYPRICE)
+                closingPrices.push(list.SELLPRICE)
+              }
+            }
+          }
+          const int1 = calculateRSI(closingPrices);
+          const int2=implementReversalStrategy(closingPrices);
+          const int3=implementTradingStrategy(closingPrices)
+          const list=[];
+          list.push({
+            time:"5 MIN",
+            Ind1:int1,
+            Ind2:int2,
+            Int3:int3,
+          })
+          callback(null, { list: list });
+        }
+      });
+  };
+  function calculateRSI(closingPrices) {
+    // Calculate the average of the upward price changes
+    let avgUpwardChange = 0;
+    for (let i = 1; i < closingPrices.length; i++) {
+      avgUpwardChange += Math.max(0, closingPrices[i] - closingPrices[i - 1]);
+    }
+    avgUpwardChange /= closingPrices.length;
+    // Calculate the average of the downward price changes
+    let avgDownwardChange = 0;
+    for (let i = 1; i < closingPrices.length; i++) {
+      avgDownwardChange += Math.max(0, closingPrices[i - 1] - closingPrices[i]);
+    }
+    avgDownwardChange /= closingPrices.length;
+    // Calculate the RSI
+    const rsi = 100 - (100 / (1 + (avgUpwardChange / avgDownwardChange)));
+    return rsi != null ? rsi >= 70 ? "UP" : "DN" : "DN";
+  }
+  const implementReversalStrategy = (prices,lookbackPeriod = 20, threshold = 0.02) => {
+    const currentPrice = prices[prices.length - 1];
+    const averagePrice = prices.slice(-lookbackPeriod).reduce((sum, price) => sum + price, 0) / lookbackPeriod;
+    if (currentPrice < averagePrice * (1 - threshold)) {
+      // setSignal('Potential Reversal: Buy Signal');
+      return "DN";
+    } else if (currentPrice > averagePrice * (1 + threshold)) {
+      // setSignal('Potential Reversal: Sell Signal');
+      return "UP";
+    } else {
+      // setSignal(null);
+      return "UP";
+    }
+  };
+  const implementTradingStrategy = (prices,position="neutral", multiplier = 2) => {
+    const middleBand = prices.reduce((sum, price) => sum + price, 0) / prices.length;
+    const standardDeviation = Math.sqrt(
+      prices.reduce((sum, price) => sum + Math.pow(price - middleBand, 2), 0) / prices.length
+    );
+
+    const upperBand = middleBand + multiplier * standardDeviation;
+    const lowerBand = middleBand - multiplier * standardDeviation;
+
+    // Get the current price
+    const currentPrice = prices[prices.length - 1];
+
+    // Trading strategy logic
+    if (currentPrice < lowerBand && position !== 'long') {
+      return "DN";
+    } else if (currentPrice > upperBand && position !== 'short') {
+      return "UP";
+    } else {
+      return "DN";
+    }
+  };
 };
