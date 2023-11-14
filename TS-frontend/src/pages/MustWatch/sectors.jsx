@@ -14,6 +14,7 @@ import {
   getExpairDate,
   getOptionDataTable,
   geIntradayData,
+  getIndicatorDataList
 } from "../../services/api/api-service"
 export default function Sectors() {
   const [dataCall, setdatacall] = useState([])
@@ -34,6 +35,7 @@ export default function Sectors() {
   let [callPers, setcallPers] = useState(0)
   let [putPers, setputPers] = useState(0)
   const [dataStrikItem, setdataStrikItem] = useState([]);
+  const [indicatorData, getIndicatorDatalist] = useState([]);
   useEffect(() => {
     setdatacall([])
     setdataput([])
@@ -108,7 +110,8 @@ export default function Sectors() {
       .catch(err => {
         console.error("Error fetching getStrikePrice:", err)
       })
-    getIntraday()
+    getIntraday();
+    getIndicatorData();
   }, [type])
   function getIntraday() {
     geIntradayData(type)
@@ -193,6 +196,18 @@ export default function Sectors() {
       }
     }
     return smaValues;
+  }
+  function getIndicatorData() {
+    let time = [5, 15, 30, 60, 420];
+    const dataList=[];
+    for (let i = 0; i < time.length; i++) {
+      getIndicatorDataList(type, time[i]).then(data => {
+        dataList.push(data);
+        console.log("time ",time[i]);
+        console.log("time  vdata",data);
+      })
+    }
+    console.log("final Indiacatro data",dataList);
   }
   return (
     <div className="page-content">

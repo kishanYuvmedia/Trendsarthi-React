@@ -612,8 +612,8 @@ module.exports = function (TdDerivatives) {
           callback(null, { list: [] });
         } else {
           const filedata = [];
-          const prices=[];
-          const closingPrices=[];
+          const prices = [];
+          const closingPrices = [];
           for (let v = 0; v < timesArray.length; v++) {
             for (const list of data) {
               if (list.time === timesArray[v]) {
@@ -624,14 +624,26 @@ module.exports = function (TdDerivatives) {
             }
           }
           const int1 = calculateRSI(closingPrices);
-          const int2=implementReversalStrategy(closingPrices);
-          const int3=implementTradingStrategy(closingPrices)
-          const list=[];
+          const int2 = implementReversalStrategy(closingPrices);
+          const int3 = implementTradingStrategy(closingPrices);
+          const int4 = implementcalculateCMF(filedata);
+          const int5 = implementcalculateROC(closingPrices);
+          const int6 = implementcalculateADX(filedata);
+          const int7 = implementcalculateAroon(filedata);
+          const int8 = implementTradingStrategy(closingPrices);
+          const int9 = calculateStochasticOscillator(filedata);
+          const list = [];
           list.push({
-            time:"5 MIN",
-            Ind1:int1,
-            Ind2:int2,
-            Int3:int3,
+            time: time + " MIN",
+            Ind1: int1,
+            Ind2: int2,
+            Int3: int3,
+            Int4: int4,
+            Int5: int5,
+            Int6: int6,
+            Int7: int7,
+            Int8: int8,
+            Int9: int9,
           })
           callback(null, { list: list });
         }
@@ -654,7 +666,7 @@ module.exports = function (TdDerivatives) {
     const rsi = 100 - (100 / (1 + (avgUpwardChange / avgDownwardChange)));
     return rsi != null ? rsi >= 70 ? "UP" : "DN" : "DN";
   }
-  const implementReversalStrategy = (prices,lookbackPeriod = 20, threshold = 0.02) => {
+  const implementReversalStrategy = (prices, lookbackPeriod = 20, threshold = 0.02) => {
     const currentPrice = prices[prices.length - 1];
     const averagePrice = prices.slice(-lookbackPeriod).reduce((sum, price) => sum + price, 0) / lookbackPeriod;
     if (currentPrice < averagePrice * (1 - threshold)) {
@@ -668,7 +680,7 @@ module.exports = function (TdDerivatives) {
       return "UP";
     }
   };
-  const implementTradingStrategy = (prices,position="neutral", multiplier = 2) => {
+  const implementTradingStrategy = (prices, position = "neutral", multiplier = 2) => {
     const middleBand = prices.reduce((sum, price) => sum + price, 0) / prices.length;
     const standardDeviation = Math.sqrt(
       prices.reduce((sum, price) => sum + Math.pow(price - middleBand, 2), 0) / prices.length
@@ -686,6 +698,209 @@ module.exports = function (TdDerivatives) {
     } else if (currentPrice > upperBand && position !== 'short') {
       return "UP";
     } else {
+      return "DN";
+    }
+  };
+  const implementcalculateCMF = (data) => {
+    let sumVolume = 0;
+    let sumCMF = 0;
+    let countB = 0;
+    let countS = 0;
+    for (let i = 0; i < data.length; i++) {
+      const CLOSE = data[i].CLOSE;
+      const HIGH = data[i].HIGH;
+      const LOW = data[i].LOW;
+      const volume = data[i].VALUE;
+      const moneyFLOWMultiplier = ((CLOSE - LOW) - (HIGH - CLOSE)) / (HIGH - LOW);
+      const moneyFLOWVolume = moneyFLOWMultiplier * volume;
+      sumVolume += volume;
+      sumCMF += moneyFLOWVolume;
+      if (i > 0) {
+        const cmf = sumCMF / sumVolume;
+        if (cmf > 0.1) {
+          countS++;
+        } else {
+          countB++;
+        }
+
+      } else {
+        countB++;
+      }
+    }
+    if (countS >= countB) {
+      return "UP";
+    }
+    else {
+      return "DN";
+    }
+  }
+  const implementcalculateROC = (data, period = 14) => {
+    const rocData = [];
+    let valueB = 0;
+    let valueS = 0;
+    for (let i = period; i < data.length; i++) {
+      const currentPrice = data[i];
+      const pastPrice = data[i - period];
+      const roc = ((currentPrice - pastPrice) / pastPrice) * 100;
+      rocData.push(roc);
+      if (roc > 0) {
+        valueS++;
+      }
+      else {
+        valueB++;
+      }
+    }
+    if (valueS >= valueB) {
+      return "UP";
+    }
+    else {
+      return "DN";
+    }
+  }
+  const implementcalculateADX = (data, period = 14) => {
+    let valueB = 0;
+    let valueS = 0;
+    const trueRange = [];
+    const directionalMovement = [];
+    const smoothedADX = [];
+
+    // Calculate True Range (TR) for each period
+    for (let i = 1; i < data.length; i++) {
+      const high = data[i].HIGH;
+      const low = data[i].LOW;
+      const prevClose = data[i - 1].CLOSE;
+
+      const tr = Math.max(high - low, Math.abs(high - prevClose), Math.abs(low - prevClose));
+      trueRange.push(tr);
+    }
+
+    // Calculate +DM and -DM
+    for (let i = 1; i < data.length; i++) {
+      const high = data[i].HIGH;
+      const low = data[i].LOW;
+      const prevHigh = data[i - 1].HIGH;
+      const prevLow = data[i - 1].LOW;
+
+      const upMove = high - prevHigh;
+      const downMove = prevLow - low;
+
+      const plusDM = upMove > downMove && upMove > 0 ? upMove : 0;
+      const minusDM = downMove > upMove && downMove > 0 ? downMove : 0;
+
+      directionalMovement.push({ plusDM, minusDM });
+    }
+    // Calculate Average True Range (ATR) for the first period
+    let atr = 0;
+    for (let i = 0; i < period; i++) {
+      atr += trueRange[i];
+    }
+    atr /= period;
+
+    // Calculate Smoothed +DM and -DM for the first period
+    let smoothedPlusDM = 0;
+    let smoothedMinusDM = 0;
+    for (let i = 0; i < period; i++) {
+      smoothedPlusDM += directionalMovement[i].plusDM;
+      smoothedMinusDM += directionalMovement[i].minusDM;
+    }
+    smoothedPlusDM /= period;
+    smoothedMinusDM /= period;
+
+    // Calculate Smoothed True Range for the first period
+    let smoothedTR = 0;
+    for (let i = 0; i < period; i++) {
+      smoothedTR += trueRange[i];
+    }
+    smoothedTR /= period;
+
+    // Calculate ADX for the first period
+    let plusDI = (smoothedPlusDM / smoothedTR) * 100;
+    let minusDI = (smoothedMinusDM / smoothedTR) * 100;
+
+    let dx = Math.abs((plusDI - minusDI) / (plusDI + minusDI)) * 100;
+
+    smoothedADX.push(dx);
+
+    // Calculate ADX for the remaining periods
+    for (let i = period; i < data.length; i++) {
+      const currentTrueRange = trueRange[i - 1];
+      const currentPlusDM = directionalMovement[i - 1].plusDM;
+      const currentMinusDM = directionalMovement[i - 1].minusDM;
+
+      atr = ((period - 1) * atr + currentTrueRange) / period;
+      smoothedTR = ((period - 1) * smoothedTR + currentTrueRange) / period;
+      smoothedPlusDM = ((period - 1) * smoothedPlusDM + currentPlusDM) / period;
+      smoothedMinusDM = ((period - 1) * smoothedMinusDM + currentMinusDM) / period;
+
+      plusDI = (smoothedPlusDM / smoothedTR) * 100;
+      minusDI = (smoothedMinusDM / smoothedTR) * 100;
+
+      dx = Math.abs((plusDI - minusDI) / (plusDI + minusDI)) * 100;
+
+      const adx = ((period - 1) * smoothedADX[i - period] + dx) / period;
+      smoothedADX.push(adx);
+      if (adx > 20) {
+        valueS++;
+      }
+      else {
+        valueB++;
+      }
+    }
+    if (valueS >= valueB) {
+      return "UP";
+    }
+    else {
+      return "DN";
+    }
+  };
+  const implementcalculateAroon = (data, period = 14) => {
+    const aroonUp = [];
+    const aroonDown = [];
+    for (let i = period; i < data.length; i++) {
+      const highPrices = data.slice(i - period, i).map(item => item.HIGH);
+      const lowPrices = data.slice(i - period, i).map(item => item.LOW);
+      const highestHigh = Math.max(...highPrices);
+      const lowestLow = Math.min(...lowPrices);
+      const aroonUpValue = ((period - (i - highPrices.indexOf(highestHigh))) / period) * 100;
+      const aroonDownValue = ((period - (i - lowPrices.indexOf(lowestLow))) / period) * 100;
+      aroonUp.push(aroonUpValue);
+      aroonDown.push(aroonDownValue);
+      const isNearTarget1 = Math.abs(aroonUpValue - 100) <= 5;
+      const isNearTarget2 = Math.abs(aroonUpValue - 0) <= 5;
+      if (isNearTarget1 && isNearTarget2) {
+        return 'DN';
+      } else if (isNearTarget1) {
+        return 'DN';
+      } else if (isNearTarget2) {
+        return 'UP';
+      } else {
+        return 'DN';
+      }
+    }
+  };
+  const calculateStochasticOscillator = (data, period = 14) => {
+    let valueB = 0;
+    let valueS = 0;
+    const stochasticOscillatorValues = [];
+    for (let i = period - 1; i < data.length; i++) {
+      const currentClose = data[i].close;
+      const lows = data.slice(i - period + 1, i + 1).map(item => item.LOW);
+      const highs = data.slice(i - period + 1, i + 1).map(item => item.HIGH);
+      const lowestLow = Math.min(...lows);
+      const highestHigh = Math.max(...highs);
+      const percentK = ((currentClose - lowestLow) / (highestHigh - lowestLow)) * 100;
+      stochasticOscillatorValues.push(percentK);
+      if (percentK > 80) {
+        valueS++;
+      }
+      else {
+        valueB++;
+      }
+    }
+    if (valueS >= valueB) {
+      return "UP";
+    }
+    else {
       return "DN";
     }
   };

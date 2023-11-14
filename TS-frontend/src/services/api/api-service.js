@@ -99,3 +99,13 @@ export const getDerivativesData = (type, time) => {
     true
   )
 }
+export const getIndicatorDataList = (type, time) => {
+  return axiosRequest(
+    "GET",
+    `${["TdDerivatives", "indicatorView"].join("/")}`,
+    undefined,
+    undefined,
+    { type, time },
+    true
+  )
+}
