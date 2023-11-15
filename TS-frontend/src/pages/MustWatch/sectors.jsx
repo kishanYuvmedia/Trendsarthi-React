@@ -20,6 +20,7 @@ export default function Sectors() {
   const [dataCall, setdatacall] = useState([])
   const [dataPut, setdataput] = useState([])
   const [category, setcategory] = useState([])
+  const [dataList,setdataList]=useState([]);
   let { product } = useParams();
   //meta title
   document.title = `${product} FNO | ${product} Dashboard`
@@ -41,7 +42,8 @@ export default function Sectors() {
     setdataput([])
     getStrikePrice(type)
       .then(resultStrike => {
-        setdataStrikItem(resultStrike.StrikePrice.item);
+        setdataStrikItem(resultStrike.StrikePrice.Item);
+        console.log("price1",resultStrike)
         getExpairDate(type)
           .then(result => {
             getOptionDataTable(
@@ -198,16 +200,14 @@ export default function Sectors() {
     return smaValues;
   }
   function getIndicatorData() {
-    let time = [5, 15, 30, 60, 420];
-    const dataList=[];
-    for (let i = 0; i < time.length; i++) {
-      getIndicatorDataList(type, time[i]).then(data => {
-        dataList.push(data);
-        console.log("time ",time[i]);
-        console.log("time  vdata",data);
+    let times = [5, 15, 30, 1, 12];
+    for(let time of times)
+    {
+      getIndicatorDataList(type, time).then(data => {
+        dataList.push(data.list[0]);
       })
     }
-    console.log("final Indiacatro data",dataList);
+    console.log("indicator  pricing ---",JSON.stringify(dataList));
   }
   return (
     <div className="page-content">

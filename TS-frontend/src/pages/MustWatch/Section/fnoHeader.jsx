@@ -1,6 +1,7 @@
 import React from 'react'
 import { Row, Col, Card,CardFooter } from 'reactstrap';
 export default function FnoHeader({ product, strikePrice,signal,callPers,putPers,strickData }) {
+    console.log("price",strickData);
     return (
         <Card className='bg-default'>
             <Row className='ms-4 p-1 m-3'>
@@ -26,7 +27,7 @@ export default function FnoHeader({ product, strikePrice,signal,callPers,putPers
                         </div>
                         <div className='flex-fill d-grid me-1'>
                             <span className='me-4 fs-6 mb-2'>Derivative Option OI</span>
-                            <span className='me-4 fs-6 fw-bold text-white'>Max Call @{strickData.BUYPRICE}(Resistance) / Max Put @{strickData.SELLPRICE}(Support)</span>
+                            <span className='me-4 fs-6 fw-bold text-white'>Max Call @(Resistance) / Max Put @(Support)</span>
                         </div>
                     </div>
             </CardFooter>
