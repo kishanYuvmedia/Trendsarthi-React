@@ -99,13 +99,13 @@ export const getDerivativesData = (type, time) => {
     true
   )
 }
-export const getIndicatorDataList = (type, time) => {
+export const getIndicatorDataList = (type, periodicity,period,max) => {
   return axiosRequest(
     "GET",
-    `${["TdDerivatives", "indicatorView"].join("/")}`,
+    `${["TdDerivatives", "indicatorTableView"].join("/")}`,
     undefined,
     undefined,
-    { type, time },
+    { type, periodicity,period,max },
     true
   )
 }

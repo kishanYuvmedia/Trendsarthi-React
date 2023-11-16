@@ -27,7 +27,7 @@ export default function FnoHeader({ product, strikePrice,signal,callPers,putPers
                         </div>
                         <div className='flex-fill d-grid me-1'>
                             <span className='me-4 fs-6 mb-2'>Derivative Option OI</span>
-                            <span className='me-4 fs-6 fw-bold text-white'>Max Call @(Resistance) / Max Put @(Support)</span>
+                            <span className='me-4 fs-6 fw-bold text-white'>Max Call {strickData.HIGH} @(Resistance) / Max Put {strickData.LOW} @(Support)</span>
                         </div>
                     </div>
             </CardFooter>

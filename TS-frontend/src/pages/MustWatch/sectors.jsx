@@ -1,49 +1,51 @@
-import React, { useState } from 'react'
-import { useParams } from "react-router-dom";
+import React, { useState } from "react"
+import { useParams } from "react-router-dom"
 import FnoIntradayTableContainer from "../../components/Common/derivativesComponent/FnoIntradayTableContainer"
 import FnoOptionChainTableContainer from "../../components/Common/derivativesComponent/FnoOptionChainTableContainer"
 //Import Breadcrumb
 import Breadcrumbs from "../../components/Common/Breadcrumb"
-import { Row, Col, Card, CardBody, CardHeader, } from 'reactstrap';
+import { Row, Col, Card, CardBody, CardHeader, Table } from "reactstrap"
 import { FnocolumnsNiftyOption } from "../Derivatives/optionChainData.js"
 import { useEffect } from "react"
-import Apaexlinecolumn from 'pages/Derivatives/DashboardComponents/apaexlinecolumn';
-import FnoHeader from './Section/fnoHeader';
+import Apaexlinecolumn from "pages/Derivatives/DashboardComponents/apaexlinecolumn"
+import FnoHeader from "./Section/fnoHeader"
+import { BiCaretDown, BiCaretUp } from "react-icons/bi"
 import {
   getStrikePrice,
   getExpairDate,
   getOptionDataTable,
   geIntradayData,
-  getIndicatorDataList
+  getIndicatorDataList,
 } from "../../services/api/api-service"
 export default function Sectors() {
   const [dataCall, setdatacall] = useState([])
   const [dataPut, setdataput] = useState([])
   const [category, setcategory] = useState([])
-  const [dataList,setdataList]=useState([]);
-  let { product } = useParams();
+  let { product } = useParams()
   //meta title
   document.title = `${product} FNO | ${product} Dashboard`
   const type = product
+  const [shortTerm, setshortTerm] = useState({})
   const [strickPrice, setStrikePrice] = useState(0)
   const [list, setlist] = useState([])
   const [intradayList, setintradayList] = useState([])
   const [dataArray, setDataArray] = useState([])
   const [timeArray, setTimeArray] = useState([])
   const [zerolistArray, setzerolistArray] = useState([])
-  const [signal, setSignal] = useState('');
-  const [setPriceing, getPricing] = useState([]);
+  const [signal, setSignal] = useState("")
+  const [setPriceing, getPricing] = useState([])
   let [callPers, setcallPers] = useState(0)
   let [putPers, setputPers] = useState(0)
-  const [dataStrikItem, setdataStrikItem] = useState([]);
-  const [indicatorData, getIndicatorDatalist] = useState([]);
+  const [dataStrikItem, setdataStrikItem] = useState([])
+  const [intradayTable, setIntradayTable] = useState([])
+  const [dayTerm, setdayTerm] = useState({})
   useEffect(() => {
     setdatacall([])
     setdataput([])
     getStrikePrice(type)
       .then(resultStrike => {
-        setdataStrikItem(resultStrike.StrikePrice.Item);
-        console.log("price1",resultStrike)
+        setdataStrikItem(resultStrike.StrikePrice.Item)
+        console.log("price1", resultStrike)
         getExpairDate(type)
           .then(result => {
             getOptionDataTable(
@@ -89,7 +91,7 @@ export default function Sectors() {
                   ciototal += Number(item.call.OPENINTEREST)
                   piogetotal += Number(item.put.OPENINTEREST)
                 })
-                getTechIndicator(pricingList);
+                getTechIndicator(pricingList)
                 totalCP = ciototal + piogetotal
                 callP = (ciototal / totalCP) * 100
                 putP = (piogetotal / totalCP) * 100
@@ -112,18 +114,18 @@ export default function Sectors() {
       .catch(err => {
         console.error("Error fetching getStrikePrice:", err)
       })
-    getIntraday();
-    getIndicatorData();
+    getIntraday()
+    getIndicatorData()
   }, [type])
   function getIntraday() {
     geIntradayData(type)
       .then(result => {
-        console.log("result", result);
+        console.log("result", result)
         if (!_.isEmpty(result)) {
-          const timevalue = [];
-          const dataValue = [];
-          const zerolist = [];
-          const IntraDay = [];
+          const timevalue = []
+          const dataValue = []
+          const zerolist = []
+          const IntraDay = []
           result.map(item => {
             IntraDay.push({
               time: item.time,
@@ -162,52 +164,93 @@ export default function Sectors() {
       .catch(err => {
         console.error("Error fetching getStrikePrice:", err)
       })
-    console.log("Technical Indicatorsqqq", setPriceing);
-
+    console.log("Technical Indicatorsqqq", setPriceing)
   }
   function getTechIndicator(priceData) {
     // Define the SMA period
-    const smaPeriod = 5;
+    const smaPeriod = 5
 
     // Calculate SMA
-    const smaData = calculateSMA(priceData, smaPeriod);
+    const smaData = calculateSMA(priceData, smaPeriod)
 
     // Calculate the latest SMA value
-    const latestSMAValue = smaData[smaData.length - 1];
+    const latestSMAValue = smaData[smaData.length - 1]
 
     // Generate buy and sell signals (example: crossover strategy)
-    let generatedSignal = '';
+    let generatedSignal = ""
     if (priceData[priceData.length - 1] > latestSMAValue) {
-      generatedSignal = 'Buy';
+      generatedSignal = "Buy"
     } else if (priceData[priceData.length - 1] < latestSMAValue) {
-      generatedSignal = 'Sell';
+      generatedSignal = "Sell"
     }
 
     // You can return or use the generatedSignal as needed
-    setSignal(generatedSignal);
+    setSignal(generatedSignal)
   }
   // Function to calculate SMA
   function calculateSMA(values, period) {
-    const smaValues = [];
+    const smaValues = []
     for (let i = 0; i < values.length; i++) {
       if (i < period - 1) {
-        smaValues.push(null); // SMA not available for initial values
+        smaValues.push(null) // SMA not available for initial values
       } else {
-        const sum = values.slice(i - period + 1, i + 1).reduce((acc, val) => acc + val, 0);
-        smaValues.push(sum / period);
+        const sum = values
+          .slice(i - period + 1, i + 1)
+          .reduce((acc, val) => acc + val, 0)
+        smaValues.push(sum / period)
       }
     }
-    return smaValues;
+    return smaValues
   }
-  function getIndicatorData() {
-    let times = [5, 15, 30, 1, 12];
-    for(let time of times)
-    {
-      getIndicatorDataList(type, time).then(data => {
-        dataList.push(data.list[0]);
-      })
+  async function getIndicatorData() {
+    const timeFrames = ["MINUTE", "MINUTE", "MINUTE", "HOUR", "DAY"]
+    const intervals = [5, 15, 30, 6, 1]
+    const dataList = []
+    for (let i = 0; i < timeFrames.length; i++) {
+      const data = await getIndicatorDataList(
+        product,
+        timeFrames[i],
+        intervals[i],
+        100
+      )
+      dataList.push(data.list)
     }
-    console.log("indicator  pricing ---",JSON.stringify(dataList));
+    countUpDown(dataList)
+    setIntradayTable(dataList)
+  }
+  function countUpDown(data) {
+    const total = { UP: 0, DN: 0 }
+    const totalDay = { UP: 0, DN: 0 }
+
+    data.forEach(entry => {
+      const time = entry.time
+      if (time !== "DAY") {
+        for (let i = 1; i <= 9; i++) {
+          const key = `Int${i}`
+          const value = entry[key]
+          if (value === "UP") {
+            total.UP++
+          } else if (value === "DN") {
+            total.DN++
+          }
+        }
+      }
+      else if (time === "DAY"){
+        for (let i = 1; i <= 9; i++) {
+          const key = `Int${i}`
+          const value = entry[key]
+          if (value === "UP") {
+            totalDay.UP++
+          } else if (value === "DN") {
+            totalDay.DN++
+          }
+        }
+      }
+    })
+    let down = (total.DN / (total.DN + total.UP)) * 100;
+    let downDay = (totalDay.DN / (totalDay.DN + totalDay.UP)) * 100
+    setshortTerm({ downP: down, up: 100 - down })
+    setdayTerm({ downP: downDay, up: 100 - downDay })
   }
   return (
     <div className="page-content">
@@ -216,16 +259,198 @@ export default function Sectors() {
           title="Derivatives"
           breadcrumbItem={`${product} FNO Dashboard`}
         />
-        <FnoHeader product={`${product}EQ`} strikePrice={strickPrice} callPers={callPers} putPers={putPers} signal={signal} strickData={dataStrikItem} />
+        <FnoHeader
+          product={`${product}EQ`}
+          strikePrice={strickPrice}
+          callPers={callPers}
+          putPers={putPers}
+          signal={signal}
+          strickData={dataStrikItem}
+        />
+        <Row>
+          <Col md={6}>
+            <Card>
+              <CardHeader>{product}</CardHeader>
+              <CardBody>
+                <Table dark responsive>
+                  <thead>
+                    <th>Time</th>
+                    <th>IND-1</th>
+                    <th>IND-2</th>
+                    <th>IND-3</th>
+                    <th>IND-4</th>
+                    <th>IND-5</th>
+                    <th>IND-6</th>
+                    <th>IND-7</th>
+                    <th>IND-8</th>
+                    <th>IND-9</th>
+                  </thead>
+                  <tbody>
+                    {intradayTable.map(item => (
+                      <tr>
+                        <th>{item.time}</th>
+                        <td>
+                          {item.Int1 == "UP" ? (
+                            <BiCaretUp
+                              style={{ fontSize: 25, color: "green" }}
+                            />
+                          ) : (
+                            <BiCaretDown
+                              style={{ fontSize: 25, color: "red" }}
+                            />
+                          )}
+                        </td>
+                        <td>
+                          {item.Int2 == "UP" ? (
+                            <BiCaretUp
+                              style={{ fontSize: 25, color: "green" }}
+                            />
+                          ) : (
+                            <BiCaretDown
+                              style={{ fontSize: 25, color: "red" }}
+                            />
+                          )}
+                        </td>
+                        <td>
+                          {item.Int3 == "UP" ? (
+                            <BiCaretUp
+                              style={{ fontSize: 25, color: "green" }}
+                            />
+                          ) : (
+                            <BiCaretDown
+                              style={{ fontSize: 25, color: "red" }}
+                            />
+                          )}
+                        </td>
+                        <td>
+                          {item.Int4 == "UP" ? (
+                            <BiCaretUp
+                              style={{ fontSize: 25, color: "green" }}
+                            />
+                          ) : (
+                            <BiCaretDown
+                              style={{ fontSize: 25, color: "red" }}
+                            />
+                          )}
+                        </td>
+                        <td>
+                          {item.Int5 == "UP" ? (
+                            <BiCaretUp
+                              style={{ fontSize: 25, color: "green" }}
+                            />
+                          ) : (
+                            <BiCaretDown
+                              style={{ fontSize: 25, color: "red" }}
+                            />
+                          )}
+                        </td>
+                        <td>
+                          {item.Int6 == "UP" ? (
+                            <BiCaretUp
+                              style={{ fontSize: 25, color: "green" }}
+                            />
+                          ) : (
+                            <BiCaretDown
+                              style={{ fontSize: 25, color: "red" }}
+                            />
+                          )}
+                        </td>
+                        <td>
+                          {item.Int7 == "UP" ? (
+                            <BiCaretUp
+                              style={{ fontSize: 25, color: "green" }}
+                            />
+                          ) : (
+                            <BiCaretDown
+                              style={{ fontSize: 25, color: "red" }}
+                            />
+                          )}
+                        </td>
+                        <td>
+                          {item.Int8 == "UP" ? (
+                            <BiCaretUp
+                              style={{ fontSize: 25, color: "green" }}
+                            />
+                          ) : (
+                            <BiCaretDown
+                              style={{ fontSize: 25, color: "red" }}
+                            />
+                          )}
+                        </td>
+                        <td>
+                          {item.Int9 == "UP" ? (
+                            <BiCaretUp
+                              style={{ fontSize: 25, color: "green" }}
+                            />
+                          ) : (
+                            <BiCaretDown
+                              style={{ fontSize: 25, color: "red" }}
+                            />
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </CardBody>
+            </Card>
+          </Col>
+          <Col md={6}>
+            <Card>
+              <CardHeader>Support & Resistance</CardHeader>
+              <CardBody>
+                <Table dark responsive>
+                  <thead>
+                    <th></th>
+                    <th>S-3</th>
+                    <th>S-2</th>
+                    <th>S-1</th>
+                    <th>PP</th>
+                    <th>R-1</th>
+                    <th>R-2</th>
+                    <th>R-3</th>
+                  </thead>
+                </Table>
+              </CardBody>
+            </Card>
+            <Card>
+              <CardHeader>Sentiments</CardHeader>
+              <CardBody>
+                <Table dark responsive>
+                  <thead>
+                    <th></th>
+                    <th>UP (%)</th>
+                    <th>DOWN (%)</th>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>Sentiments (Average)</th>
+                      <th>{Math.round(callPers).toFixed(2)}% </th>
+                      <th>{Math.round(putPers).toFixed(2)}% </th>
+                    </tr>
+                    <tr>
+                      <th>Short Term Sentiments (5,15,30,60)</th>
+                      <th>{Math.round(shortTerm.downP).toFixed(2)}% </th>
+                      <th>{Math.round(shortTerm.up).toFixed(2)}% </th>
+                    </tr>
+                    <tr>
+                      <th>Sentiments (Average)</th>
+                      <th>{Math.round(dayTerm.downP).toFixed(2)}% </th>
+                      <th>{Math.round(dayTerm.up).toFixed(2)}% </th>
+                    </tr>
+                  </tbody>
+                </Table>
+              </CardBody>
+            </Card>
+          </Col>
+        </Row>
         <Row>
           <Col md={6}>
             <FnoIntradayTableContainer data={intradayList} />
           </Col>
           <Col md={6}>
             <Card>
-              <CardHeader>
-                OI-Concentration since Expiry
-              </CardHeader>
+              <CardHeader>OI-Concentration since Expiry</CardHeader>
               <CardBody>
                 {!_.isEmpty(dataCall) && (
                   <Apaexlinecolumn
@@ -233,7 +458,7 @@ export default function Sectors() {
                     dataPutValue={dataPut}
                     categoryValue={category}
                     horizontal={false}
-                    titleName={''}
+                    titleName={""}
                     dataColors='["#ff0000","#00ff26"]'
                   />
                 )}
