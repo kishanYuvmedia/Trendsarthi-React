@@ -31,7 +31,6 @@ const Header = props => {
                   <img src={logo} alt="" height="22" />
                 </span>
               </Link>
-
               <Link to="/dashboard" className="logo logo-light">
                 <span className="logo-sm">
                   <img src={logoLightSvg} alt="" height="22" />
@@ -43,7 +42,7 @@ const Header = props => {
             <ProfileMenu />
           </div>
         </div>
-         </header>
+      </header>
     </React.Fragment>
   )
 }

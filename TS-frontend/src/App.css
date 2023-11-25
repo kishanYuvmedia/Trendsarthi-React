@@ -16,3 +16,50 @@
 .text-green {
   color: green;
 }
+.text-gradient {
+  background: linear-gradient(to right, #3cff01, rgb(0, 0, 0));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.Drag:hover {
+  cursor: pointer;
+}
+.bgbackgroundblue {
+  background: linear-gradient(to right, #144704, rgb(67, 182, 1));
+}
+
+.gu-transit {
+  opacity: 0.01;
+  background-color: rgb(0,0,0,0.3);
+  height: 60px;
+  width: 100%;
+  transition: 0.2s;
+  object-fit: cover;
+}
+.gu-mirror{
+  position :fixed !important;
+  margin: 0 !important;
+  z-index :9999 !important;
+  opacity: 0.8
+}
+.gu-hide
+{ display: none !important;}
+.gu-unselectable{
+  user-select: none !important
+}
+.gu-transit{
+  opacity :0.2;
+}
+.gu-transit:hover {
+  animation: superSUPERSecret;
+  animation-duration: 0.5s;
+  animation-iteration-count: infinite;
+  opacity: 0.8;
+  background-color: rgb(0,0,0,0.1);
+}
+
+@keyframes superSUPERSecret {
+  0%{transform: rotate(3deg)}
+  50%{transform: rotate(-3deg)}
+  100%{transform: rotate(3deg)}
+}

@@ -25,7 +25,6 @@ const authProtectedRoutes = [
   {path:"/mustwatch", component:<Mustwatch/>},
   {path:"/sectors/:product", component:<Sectors/>},
 ]
-
 const publicRoutes = [
   { path: "/", component: <Login /> },
   { path: "/login", component: <Login /> },
