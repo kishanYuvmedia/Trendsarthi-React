@@ -1,0 +1,25 @@
+.nav-link{
+  color:#fff;
+  font-size:20px;
+}
+.nav-link:hover{
+  color:rgb(221, 255, 223);
+  font-size:20px;
+}
+.active{
+  color:rgb(0, 255, 17);
+  font-size:20px;
+}
+.offcanvas-body .nav .nav-link{
+  border-bottom: 1px solid #fff;
+}
+.offcanvas-body .nav .nav-link:hover{
+  border-bottom: 1px solid #b3ecb3;
+  color:rgb(255, 255, 255)
+}
+.bannerBg {
+	background-image: url('../public/Images/images-bnner.webp');
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-position: center;
+  }

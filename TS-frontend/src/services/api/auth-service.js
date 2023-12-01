@@ -9,11 +9,12 @@ const login = (username, password) => {
     apiKit
       .post("/TdUsers/login?include=user", { username, password })
       .then(function (response) {
-        storeLocalData("accessToken", response.data.id)
-        storeLocalData("userId", response.data.userId)
-        storeLocalData("authUser", JSON.stringify(response.data.user))
-        resolve(response.data.id)
-        console.log("login User", response.data)
+        if (response.data.user.status === "A") {
+          storeLocalData("accessToken", response.data.id)
+          storeLocalData("userId", response.data.userId)
+          storeLocalData("authUser", JSON.stringify(response.data.user))
+          resolve(response.data.id)
+        }
       })
       .catch(function (error) {
         console.error(`Error:${error}`)

@@ -53,11 +53,11 @@ export const getOptionDataTable = (type, expairdate, strickPrice) => {
 export const geIntradayData = type => {
   const currentDate = new Date() // Create a Date object for the current date
   const startOfToday = new Date(currentDate) // Clone the current date
-  startOfToday.setHours(9,0,0,0) // Set the time to 00:00:00.000
-  console.log('cureent',startOfToday);
+  startOfToday.setHours(9, 0, 0, 0) // Set the time to 00:00:00.000
+  console.log("cureent", startOfToday)
   const endOfToday = new Date(currentDate) // Clone the current date
   endOfToday.setHours(15, 59, 59, 999) // Set the time to 23:59:59.999
-  console.log('endtime',endOfToday);
+  console.log("endtime", endOfToday)
   return find("TdDerivatives", {
     where: {
       INSTRUMENTIDENTIFIER: `${type}-I`,
@@ -69,14 +69,14 @@ export const geIntradayData = type => {
     order: "id desc",
   })
 }
-export const geIntradayDataLimit = (type,limit)=> {
+export const geIntradayDataLimit = (type, limit) => {
   const currentDate = new Date() // Create a Date object for the current date
   const startOfToday = new Date(currentDate) // Clone the current date
-  startOfToday.setHours(9,0,0,0) // Set the time to 00:00:00.000
-  console.log('cureent',startOfToday);
+  startOfToday.setHours(9, 0, 0, 0) // Set the time to 00:00:00.000
+  console.log("cureent", startOfToday)
   const endOfToday = new Date(currentDate) // Clone the current date
   endOfToday.setHours(15, 59, 59, 999) // Set the time to 23:59:59.999
-  console.log('endtime',endOfToday);
+  console.log("endtime", endOfToday)
   return find("TdDerivatives", {
     where: {
       INSTRUMENTIDENTIFIER: `${type}-I`,
@@ -119,13 +119,53 @@ export const getDerivativesData = (type, time) => {
     true
   )
 }
-export const getIndicatorDataList = (type, periodicity,period,max) => {
+export const getIndicatorDataList = (type, periodicity, period, max) => {
   return axiosRequest(
     "GET",
     `${["TdDerivatives", "indicatorTableView"].join("/")}`,
     undefined,
     undefined,
-    { type, periodicity,period,max },
+    { type, periodicity, period, max },
     true
   )
+}
+export const createTdUsers = data => {
+  return create("TdUsers", data)
+}
+export const verifyOtp = (username1, otp) => {
+  return find("TdUsers", {
+    where: {
+      status: "I",
+      and: [{ username: username1 }, { verificationCode: otp }],
+    },
+  })
+}
+export const checkUser = (username1,password,status='A') => {
+  return find("TdUsers", {
+    where: {
+      and: [{ username: username1 },{ password: password }],
+    },
+  })
+}
+export const getPlan = () => {
+  return find("TdPlans", {
+    where: {},
+  })
+}
+export const createOrder = data => {
+  return create("TdPaymentLists", data)
+}
+export const getUserOne = (username1) => {
+  return find("TdUsers", {
+    where: {
+      and: [{ username: username1 }],
+    },
+  })
+}
+export const getPlanId = (planId) => {
+  return find("TdPlans", {
+    where: {
+      and: [{ id: planId }],
+    },
+  })
 }

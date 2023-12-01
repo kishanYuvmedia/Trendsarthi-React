@@ -1,5 +1,5 @@
 import PropTypes from "prop-types"
-import React from "react"
+import React, { useState } from "react"
 import {
   Row,
   Col,
@@ -15,27 +15,25 @@ import {
 //redux
 import { useSelector, useDispatch } from "react-redux"
 import { createSelector } from "reselect"
-import { Link } from "react-router-dom"
+import { useNavigate, Link } from "react-router-dom";
 import withRouter from "components/Common/withRouter"
-
 // Formik validation
 import * as Yup from "yup"
 import { useFormik } from "formik"
-
 // actions
 import { loginUser } from "../../store/actions"
-
+import { checkUser } from "services/api/api-service"
 import logo from "assets/image/scalping-logo.png"
 import CarouselPage from "./CarouselPage"
+import { isEmpty, result } from "lodash"
 const Login = props => {
   //meta title
+  const navigate = useNavigate();
   document.title = "Login | Scalping"
-
+  const [errorcheck,setErrorcheck]=useState("");
   const dispatch = useDispatch()
-
   const validation = useFormik({
     enableReinitialize: true,
-
     initialValues: {
       username: "",
       password: "",
@@ -45,17 +43,28 @@ const Login = props => {
       password: Yup.string().required("Please Enter Your Password"),
     }),
     onSubmit: values => {
-      dispatch(loginUser(values, props.router.navigate))
+      checkUser(values.username,values.password).then(result=>{
+        if(!isEmpty(result)){
+          if(result[0].status=="A")
+          {
+            dispatch(loginUser(values, props.router.navigate))
+            setErrorcheck("")
+          }else if(result[0].status=="I") {
+            navigate(`/subscribe-plan/${result[0].username}`, {
+              replace: true,
+          });
+          }
+        }else{
+          setErrorcheck("User not valid please check")
+        }
+      })
     },
   })
-
   const selectLoginState = state => state.Login
   const LoginProperties = createSelector(selectLoginState, login => ({
     error: login.error,
   }))
-
   const { error } = useSelector(LoginProperties)
-
   return (
     <React.Fragment>
       <div>
@@ -125,7 +134,6 @@ const Login = props => {
                               </FormFeedback>
                             ) : null}
                           </div>
-
                           <div className="mb-3">
                             <Label className="form-label">Password</Label>
                             <Input
@@ -149,7 +157,7 @@ const Login = props => {
                               </FormFeedback>
                             ) : null}
                           </div>
-
+                            <strong style={{color:'red'}}>{errorcheck}</strong>
                           <div className="form-check">
                             <input
                               type="checkbox"
@@ -199,9 +207,8 @@ const Login = props => {
 
                     <div className="mt-4 mt-md-5 text-center">
                       <p className="mb-0">
-                        © {new Date().getFullYear()} http://trendsarthi.com/.
-                        Crafted with{" "}
-                        <i className="mdi mdi-heart text-danger"></i> by
+                        © {new Date().getFullYear()} trendsarthi.com. Crafted
+                        with <i className="mdi mdi-heart text-danger"></i> by
                         Yuvmedia.in
                       </p>
                     </div>

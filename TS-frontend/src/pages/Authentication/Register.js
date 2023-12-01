@@ -1,242 +1,269 @@
-import React, { useEffect } from "react"
+import PropTypes from "prop-types"
+import React from "react"
 import {
   Row,
   Col,
-  CardBody,
-  Card,
   Alert,
   Container,
-  Input,
-  Label,
   Form,
+  Input,
   FormFeedback,
+  Label,
 } from "reactstrap"
-
-// Formik Validation
-import * as Yup from "yup"
-import { useFormik } from "formik"
-
-// action
-import { registerUser, apiError } from "../../store/actions"
-
 //redux
 import { useSelector, useDispatch } from "react-redux"
 import { createSelector } from "reselect"
-
-import { Link, useNavigate } from "react-router-dom"
-
-// import images
-import profileImg from "../../assets/images/profile-img.png"
-import logoImg from "../../assets/images/logo.svg"
-
-const Register = props => {
+import { useNavigate, Link } from "react-router-dom";
+import withRouter from "components/Common/withRouter"
+// Formik validation
+import * as Yup from "yup"
+import { useFormik } from "formik"
+// actions
+import { registerUser } from "../../store/actions"
+import logo from "assets/image/scalping-logo.png"
+import CarouselPage from "./CarouselPage"
+const Login = props => {
   //meta title
-  document.title = "Register | Scalping- React Admin & Dashboard Template"
-
+  const navigate = useNavigate();
+  document.title = "Registration | Trendsarthi"
   const dispatch = useDispatch()
-  const navigate = useNavigate()
-
   const validation = useFormik({
-    // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
-
     initialValues: {
-      email: "",
       username: "",
       password: "",
+      contactName: "",
+      contactNumber: "",
+      confirmPassword: "",
     },
     validationSchema: Yup.object({
-      email: Yup.string().required("Please Enter Your Email"),
-      username: Yup.string().required("Please Enter Your Username"),
+      username: Yup.string().required("Please Enter Your username"),
       password: Yup.string().required("Please Enter Your Password"),
+      contactName: Yup.string().required("Please Enter Your Full Name"),
+      contactNumber: Yup.string().required("Please Enter Your Contact Number"),
+      confirmPassword: Yup.string().required(
+        "Please Enter Your Confirm Password"
+      ),
     }),
     onSubmit: values => {
-      dispatch(registerUser(values))
+      console.log(values)
+      const data = {
+        contactName: values.contactName,
+        contactNumber: values.contactNumber,
+        userType: "user",
+        verificationCode: "123",
+        status: "I",
+        realm: values.contactName,
+        username: values.username,
+        email: values.username,
+        password: values.password,
+        emailVerified: false,
+      }
+      dispatch(registerUser(data, props.router.navigate))
+      navigate(`/successfully/${formData.username}`, {
+        replace: true,
+    });
     },
   })
-
-  const selectAccountState = state => state.Account
-  const AccountProperties = createSelector(selectAccountState, account => ({
-    user: account.user,
-    registrationError: account.registrationError,
-    success: account.success,
-    // loading: account.loading,
+  const selectLoginState = state => state.Login
+  const LoginProperties = createSelector(selectLoginState, login => ({
+    error: login.error,
   }))
-
-  const {
-    user,
-    registrationError,
-    success,
-    // loading
-  } = useSelector(AccountProperties)
-
-  useEffect(() => {
-    dispatch(apiError(""))
-  }, [])
-
-  useEffect(() => {
-    success && setTimeout(() => navigate("/login"), 2000)
-  }, [success])
-
+  const { error } = useSelector(LoginProperties)
   return (
     <React.Fragment>
-      <div className="home-btn d-none d-sm-block">
-        <Link to="/" className="text-dark">
-          <i className="bx bx-home h2" />
-        </Link>
-      </div>
-      <div className="account-pages my-5 pt-sm-5">
-        <Container>
-          <Row className="justify-content-center">
-            <Col md={8} lg={6} xl={5}>
-              <Card className="overflow-hidden">
-                <div className="bg-primary-subtle">
-                  <Row>
-                    <Col className="col-7">
-                      <div className="text-primary p-4">
-                        <h5 className="text-primary">Free Register</h5>
-                        <p>Get your trendsarthi account</p>
-                      </div>
-                    </Col>
-                    <Col className="col-5 align-self-end">
-                      <img src={profileImg} alt="" className="img-fluid" />
-                    </Col>
-                  </Row>
-                </div>
-                <CardBody className="pt-0">
-                  <div>
-                    <Link to="/">
-                      <div className="avatar-md profile-user-wid mb-4">
-                        <span className="avatar-title rounded-circle bg-light">
-                          <img
-                            src={logoImg}
-                            alt=""
-                            className="rounded-circle"
-                            height="34"
-                          />
-                        </span>
-                      </div>
-                    </Link>
-                  </div>
-                  <div className="p-2">
-                    <Form
-                      className="form-horizontal"
-                      onSubmit={e => {
-                        e.preventDefault()
-                        validation.handleSubmit()
-                        return false
-                      }}
-                    >
-                      {user && user ? (
-                        <Alert color="success">
-                          Register User Successfully
-                        </Alert>
-                      ) : null}
-
-                      {registrationError && registrationError ? (
-                        <Alert color="danger">{registrationError}</Alert>
-                      ) : null}
-
-                      <div className="mb-3">
-                        <Label className="form-label">Email</Label>
-                        <Input
-                          id="email"
-                          name="email"
-                          className="form-control"
-                          placeholder="Enter email"
-                          type="email"
-                          onChange={validation.handleChange}
-                          onBlur={validation.handleBlur}
-                          value={validation.values.email || ""}
-                          invalid={
-                            validation.touched.email && validation.errors.email
-                              ? true
-                              : false
-                          }
+      <div>
+        <Container fluid className="p-0">
+          <Row className="g-0">
+            <CarouselPage />
+            <Col xl={3}>
+              <div className="auth-full-page-content p-md-5 p-4">
+                <div className="w-100">
+                  <div className="d-flex flex-column h-100">
+                    <div className="mb-4 mb-md-5">
+                      <Link to="/dashboard" className="d-block card-logo">
+                        <img
+                          src={logo}
+                          alt=""
+                          height="50"
+                          className="logo-dark-element"
                         />
-                        {validation.touched.email && validation.errors.email ? (
-                          <FormFeedback type="invalid">
-                            {validation.errors.email}
-                          </FormFeedback>
-                        ) : null}
-                      </div>
-
-                      <div className="mb-3">
-                        <Label className="form-label">Username</Label>
-                        <Input
-                          name="username"
-                          type="text"
-                          placeholder="Enter username"
-                          onChange={validation.handleChange}
-                          onBlur={validation.handleBlur}
-                          value={validation.values.username || ""}
-                          invalid={
-                            validation.touched.username &&
-                            validation.errors.username
-                              ? true
-                              : false
-                          }
+                        <img
+                          src={logo}
+                          alt=""
+                          height="50"
+                          className="logo-light-element"
                         />
-                        {validation.touched.username &&
-                        validation.errors.username ? (
-                          <FormFeedback type="invalid">
-                            {validation.errors.username}
-                          </FormFeedback>
-                        ) : null}
-                      </div>
-                      <div className="mb-3">
-                        <Label className="form-label">Password</Label>
-                        <Input
-                          name="password"
-                          type="password"
-                          placeholder="Enter Password"
-                          onChange={validation.handleChange}
-                          onBlur={validation.handleBlur}
-                          value={validation.values.password || ""}
-                          invalid={
-                            validation.touched.password &&
-                            validation.errors.password
-                              ? true
-                              : false
-                          }
-                        />
-                        {validation.touched.password &&
-                        validation.errors.password ? (
-                          <FormFeedback type="invalid">
-                            {validation.errors.password}
-                          </FormFeedback>
-                        ) : null}
+                      </Link>
+                    </div>
+                    <div className="my-auto">
+                      <div>
+                        <h5 className="text-success">Welcome Back !</h5>
+                        <p className="text-danger">
+                          Sign Up to continue to trendsarthi.com.
+                        </p>
                       </div>
 
                       <div className="mt-4">
-                        <button
-                          className="btn btn-primary btn-block "
-                          type="submit"
+                        <Form
+                          className="form-horizontal"
+                          onSubmit={e => {
+                            e.preventDefault()
+                            validation.handleSubmit()
+                            return false
+                          }}
                         >
-                          Register
-                        </button>
-                      </div>
+                          {error ? <Alert color="danger">{error}</Alert> : null}
 
-                      <div className="mt-4 text-center">
-                        <p className="mb-0">
-                          By registering you agree to the Skote{" "}
-                          <Link to="#" className="text-primary">
-                            Terms of Use
-                          </Link>
-                        </p>
+                          <div className="mb-3">
+                            <Label className="form-label">Email Address</Label>
+                            <Input
+                              name="username"
+                              className="form-control"
+                              placeholder="Enter Email Address"
+                              type="email"
+                              onChange={validation.handleChange}
+                              onBlur={validation.handleBlur}
+                              value={validation.values.username || ""}
+                              invalid={
+                                validation.touched.username &&
+                                validation.errors.username
+                                  ? true
+                                  : false
+                              }
+                            />
+                            {validation.touched.username &&
+                            validation.errors.username ? (
+                              <FormFeedback type="invalid">
+                                {validation.errors.username}
+                              </FormFeedback>
+                            ) : null}
+                          </div>
+                          <div className="mb-3">
+                            <Label className="form-label">Full Name</Label>
+                            <Input
+                              name="contactName"
+                              className="form-control"
+                              placeholder="Enter Full Name"
+                              type="text"
+                              onChange={validation.handleChange}
+                              onBlur={validation.handleBlur}
+                              value={validation.values.contactName || ""}
+                              invalid={
+                                validation.touched.contactName &&
+                                validation.errors.contactName
+                                  ? true
+                                  : false
+                              }
+                            />
+                            {validation.touched.contactName &&
+                            validation.errors.contactName ? (
+                              <FormFeedback type="invalid">
+                                {validation.errors.contactName}
+                              </FormFeedback>
+                            ) : null}
+                          </div>
+                          <div className="mb-3">
+                            <Label className="form-label">Mobile Number</Label>
+                            <Input
+                              name="contactNumber"
+                              className="form-control"
+                              placeholder="Enter Mobile Number"
+                              type="text"
+                              onChange={validation.handleChange}
+                              onBlur={validation.handleBlur}
+                              value={validation.values.contactNumber || ""}
+                              invalid={
+                                validation.touched.contactNumber &&
+                                validation.errors.contactNumber
+                                  ? true
+                                  : false
+                              }
+                            />
+                            {validation.touched.contactNumber &&
+                            validation.errors.contactNumber ? (
+                              <FormFeedback type="invalid">
+                                {validation.errors.contactNumber}
+                              </FormFeedback>
+                            ) : null}
+                          </div>
+                          <div className="mb-3">
+                            <Label className="form-label">Password</Label>
+                            <Input
+                              name="password"
+                              value={validation.values.password || ""}
+                              type="password"
+                              placeholder="Enter Password"
+                              onChange={validation.handleChange}
+                              onBlur={validation.handleBlur}
+                              invalid={
+                                validation.touched.password &&
+                                validation.errors.password
+                                  ? true
+                                  : false
+                              }
+                            />
+                            {validation.touched.password &&
+                            validation.errors.password ? (
+                              <FormFeedback type="invalid">
+                                {validation.errors.password}
+                              </FormFeedback>
+                            ) : null}
+                          </div>
+                          <div className="mb-3">
+                            <Label className="form-label">
+                              Confirm Password
+                            </Label>
+                            <Input
+                              name="confirmPassword"
+                              value={validation.values.confirmPassword || ""}
+                              type="password"
+                              placeholder="Enter Confirm Password"
+                              onChange={validation.handleChange}
+                              onBlur={validation.handleBlur}
+                              invalid={
+                                validation.touched.confirmPassword &&
+                                validation.errors.confirmPassword
+                                  ? true
+                                  : false
+                              }
+                            />
+                            {validation.touched.confirmPassword &&
+                            validation.errors.confirmPassword ? (
+                              <FormFeedback type="invalid">
+                                {validation.errors.confirmPassword}
+                              </FormFeedback>
+                            ) : null}
+                          </div>
+                          <div className="mt-3 d-grid">
+                            <button
+                              className="btn btn-success btn-block"
+                              type="submit"
+                            >
+                              SignUp
+                            </button>
+                          </div>
+                        </Form>
+                        <div className="mt-5 text-center">
+                          <p>
+                            Do you have trendsarthi account ?
+                            <Link to="/login" className="fw-medium text-danger">
+                              Signin
+                            </Link>
+                          </p>
+                        </div>
                       </div>
-                    </Form>
+                    </div>
+
+                    <div className="mt-4 mt-md-5 text-center">
+                      <p className="mb-0">
+                        © {new Date().getFullYear()} trendsarthi.com. Crafted
+                        with <i className="mdi mdi-heart text-danger"></i> by
+                        Yuvmedia.in
+                      </p>
+                    </div>
                   </div>
-                </CardBody>
-              </Card>
-              <div className="mt-5 text-center">
-                <p>
-                  Already have an account ?{" "}
-                  <Link to="/login" className="font-weight-medium text-primary">
-                    {" "}
-                    Login
-                  </Link>{" "}
-                </p>
+                </div>
               </div>
             </Col>
           </Row>
@@ -245,5 +272,8 @@ const Register = props => {
     </React.Fragment>
   )
 }
+export default withRouter(Login)
 
-export default Register
+Login.propTypes = {
+  history: PropTypes.object,
+}

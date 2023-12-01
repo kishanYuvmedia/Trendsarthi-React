@@ -9,6 +9,7 @@ export default {
   topMenuHeaderColor: "#3f51b5",
   linkTextColor: "#556ee6",
   apiUrl: "http://trading.marbiz.in:3000/api",
+  RAZORPAY_KEY_ID: "rzp_test_Q2Nqpd2u2kxq1S",
+  RAZORPAY_KEY_SECRET: "iOktJpH260XI1YVqTo9n7cPn",
   //apiUrl: "http://localhost:3000/api",
 }
- 
