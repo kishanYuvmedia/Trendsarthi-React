@@ -37,16 +37,16 @@ export default function SubscribePlan() {
                     </div>
                     <div class="option">
                       <ul>
-                        {list.fetures.map(item => (
+                        {list?.fetures.map(item => 
                           <li>
                             {" "}
                             <i class="fa fa-check" aria-hidden="true"></i>
                             {item.label}{" "}
                           </li>
-                        ))}
+                        )}
                       </ul>
                     </div>
-                    <Link to={`/plan-view/${username}/${item.id}`}>Buy Now</Link>
+                    <Link to={`/plan-view/${username}/${list.id}`}>Buy Now</Link>
                   </div>
                 </div>
               ))}

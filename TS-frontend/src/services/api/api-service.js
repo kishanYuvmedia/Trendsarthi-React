@@ -156,14 +156,14 @@ export const createOrder = data => {
   return create("TdPaymentLists", data)
 }
 export const getUserOne = (username1) => {
-  return find("TdUsers", {
+  return findOne("TdUsers", {
     where: {
       and: [{ username: username1 }],
     },
   })
 }
 export const getPlanId = (planId) => {
-  return find("TdPlans", {
+  return findOne("TdPlans", {
     where: {
       and: [{ id: planId }],
     },
