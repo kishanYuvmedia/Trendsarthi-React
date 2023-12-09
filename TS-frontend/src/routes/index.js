@@ -7,6 +7,7 @@ import ForgetPwd from "../pages/Authentication/ForgetPassword"
 import Successfully from "../pages/Authentication/Successfully"
 import SubscribePlan from "pages/Authentication/SubscribePlan"
 import PlanView from "pages/Authentication/planView"
+import IndicatorChart from "pages/Dashboard/Indicator-chart"
 // Dashboard
 import Dashboard from "../pages/Dashboard/index"
 // Derivatives
@@ -16,6 +17,7 @@ import { Mustwatch } from "pages/MustWatch/mustwatch"
 import Sectors from "pages/MustWatch/sectors"
 const authProtectedRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
+  { path: "/Indicator-chart", component: <IndicatorChart /> },
   // derivatives
   { path: "/DerivativeDashboard", component: <DerivativeDashboard /> },
   { path: "/NiftyOptionChain", component: <OptionChain type="NIFTY" /> },

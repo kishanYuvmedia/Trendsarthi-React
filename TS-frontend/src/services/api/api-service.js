@@ -169,3 +169,6 @@ export const getPlanId = (planId) => {
     },
   })
 }
+export const updateTdUsers = data => {
+  return upsertPatch("TdUsers", data)
+}

@@ -6,7 +6,9 @@ import { useState } from "react"
 import { verifyOtp } from "services/api/api-service"
 import { useParams } from "react-router-dom"
 import { isEmpty } from "lodash"
+import { useNavigate, Link } from "react-router-dom"
 const Successfully = () => {
+  const navigate = useNavigate()
   let { username } = useParams()
   //meta title
   document.title = "Otp Verification | Trendsarthi"
@@ -20,6 +22,9 @@ const Successfully = () => {
       if (isEmpty(result)) {
         seterror("Otp not verify")
       } else {
+        navigate(`/subscribe-plan/${username}`, {
+          replace: true,
+        })
       }
     })
   }

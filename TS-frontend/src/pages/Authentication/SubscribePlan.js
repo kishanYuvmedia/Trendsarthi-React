@@ -25,7 +25,7 @@ export default function SubscribePlan() {
             <div class="row justify-content-md-center">
               {priceList.map(list => (
                 <div class="col-sm-4">
-                  <div class="card text-center">
+                  <div class="card cardView text-center">
                     <div class="title">
                       <i class="fa fa-chart-line" aria-hidden="true"></i>
                       <h2>{list.planName}</h2>

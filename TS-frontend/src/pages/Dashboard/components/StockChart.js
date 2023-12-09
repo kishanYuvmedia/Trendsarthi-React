@@ -9,9 +9,12 @@ const StockChart = () => {
 
   useEffect(() => {
     const chartRoot = am5.Root.new("chartdiv")
+    chartRoot.interfaceColors.set("grid", am5.color(0xffffff))
+    chartRoot.interfaceColors.set("text", am5.color(0xffffff))
     const myTheme = am5.Theme.new(root)
     myTheme.rule("AxisLabel").setAll({
       fontWeight: "bold",
+      grid: "#fff",
     })
 
     // Set themes
@@ -21,7 +24,6 @@ const StockChart = () => {
     const stockChart = chartRoot.container.children.push(
       am5stock.StockChart.new(chartRoot, {})
     )
-
     // Set global number format
     chartRoot.numberFormatter.set("numberFormat", "#,###.00")
 
@@ -106,7 +108,7 @@ const StockChart = () => {
       "scrollbarX",
       am5xy.XYChartScrollbar.new(chartRoot, {
         orientation: "horizontal",
-        height: 50,
+        height: 100,
       })
     )
     stockChart.toolsContainer.children.push(scrollbar)
@@ -143,19 +145,18 @@ const StockChart = () => {
 
     // Function that dynamically loads data
     const loadData = (ticker, series) => {
-
       am5.net
         .load(
           `https://www.amcharts.com/wp-content/uploads/assets/docs/stock/${ticker}.csv`
         )
         .then(result => {
-          console.log('result',result)
+          console.log("result", result)
           const data = am5.CSVParser.parse(result.response, {
             delimiter: ",",
             skipEmpty: true,
             useColumnNames: true,
           })
-
+          console.log("result-data", data)
           const processor = am5.DataProcessor.new(chartRoot, {
             dateFields: ["Date"],
             dateFormat: "yyyy-MM-dd",
@@ -218,15 +219,14 @@ const StockChart = () => {
     <>
       <div
         id="chartcontrols"
-        style={{ height: "auto", padding: "5px 45px 0 15px" }}
+        style={{ height: "auto", padding: "5px 45px 0 15px", maxWidth: "100%" }}
       ></div>
       <div
         id="chartdiv"
         style={{
           width: "100%",
-          height: "500px",
-          backgroundColor: "#fff",
-          borderRadius: 10,
+          height: "600px",
+          maxWidth: "100%",
         }}
       ></div>
     </>

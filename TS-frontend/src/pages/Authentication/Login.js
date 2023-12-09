@@ -49,7 +49,7 @@ const Login = props => {
           {
             dispatch(loginUser(values, props.router.navigate))
             setErrorcheck("")
-          }else if(result[0].status=="I") {
+          }else if(result[0].status=="I"){
             navigate(`/subscribe-plan/${result[0].username}`, {
               replace: true,
           });

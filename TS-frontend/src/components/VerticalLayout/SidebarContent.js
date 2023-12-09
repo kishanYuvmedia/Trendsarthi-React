@@ -186,6 +186,13 @@ const SidebarContent = props => {
                 </li>
               </ul>
             </li>
+            <li>
+              <Link to="/Indicator-chart">
+                <i className="bx bx-home-circle"></i>
+                <span>{props.t("Indicator Chart")}</span>
+              </Link>
+            </li>
+
             {/* 
             <li className="menu-title">{props.t("Appss")}</li>
 

@@ -13,7 +13,7 @@ import {
 //redux
 import { useSelector, useDispatch } from "react-redux"
 import { createSelector } from "reselect"
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom"
 import withRouter from "components/Common/withRouter"
 // Formik validation
 import * as Yup from "yup"
@@ -24,7 +24,7 @@ import logo from "assets/image/scalping-logo.png"
 import CarouselPage from "./CarouselPage"
 const Login = props => {
   //meta title
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   document.title = "Registration | Trendsarthi"
   const dispatch = useDispatch()
   const validation = useFormik({
@@ -60,9 +60,9 @@ const Login = props => {
         emailVerified: false,
       }
       dispatch(registerUser(data, props.router.navigate))
-      navigate(`/successfully/${formData.username}`, {
+      navigate(`/successfully/${values.username}`, {
         replace: true,
-    });
+      })
     },
   })
   const selectLoginState = state => state.Login

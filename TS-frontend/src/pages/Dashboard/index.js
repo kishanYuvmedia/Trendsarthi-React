@@ -6,7 +6,6 @@ import { getStrikePrice, geIntradayDataLimit } from "services/api/api-service"
 import CardDrag from "./components/CardDrag"
 import dragula from "dragula"
 import _ from "lodash"
-import StockChart from "./components/StockChart"
 import IntradayTableDeshboad from "../../components/Common/derivativesComponent/IntradayTableDeshboad"
 const Dashboard = props => {
   document.title = "Dashboard | Trendsarthi- React Admin & Dashboard Template"
@@ -127,11 +126,7 @@ const Dashboard = props => {
                 <IntradayTableDeshboad data={intradayListBank} />
               </CardDrag>
             </Col>
-            <Col md={12}>
-            <CardDrag header={"Stock Chart"}>
-                <StockChart />
-              </CardDrag>
-            </Col>
+            
           </Row>
         </Container>
       </div>
