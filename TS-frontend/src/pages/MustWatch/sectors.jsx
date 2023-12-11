@@ -67,30 +67,32 @@ export default function Sectors() {
                 let ciototal = 0
                 let piogetotal = 0
                 console.log("result one data", result1)
-                result1.list.map(item => {
-                  data.push({
-                    openIntCE: item.call.OPENINTEREST,
-                    openInterestChangeCE: item.call.OPENINTERESTCHANGE,
-                    totalQtyTradedCE: item.call.TOTALQTYTRADED,
-                    priceChangeCE: item.call.PRICECHANGE,
-                    lastTradedPriceCE: item.call.LASTTRADEPRICE,
-                    strikePrice: item.call.value,
-                    stricke: item.strike,
-                    lastTradedPricePE: item.put.LASTTRADEPRICE,
-                    priceChangePE: item.put.PRICECHANGE,
-                    totalQtyTradedPE: item.put.LASTTRADEPRICE,
-                    openInterestChangePE: item.put.OPENINTERESTCHANGE,
-                    openIntPE: item.put.OPENINTEREST,
+                if (_.get(result1, "list")) {
+                  result1.list.map(item => {
+                    data.push({
+                      openIntCE: item.call.OPENINTEREST,
+                      openInterestChangeCE: item.call.OPENINTERESTCHANGE,
+                      totalQtyTradedCE: item.call.TOTALQTYTRADED,
+                      priceChangeCE: item.call.PRICECHANGE,
+                      lastTradedPriceCE: item.call.LASTTRADEPRICE,
+                      strikePrice: item.call.value,
+                      stricke: item.strike,
+                      lastTradedPricePE: item.put.LASTTRADEPRICE,
+                      priceChangePE: item.put.PRICECHANGE,
+                      totalQtyTradedPE: item.put.LASTTRADEPRICE,
+                      openInterestChangePE: item.put.OPENINTERESTCHANGE,
+                      openIntPE: item.put.OPENINTEREST,
+                    })
+                    pricingList.push(item.call.BUYPRICE)
+                    datacl.push(item.call.OPENINTERESTCHANGE)
+                    datap.push(item.put.OPENINTERESTCHANGE)
+                    cdata.push(item.put.value)
+                    ctotal += Number(item.call.OPENINTERESTCHANGE)
+                    ptotal += Number(item.put.OPENINTERESTCHANGE)
+                    ciototal += Number(item.call.OPENINTEREST)
+                    piogetotal += Number(item.put.OPENINTEREST)
                   })
-                  pricingList.push(item.call.BUYPRICE)
-                  datacl.push(item.call.OPENINTERESTCHANGE)
-                  datap.push(item.put.OPENINTERESTCHANGE)
-                  cdata.push(item.put.value)
-                  ctotal += Number(item.call.OPENINTERESTCHANGE)
-                  ptotal += Number(item.put.OPENINTERESTCHANGE)
-                  ciototal += Number(item.call.OPENINTEREST)
-                  piogetotal += Number(item.put.OPENINTEREST)
-                })
+                }
                 getTechIndicator(pricingList)
                 totalCP = ciototal + piogetotal
                 callP = (ciototal / totalCP) * 100
@@ -234,8 +236,7 @@ export default function Sectors() {
             total.DN++
           }
         }
-      }
-      else if (time === "DAY"){
+      } else if (time === "DAY") {
         for (let i = 1; i <= 9; i++) {
           const key = `Int${i}`
           const value = entry[key]
@@ -247,7 +248,7 @@ export default function Sectors() {
         }
       }
     })
-    let down = (total.DN / (total.DN + total.UP)) * 100;
+    let down = (total.DN / (total.DN + total.UP)) * 100
     let downDay = (totalDay.DN / (totalDay.DN + totalDay.UP)) * 100
     setshortTerm({ downP: down, up: 100 - down })
     setdayTerm({ downP: downDay, up: 100 - downDay })

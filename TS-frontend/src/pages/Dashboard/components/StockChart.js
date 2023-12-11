@@ -4,19 +4,12 @@ import * as am5xy from "@amcharts/amcharts5/xy"
 import * as am5stock from "@amcharts/amcharts5/stock"
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated"
 import "./chartstyle.css"
-const StockChart = () => {
+const StockChart = ({dataList}) => {
   const [root, setRoot] = useState(null)
-
   useEffect(() => {
     const chartRoot = am5.Root.new("chartdiv")
     chartRoot.interfaceColors.set("grid", am5.color(0xffffff))
     chartRoot.interfaceColors.set("text", am5.color(0xffffff))
-    const myTheme = am5.Theme.new(root)
-    myTheme.rule("AxisLabel").setAll({
-      fontWeight: "bold",
-      grid: "#fff",
-    })
-
     // Set themes
     chartRoot.setThemes(chartRoot, am5themes_Animated)
 
@@ -156,7 +149,7 @@ const StockChart = () => {
             skipEmpty: true,
             useColumnNames: true,
           })
-          console.log("result-data", data)
+          console.log("result-data", dataList)
           const processor = am5.DataProcessor.new(chartRoot, {
             dateFields: ["Date"],
             dateFormat: "yyyy-MM-dd",
@@ -169,10 +162,10 @@ const StockChart = () => {
               "Volume",
             ],
           })
-          processor.processMany(data)
+          processor.processMany(dataList)
 
           am5.array.each(series, item => {
-            item.data.setAll(data)
+            item.data.setAll(dataList)
           })
         })
     }
@@ -213,7 +206,7 @@ const StockChart = () => {
         chartRoot.dispose()
       }
     }
-  }, []) // Empty dependency array to run the effect only once
+  }, [dataList]) // Empty dependency array to run the effect only once
 
   return (
     <>
@@ -221,6 +214,7 @@ const StockChart = () => {
         id="chartcontrols"
         style={{ height: "auto", padding: "5px 45px 0 15px", maxWidth: "100%" }}
       ></div>
+
       <div
         id="chartdiv"
         style={{

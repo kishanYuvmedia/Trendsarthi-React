@@ -140,10 +140,10 @@ export const verifyOtp = (username1, otp) => {
     },
   })
 }
-export const checkUser = (username1,password,status='A') => {
+export const checkUser = (username1, password, status = "A") => {
   return find("TdUsers", {
     where: {
-      and: [{ username: username1 },{ password: password }],
+      and: [{ username: username1 }, { password: password }],
     },
   })
 }
@@ -155,14 +155,14 @@ export const getPlan = () => {
 export const createOrder = data => {
   return create("TdPaymentLists", data)
 }
-export const getUserOne = (username1) => {
+export const getUserOne = username1 => {
   return findOne("TdUsers", {
     where: {
       and: [{ username: username1 }],
     },
   })
 }
-export const getPlanId = (planId) => {
+export const getPlanId = planId => {
   return findOne("TdPlans", {
     where: {
       and: [{ id: planId }],
@@ -171,4 +171,14 @@ export const getPlanId = (planId) => {
 }
 export const updateTdUsers = data => {
   return upsertPatch("TdUsers", data)
+}
+export const getHistoryList = (periodicity, type, max, period) => {
+  return axiosRequest(
+    "GET",
+    `${["TdDerivatives", "getHistoryData"].join("/")}`,
+    undefined,
+    undefined,
+    { periodicity, type, max, period },
+    true
+  )
 }

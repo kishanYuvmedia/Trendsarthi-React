@@ -9,3 +9,9 @@
 .am5-modal-content h1{
     color: rgb(0, 0, 0);
 }
+.am5stock-control-button-active,.am5stock-control-list{
+    background:linear-gradient(to right, #32394e,#32394e);
+}
+.am5-modal-table-heading{
+    color:rgb(0, 1, 2)
+}

@@ -1010,7 +1010,7 @@ module.exports = function (TdDerivatives) {
       return "DN";
     }
   };
-  TdDerivatives.getHistoryData = (periodicity,type,max,period, callback) => {
+  TdDerivatives.getHistoryData = (periodicity, type, max, period, callback) => {
     getIntradayData.GetHistory(
       periodicity,
       type,
@@ -1025,5 +1025,40 @@ module.exports = function (TdDerivatives) {
         }
       }
     );
+  };
+  TdDerivatives.getNiftyRanking = (callback) => {
+    const listType = ["NIFTY", "BANKNIFTY", "FINNIFTY", "MIDCPNIFTY"];
+    const currentdata = [];
+    async function fetchData() {
+      for (const type of listType) {
+        const response = await new Promise((resolve) => {
+          getIntradayData.getcurrentIntraday(type, (err, data) => {
+            resolve(data);
+          });
+        });
+
+        if (_.isEmpty(response)) {
+          console.log("error 1");
+        } else {
+          getIntradayData.GetHistory(
+            periodicity,
+            type,
+            1,
+            5,
+            (err, response) => {
+              if (_.isEmpty(response)) {
+                console.log("error 1");
+              } else {
+                //console.log(response);
+                callback(null, { list: response.OHLC });
+              }
+            }
+          );
+          currentdata.push(response);
+        }
+      }
+      callback(null, { list: currentdata });
+    }
+    fetchData();
   };
 };

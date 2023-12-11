@@ -15,7 +15,7 @@ import {
 //redux
 import { useSelector, useDispatch } from "react-redux"
 import { createSelector } from "reselect"
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom"
 import withRouter from "components/Common/withRouter"
 // Formik validation
 import * as Yup from "yup"
@@ -28,9 +28,9 @@ import CarouselPage from "./CarouselPage"
 import { isEmpty, result } from "lodash"
 const Login = props => {
   //meta title
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   document.title = "Login | Scalping"
-  const [errorcheck,setErrorcheck]=useState("");
+  const [errorcheck, setErrorcheck] = useState("")
   const dispatch = useDispatch()
   const validation = useFormik({
     enableReinitialize: true,
@@ -43,18 +43,17 @@ const Login = props => {
       password: Yup.string().required("Please Enter Your Password"),
     }),
     onSubmit: values => {
-      checkUser(values.username,values.password).then(result=>{
-        if(!isEmpty(result)){
-          if(result[0].status=="A")
-          {
+      checkUser(values.username, values.password).then(result => {
+        if (!isEmpty(result)) {
+          if (result[0].status == "A") {
             dispatch(loginUser(values, props.router.navigate))
             setErrorcheck("")
-          }else if(result[0].status=="I"){
+          } else if (result[0].status == "I") {
             navigate(`/subscribe-plan/${result[0].username}`, {
               replace: true,
-          });
+            })
           }
-        }else{
+        } else {
           setErrorcheck("User not valid please check")
         }
       })
@@ -157,7 +156,7 @@ const Login = props => {
                               </FormFeedback>
                             ) : null}
                           </div>
-                            <strong style={{color:'red'}}>{errorcheck}</strong>
+                          <strong style={{ color: "red" }}>{errorcheck}</strong>
                           <div className="form-check">
                             <input
                               type="checkbox"
