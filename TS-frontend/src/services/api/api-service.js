@@ -182,3 +182,13 @@ export const getHistoryList = (periodicity, type, max, period) => {
     true
   )
 }
+export const getNiftyRanking = () => {
+  return axiosRequest(
+    "GET",
+    `${["TdDerivatives", "getNiftyRanking"].join("/")}`,
+    undefined,
+    undefined,
+    {},
+    true
+  )
+}
