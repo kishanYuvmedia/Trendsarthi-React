@@ -5,7 +5,7 @@ import { withTranslation } from "react-i18next"
 import { getStrikePrice, geIntradayDataLimit } from "services/api/api-service"
 import CardDrag from "./components/CardDrag"
 import dragula from "dragula"
-import _ from "lodash"
+import _, { result } from "lodash"
 import IntradayTableDeshboad from "../../components/Common/derivativesComponent/IntradayTableDeshboad"
 const Dashboard = props => {
   document.title = "Dashboard | Trendsarthi- React Admin & Dashboard Template"
@@ -13,6 +13,13 @@ const Dashboard = props => {
   const [bankNifty, setBankNifty] = useState({})
   const [intradayList, setintradayList] = useState([])
   const [intradayListBank, setintradayListBank] = useState([])
+  const [ProductData,setProductData]=useState([]);
+  const [ProductLabel,setProductLabel]=useState([]);
+  useEffect(() => {
+    getNiftyRankingTime().then(result=>{
+      console.log(result);
+    })
+  }, [])
   useEffect(() => {
     // Define your function to be called every 1 minute
     const yourFunction = () => {
@@ -128,6 +135,16 @@ const Dashboard = props => {
             </Col>
             
           </Row>
+          <Row>
+            <Col md={6} >
+            <BarChart
+                ProductLabel={ProductLabel}
+                ProductData={ProductData}
+                dataColors='["--bs-success-rgb, 0.8", "--bs-info", "--bs-danger", "--bs-warning"]'
+                height={400}
+              />
+            </Col>
+            </Row>
         </Container>
       </div>
     </React.Fragment>

@@ -143,12 +143,6 @@ const StockChart = ({dataList}) => {
           `https://www.amcharts.com/wp-content/uploads/assets/docs/stock/${ticker}.csv`
         )
         .then(result => {
-          console.log("result", result)
-          const data = am5.CSVParser.parse(result.response, {
-            delimiter: ",",
-            skipEmpty: true,
-            useColumnNames: true,
-          })
           console.log("result-data", dataList)
           const processor = am5.DataProcessor.new(chartRoot, {
             dateFields: ["Date"],

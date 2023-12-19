@@ -36,7 +36,7 @@ const RankingTable = ({ type, limit, title, data, top }) => {
                 </tr>
               </thead>
               <tbody>
-                {data.slice(16, limit).map((list, index) => (
+                {data.slice(0, limit).map((list, index) => (
                   <tr key={index}>
                     <td>{index + 1}</td>
                     <td>

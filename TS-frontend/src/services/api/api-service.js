@@ -183,12 +183,38 @@ export const getHistoryList = (periodicity, type, max, period) => {
   )
 }
 export const getNiftyRanking = () => {
-  return axiosRequest(
-    "GET",
-    `${["TdDerivatives", "getNiftyRanking"].join("/")}`,
-    undefined,
-    undefined,
-    {},
-    true
-  )
+  return new Promise((resolve, reject) => {
+    axiosRequest(
+      "GET",
+      `${["TdFnoRankings", "getNiftyRanking"].join("/")}`,
+      undefined,
+      undefined,
+      {},
+      true
+    )
+      .then(response => {
+        resolve(response) // Resolve the promise with the response data
+      })
+      .catch(error => {
+        reject(error) // Reject the promise with the error
+      })
+  })
+}
+export const getNiftyRankingTime = () => {
+  return new Promise((resolve, reject) => {
+    axiosRequest(
+      "GET",
+      `${["TdFnoRankings", "getNiftyRankingTime"].join("/")}`,
+      undefined,
+      undefined,
+      {},
+      true
+    )
+      .then(response => {
+        resolve(response) // Resolve the promise with the response data
+      })
+      .catch(error => {
+        reject(error) // Reject the promise with the error
+      })
+  })
 }

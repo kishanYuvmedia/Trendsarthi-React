@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react"
 import RankingTable from "./ranking-table"
-import { getProductsList, getNiftyRanking } from "services/api/api-service"
+import { getNiftyRanking } from "services/api/api-service"
 import { isEmpty } from "lodash"
 export const FNO = ({ props }) => {
   const [list, setlist] = useState([])
+  const [listreverse, setlistreverse] = useState([])
   useEffect(() => {
     getNiftyRanking().then(data => {
       if (!isEmpty(data)) {
         setlist(data.list)
+        setlistreverse(data.list.reverse())
       }
     })
   }, [])
@@ -16,14 +18,14 @@ export const FNO = ({ props }) => {
       <RankingTable
         type={"Strongest"}
         data={list}
-        limit={25}
+        limit={5}
         title={"Strength Ranking"}
         top={5}
       />
       <RankingTable
         type={"Weakest"}
-        data={list}
-        limit={25}
+        data={listreverse}
+        limit={5}
         title={"Strength Ranking"}
         top={5}
       />
