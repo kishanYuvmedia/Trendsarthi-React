@@ -125,62 +125,38 @@ module.exports = function (TdFnoRanking) {
 
     return rankings;
   }
-  TdFnoRanking.getNiftyRankingTime = (callback) => {
+  TdFnoRanking.getNiftyRankingTime = (duration, callback) => {
     getIntradayData.getProductList(async (err, responseType) => {
       if (!_.isEmpty(responseType)) {
         const timeHistory = [];
         async function fetchData() {
-          const listTime = ["MINUTE", "HOUR", "DAY", "WEEK", "MONTH"];
-
-          await Promise.all(
-            responseType.PRODUCTS.slice(16).map(async (type) => {
-              try {
-                const responses = await Promise.all(
-                  listTime.map(async (timing) => {
-                    try {
-                      return await new Promise((resolve) => {
-                        getIntradayData.GetHistory(
-                          timing,
-                          type + "-I",
-                          10,
-                          1,
-                          (err, data) => {
-                            resolve(data);
-                          }
-                        );
-                      });
-                    } catch (error) {
-                      console.log(
-                        `Error fetching history for ${type} - ${timing}:`,
-                        error
-                      );
-                      return null; // or handle the error accordingly
-                    }
-                  })
-                );
-
-                responses.forEach((response2, index) => {
-                  if (_.isEmpty(response2)) {
-                    console.log(
-                      `Error: Empty response2 for ${type} - ${listTime[index]}`
-                    );
+          responseType.PRODUCTS.slice(16).map(async (type) => {
+            try {
+              getIntradayData.GetHistory(
+                duration,
+                type + "-I",
+                10,
+                1,
+                (err, data) => {
+                  if (_.isEmpty(data)) {
+                    console.log(`Error: Empty response2 for ${type}`);
                   } else {
-                    const labelAverage = calculateLabelAverage(response2.OHLC);
+                    const labelAverage = calculateLabelAverage(data.OHLC);
                     timeHistory.push({
                       ...labelAverage,
                       type,
-                      timing: listTime[index],
+                      timing: duration,
                     });
                   }
-                });
-              } catch (error) {
-                console.log(`Error fetching data for ${type}:`, error);
-              }
-            })
-          );
+                }
+              );
+            } catch (error) {
+              console.log(`Error fetching history for ${type}`, error);
+              return null; // or handle the error accordingly
+            }
+          });
           callback(null, { list: timeHistory });
         }
-
         function calculateLabelAverage(OHLC) {
           const labelSum = OHLC.reduce(
             (sum, calculate) => {

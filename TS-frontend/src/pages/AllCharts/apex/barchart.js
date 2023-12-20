@@ -1,7 +1,6 @@
 import React from "react"
 import { Bar } from "react-chartjs-2"
 import getChartColorsArray from "../../../components/Common/ChartsDynamicColor"
-
 const BarChart = ({ dataColors, height, totalcal, totalput }) => {
   var barChartColor = getChartColorsArray(dataColors)
   const data = {

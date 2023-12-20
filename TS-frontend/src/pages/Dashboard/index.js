@@ -2,10 +2,15 @@ import PropTypes from "prop-types"
 import React, { useRef, useEffect, useState } from "react"
 import { Container, Row, Col, Card } from "reactstrap"
 import { withTranslation } from "react-i18next"
-import { getStrikePrice, geIntradayDataLimit } from "services/api/api-service"
+import {
+  getStrikePrice,
+  geIntradayDataLimit,
+  getNiftyRankingTime,
+} from "services/api/api-service"
 import CardDrag from "./components/CardDrag"
 import dragula from "dragula"
-import _, { result } from "lodash"
+import _, { isEmpty, result, set } from "lodash"
+import BarChart from "../AllCharts/barchart"
 import IntradayTableDeshboad from "../../components/Common/derivativesComponent/IntradayTableDeshboad"
 const Dashboard = props => {
   document.title = "Dashboard | Trendsarthi- React Admin & Dashboard Template"
@@ -13,13 +18,19 @@ const Dashboard = props => {
   const [bankNifty, setBankNifty] = useState({})
   const [intradayList, setintradayList] = useState([])
   const [intradayListBank, setintradayListBank] = useState([])
-  const [ProductData,setProductData]=useState([]);
-  const [ProductLabel,setProductLabel]=useState([]);
+  const [ProductData, setProductData] = useState([])
+  const [timelist] = useState(["MINUTE", "HOUR", "DAY", "WEEK", "MONTH"])
+  const [fetureBuild] = useState(["Long Buildup", "Short Buildup", "Long Unwinding", "Short Covering"])
+  const [time, setTime] = useState("MINUTE")
   useEffect(() => {
-    getNiftyRankingTime().then(result=>{
-      console.log(result);
-    })
-  }, [])
+    getNiftyRankingTime().then(result => {
+      if(!isEmpty(result)){
+        console.log("resulte Product data",result);
+        setProductData(result.list);
+      }
+    });
+  }, [time]);
+  
   useEffect(() => {
     // Define your function to be called every 1 minute
     const yourFunction = () => {
@@ -133,18 +144,37 @@ const Dashboard = props => {
                 <IntradayTableDeshboad data={intradayListBank} />
               </CardDrag>
             </Col>
-            
           </Row>
           <Row>
-            <Col md={6} >
-            <BarChart
-                ProductLabel={ProductLabel}
-                ProductData={ProductData}
-                dataColors='["--bs-success-rgb, 0.8", "--bs-info", "--bs-danger", "--bs-warning"]'
-                height={400}
-              />
+            <Col md={12}>
+              <CardDrag header={"IO Chart"}>
+                {timelist.map(item => (
+                  <button
+                    type="button"
+                    className="btn btn-info m-1"
+                    onClick={e => setTime(item)}
+                  >
+                    {item}
+                  </button>
+                ))}
+                <BarChart ProductData={ProductData} height={400} />
+              </CardDrag>
             </Col>
-            </Row>
+            <Col md={12}>
+              <CardDrag header={"Futures Build"}>
+                {fetureBuild.map(item => (
+                  <button
+                    type="button"
+                    className="btn btn-info m-1"
+                    onClick={e => setTime(item)}
+                  >
+                    {item}
+                  </button>
+                ))}
+                <BarChart ProductData={ProductData} height={400} />
+              </CardDrag>
+            </Col>
+          </Row>
         </Container>
       </div>
     </React.Fragment>

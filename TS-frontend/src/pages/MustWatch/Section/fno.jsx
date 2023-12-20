@@ -4,12 +4,10 @@ import { getNiftyRanking } from "services/api/api-service"
 import { isEmpty } from "lodash"
 export const FNO = ({ props }) => {
   const [list, setlist] = useState([])
-  const [listreverse, setlistreverse] = useState([])
   useEffect(() => {
     getNiftyRanking().then(data => {
       if (!isEmpty(data)) {
         setlist(data.list)
-        setlistreverse(data.list.reverse())
       }
     })
   }, [])
@@ -24,7 +22,7 @@ export const FNO = ({ props }) => {
       />
       <RankingTable
         type={"Weakest"}
-        data={listreverse}
+        data={list.reverse()}
         limit={5}
         title={"Strength Ranking"}
         top={5}
