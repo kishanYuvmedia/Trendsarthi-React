@@ -19,14 +19,23 @@ const Dashboard = props => {
   const [intradayList, setintradayList] = useState([])
   const [intradayListBank, setintradayListBank] = useState([])
   const [ProductData, setProductData] = useState([])
+  const [ProductLabel, setProductLabel] = useState([])
   const [timelist] = useState(["MINUTE", "HOUR", "DAY", "WEEK", "MONTH"])
   const [fetureBuild] = useState(["Long Buildup", "Short Buildup", "Long Unwinding", "Short Covering"])
   const [time, setTime] = useState("MINUTE")
   useEffect(() => {
-    getNiftyRankingTime().then(result => {
+    getNiftyRankingTime(time).then(result => {
       if(!isEmpty(result)){
+        const data=[];
+        const label=[];
         console.log("resulte Product data",result);
-        setProductData(result.list);
+        result.map(item=>{
+          data.push(item.OPENINTEREST);
+          label.push(item.type);
+        })
+        
+        setProductData(data);
+        setProductLabel(label);
       }
     });
   }, [time]);
@@ -157,7 +166,10 @@ const Dashboard = props => {
                     {item}
                   </button>
                 ))}
-                <BarChart ProductData={ProductData} height={400} />
+                {!isEmpty(ProductLabel) &&
+                 <BarChart ProductData={ProductData} height={400} ProductLabel={ProductLabel} />
+                 
+                }
               </CardDrag>
             </Col>
             <Col md={12}>
@@ -171,7 +183,9 @@ const Dashboard = props => {
                     {item}
                   </button>
                 ))}
-                <BarChart ProductData={ProductData} height={400} />
+               {!isEmpty(ProductLabel) &&
+                 <BarChart ProductData={ProductData} height={400} ProductLabel={ProductLabel} />
+                }
               </CardDrag>
             </Col>
           </Row>

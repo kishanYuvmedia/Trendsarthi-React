@@ -38,7 +38,7 @@ module.exports = function (TdDerivatives) {
       }
     });
   };
-  TdDerivatives.productehxpirydate = (type, callback) => {
+  TdDerivatives.productexpirydate = (type, callback) => {
     const currenturl = `${configt.stock.connector}/GetExpiryDates/?accessKey=${configt.stock.key}&exchange=NFO&product=${type}`;
     request(currenturl, function (error, response, body) {
       if (!error && response.statusCode == 200) {

@@ -200,14 +200,14 @@ export const getNiftyRanking = () => {
       })
   })
 }
-export const getNiftyRankingTime = () => {
+export const getNiftyRankingTime = (duration) => {
   return new Promise((resolve, reject) => {
     axiosRequest(
       "GET",
       `${["TdFnoRankings", "getNiftyRankingTime"].join("/")}`,
       undefined,
       undefined,
-      {},
+      {duration},
       true
     )
       .then(response => {
