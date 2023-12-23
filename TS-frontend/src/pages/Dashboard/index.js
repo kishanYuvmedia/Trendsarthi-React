@@ -5,7 +5,7 @@ import { withTranslation } from "react-i18next"
 import {
   getStrikePrice,
   geIntradayDataLimit,
-  getNiftyRankingTime,
+  shortGraphList,
 } from "services/api/api-service"
 import CardDrag from "./components/CardDrag"
 import dragula from "dragula"
@@ -19,27 +19,13 @@ const Dashboard = props => {
   const [intradayList, setintradayList] = useState([])
   const [intradayListBank, setintradayListBank] = useState([])
   const [ProductData, setProductData] = useState([])
-  const [ProductLabel, setProductLabel] = useState([])
-  const [timelist] = useState(["MINUTE", "HOUR", "DAY", "WEEK", "MONTH"])
-  const [fetureBuild] = useState(["Long Buildup", "Short Buildup", "Long Unwinding", "Short Covering"])
-  const [time, setTime] = useState("MINUTE")
-  useEffect(() => {
-    getNiftyRankingTime(time).then(result => {
-      if(!isEmpty(result)){
-        const data=[];
-        const label=[];
-        console.log("resulte Product data",result);
-        result.map(item=>{
-          data.push(item.OPENINTEREST);
-          label.push(item.type);
-        })
-        
-        setProductData(data);
-        setProductLabel(label);
-      }
-    });
-  }, [time]);
-  
+  const [ProductName, setProductName] = useState([])
+  const [fetureBuild] = useState([
+    "Long Buildup",
+    "Short Buildup",
+    "Long Unwinding",
+    "Short Covering",
+  ])
   useEffect(() => {
     // Define your function to be called every 1 minute
     const yourFunction = () => {
@@ -55,6 +41,21 @@ const Dashboard = props => {
       getIntraday("BANKNIFTY", setintradayListBank)
       console.log("NIFTY List", intradayListBank)
       console.log("BANKNIFTY List", intradayList)
+      shortGraphList().then(result => {
+        if (!isEmpty(result)) {
+          const data = []
+          const label = []
+          console.log("short Image", result)
+          result.map(item => {
+            data.push(item.CLOSE - item.OPEN)
+            label.push(item.INSTRUMENTIDENTIFIER)
+          })
+          setProductName(label)
+          setProductData(data)
+          console.log(ProductData)
+          console.log(ProductName)
+        }
+      })
     }
     yourFunction()
     const intervalId = setInterval(yourFunction, 10000)
@@ -155,25 +156,8 @@ const Dashboard = props => {
             </Col>
           </Row>
           <Row>
-            <Col md={12}>
+            <Col md={6}>
               <CardDrag header={"IO Chart"}>
-                {timelist.map(item => (
-                  <button
-                    type="button"
-                    className="btn btn-info m-1"
-                    onClick={e => setTime(item)}
-                  >
-                    {item}
-                  </button>
-                ))}
-                {!isEmpty(ProductLabel) &&
-                 <BarChart ProductData={ProductData} height={400} ProductLabel={ProductLabel} />
-                 
-                }
-              </CardDrag>
-            </Col>
-            <Col md={12}>
-              <CardDrag header={"Futures Build"}>
                 {fetureBuild.map(item => (
                   <button
                     type="button"
@@ -183,9 +167,7 @@ const Dashboard = props => {
                     {item}
                   </button>
                 ))}
-               {!isEmpty(ProductLabel) &&
-                 <BarChart ProductData={ProductData} height={400} ProductLabel={ProductLabel} />
-                }
+                <BarChart ProductName={ProductName} Productdata={ProductData} />
               </CardDrag>
             </Col>
           </Row>

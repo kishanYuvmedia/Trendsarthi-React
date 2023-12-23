@@ -200,14 +200,14 @@ export const getNiftyRanking = () => {
       })
   })
 }
-export const getNiftyRankingTime = (duration) => {
+export const shortGraphList = () => {
   return new Promise((resolve, reject) => {
     axiosRequest(
       "GET",
-      `${["TdFnoRankings", "getNiftyRankingTime"].join("/")}`,
+      `${["TdDerivatives", "getProductListOption"].join("/")}`,
       undefined,
       undefined,
-      {duration},
+      {},
       true
     )
       .then(response => {

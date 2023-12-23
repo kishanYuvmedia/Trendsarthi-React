@@ -1,39 +1,37 @@
-import React from "react";
-import { Bar } from "react-chartjs-2";
-import getChartColorsArray from "../../components/Common/ChartsDynamicColor";
+import React from "react"
+import { Bar } from "react-chartjs-2"
 
-const BarChart = ({ height, productData, ProductLabel }) => {
-  console.log("productData",productData)
-  console.log("productLabels",ProductLabel)
-  var barChartColor = getChartColorsArray(
-    '["--bs-success-rgb, 0.8", "--bs-info", "--bs-danger", "--bs-warning"]'
-  );
+const BarChart = ({ ProductName, Productdata }) => {
+  // Sample data for the bar chart
   const data = {
-    labels: "Products", // Array of X values
-    datasets: productData.map((dataSet, index) => ({
-      label: `Product ${index + 1}`,
-      backgroundColor: barChartColor[1],
-      borderColor: barChartColor[1],
-      borderWidth: 1,
-      hoverBackgroundColor: barChartColor[1], // Adjust index as needed
-      hoverBorderColor: barChartColor[1], // Adjust index as needed
-      data: dataSet, // Array of Y values for the corresponding X values
-    })),
-  };
+    labels: ProductName,
+    datasets: [
+      {
+        label: "Data Set 1",
+        backgroundColor: "rgba(75,192,192,0.4)",
+        borderColor: "rgba(75,192,192,1)",
+        borderWidth: 1,
+        hoverBackgroundColor: "rgba(75,192,192,0.6)",
+        hoverBorderColor: "rgba(75,192,192,1)",
+        data: Productdata,
+      },
+    ],
+  }
 
+  // Configuration options for the chart
   const options = {
     scales: {
-      x: {
-        stacked: true,
-        beginAtZero: true,
-      },
       y: {
-        beginAtZero: true,
+        beginAtZero: false,
       },
     },
-  };
+  }
 
-  return <Bar width={751} height={height} data={data} options={options} />;
-};
+  return (
+    <div>
+      <Bar data={data} options={options} />
+    </div>
+  )
+}
 
-export default BarChart;
+export default BarChart
