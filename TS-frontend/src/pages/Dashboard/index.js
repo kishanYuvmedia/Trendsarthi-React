@@ -6,6 +6,7 @@ import {
   getStrikePrice,
   geIntradayDataLimit,
   shortGraphList,
+  shortProductListDataList,
 } from "services/api/api-service"
 import CardDrag from "./components/CardDrag"
 import dragula from "dragula"
@@ -20,6 +21,8 @@ const Dashboard = props => {
   const [intradayListBank, setintradayListBank] = useState([])
   const [ProductData, setProductData] = useState([])
   const [ProductName, setProductName] = useState([])
+  const [ProductDataOption, setProductDataOption] = useState([])
+  const [ProductNameOption, setProductNameOption] = useState([])
   const [fetureBuild] = useState([
     "Long Buildup",
     "Short Buildup",
@@ -47,7 +50,7 @@ const Dashboard = props => {
           const label = []
           console.log("short Image", result)
           result.map(item => {
-            data.push(item.CLOSE - item.OPEN)
+            data.push(item.OPEN - item.CLOSE)
             label.push(item.INSTRUMENTIDENTIFIER)
           })
           setProductName(label)
@@ -60,7 +63,7 @@ const Dashboard = props => {
     yourFunction()
     const intervalId = setInterval(yourFunction, 10000)
     return () => clearInterval(intervalId)
-  }, [])
+  }, [fetureBuild])
   useEffect(() => {
     dragula([document.getElementById("left"), document.getElementById("right")])
   }, [])
@@ -98,6 +101,52 @@ const Dashboard = props => {
       .catch(err => {
         console.error("Error fetching getStrikePrice:", err)
       })
+  }
+  function getProductFilter(type) {
+    shortProductListDataList().then(result => {
+      if (!isEmpty(result)) {
+        const data = []
+        const label = []
+
+        // Assuming result is an array of objects with properties OPEN, CLOSE, and INSTRUMENTIDENTIFIER
+        result.forEach(item => {
+          data.push(item.OPEN - item.CLOSE)
+          label.push(item.INSTRUMENTIDENTIFIER)
+        })
+
+        // Create an array of objects with data and label properties
+        const productList = data.map((value, index) => ({
+          data: value,
+          label: label[index],
+        }))
+
+        // Sort the array in ascending order based on the 'data' property
+        const sortedAsc = productList.slice().sort((a, b) => a.data - b.data)
+
+        // Get the top 10 items in ascending order
+        const top10Asc = sortedAsc.slice(0, 10)
+
+        // Sort the array in descending order based on the 'data' property
+        const sortedDesc = productList.slice().sort((a, b) => b.data - a.data)
+
+        // Get the top 10 items in descending order
+        const top10Desc = sortedDesc.slice(0, 10)
+
+        // Use top10Asc and top10Desc as needed
+        console.log("Top 10 Ascending:", top10Asc)
+        console.log("Top 10 Descending:", top10Desc)
+        // Assuming setProductName and setProductData are state-setting functions
+        setProductNameOption(top10Asc.map(item => item.label))
+        if (type === "Long Buildup") {
+          setProductDataOption(top10Desc.map(item => item.data))
+        } else if (type === "Short Buildup") {
+          setProductDataOption(top10Asc.map(item => item.data))
+        }
+      }
+    })
+  }
+  const buildHandler = type => {
+    getProductFilter(type)
   }
   return (
     <React.Fragment>
@@ -157,17 +206,25 @@ const Dashboard = props => {
           </Row>
           <Row>
             <Col md={6}>
+              <CardDrag header={"Movment Chart"}>
+                <BarChart ProductName={ProductName} Productdata={ProductData} />
+              </CardDrag>
+            </Col>
+            <Col md={6}>
               <CardDrag header={"IO Chart"}>
                 {fetureBuild.map(item => (
                   <button
                     type="button"
                     className="btn btn-info m-1"
-                    onClick={e => setTime(item)}
+                    onClick={() => buildHandler(item)}
                   >
                     {item}
                   </button>
                 ))}
-                <BarChart ProductName={ProductName} Productdata={ProductData} />
+                <BarChart
+                  ProductName={ProductNameOption}
+                  Productdata={ProductDataOption}
+                />
               </CardDrag>
             </Col>
           </Row>

@@ -218,3 +218,21 @@ export const shortGraphList = () => {
       })
   })
 }
+export const shortProductListDataList = () => {
+  return new Promise((resolve, reject) => {
+    axiosRequest(
+      "GET",
+      `${["TdDerivatives", "getProductListData"].join("/")}`,
+      undefined,
+      undefined,
+      {},
+      true
+    )
+      .then(response => {
+        resolve(response) // Resolve the promise with the response data
+      })
+      .catch(error => {
+        reject(error) // Reject the promise with the error
+      })
+  })
+}
