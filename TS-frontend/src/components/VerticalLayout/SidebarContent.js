@@ -192,7 +192,12 @@ const SidebarContent = props => {
                 <span>{props.t("Indicator Chart")}</span>
               </Link>
             </li>
-
+            <li>
+              <Link to="/delivery-average-scanner">
+                <i className="bx bx-file"></i>
+                <span>{props.t("Delivery Average Scanner")}</span>
+              </Link>
+            </li>
             {/* 
             <li className="menu-title">{props.t("Appss")}</li>
 

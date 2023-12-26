@@ -12,6 +12,7 @@ import CardDrag from "./components/CardDrag"
 import dragula from "dragula"
 import _, { isEmpty, result, set } from "lodash"
 import BarChart from "../AllCharts/barchart"
+import BuildBarChart from "../AllCharts/buildBarChart"
 import IntradayTableDeshboad from "../../components/Common/derivativesComponent/IntradayTableDeshboad"
 const Dashboard = props => {
   document.title = "Dashboard | Trendsarthi- React Admin & Dashboard Template"
@@ -22,13 +23,14 @@ const Dashboard = props => {
   const [ProductData, setProductData] = useState([])
   const [ProductName, setProductName] = useState([])
   const [ProductDataOption, setProductDataOption] = useState([])
+  const [ioData, setIoData] = useState([])
+  const [LabelName, setLabelName] = useState([])
+  const [ioDataPrice, setIoDataPrice] = useState([])
   const [ProductNameOption, setProductNameOption] = useState([])
-  const [fetureBuild] = useState([
-    "Long Buildup",
-    "Short Buildup",
-    "Long Unwinding",
-    "Short Covering",
-  ])
+  const [typeFilter, setTypeFilter] = useState("Long Buildup")
+  const [typeOIpriceFilter, setTypeOIpriceFilter] = useState("Long Unwinding")
+  const [fetureBuild] = useState(["Long Buildup", "Short Buildup"])
+  const [fetureIO] = useState(["Long Unwinding", "Short Covering"])
   useEffect(() => {
     // Define your function to be called every 1 minute
     const yourFunction = () => {
@@ -61,11 +63,20 @@ const Dashboard = props => {
       })
     }
     yourFunction()
+    getProductFilter(typeFilter)
+    getOIFilter(typeOIpriceFilter)
     const intervalId = setInterval(yourFunction, 10000)
     return () => clearInterval(intervalId)
   }, [fetureBuild])
   useEffect(() => {
-    dragula([document.getElementById("left"), document.getElementById("right")])
+    dragula([
+      document.getElementById("left"),
+      document.getElementById("right"),
+      document.getElementById("left1"),
+      document.getElementById("right2"),
+      document.getElementById("left3"),
+      document.getElementById("right3"),
+    ])
   }, [])
   function getIntraday(type, list) {
     geIntradayDataLimit(type, 5)
@@ -106,14 +117,21 @@ const Dashboard = props => {
     shortProductListDataList().then(result => {
       if (!isEmpty(result)) {
         const data = []
+        const dataPrice = []
+        const dataOIPrice = []
         const label = []
-
+        console.log("result", result)
         // Assuming result is an array of objects with properties OPEN, CLOSE, and INSTRUMENTIDENTIFIER
         result.forEach(item => {
           data.push(item.OPEN - item.CLOSE)
+          dataPrice.push(item.SELLPRICE - item.BUYPRICE)
           label.push(item.INSTRUMENTIDENTIFIER)
         })
-
+        const productList2 = dataPrice.map((value, index) => ({
+          oiPrice: dataOIPrice[index],
+          data: value,
+          label: label[index],
+        }))
         // Create an array of objects with data and label properties
         const productList = data.map((value, index) => ({
           data: value,
@@ -131,22 +149,81 @@ const Dashboard = props => {
 
         // Get the top 10 items in descending order
         const top10Desc = sortedDesc.slice(0, 10)
+        const sortedAscPrice = productList2
+          .slice()
+          .sort((a, b) => a.data - b.data)
+        const top10AscPrice = sortedAscPrice.slice(0, 10)
+        const sortedDescPrice = productList2
+          .slice()
+          .sort((a, b) => b.data - a.data)
+        const top10DescPrice = sortedDescPrice.slice(0, 10)
 
-        // Use top10Asc and top10Desc as needed
-        console.log("Top 10 Ascending:", top10Asc)
-        console.log("Top 10 Descending:", top10Desc)
-        // Assuming setProductName and setProductData are state-setting functions
-        setProductNameOption(top10Asc.map(item => item.label))
         if (type === "Long Buildup") {
           setProductDataOption(top10Desc.map(item => item.data))
+          setProductNameOption(top10Desc.map(item => item.label))
         } else if (type === "Short Buildup") {
+          setProductNameOption(top10Asc.map(item => item.label))
           setProductDataOption(top10Asc.map(item => item.data))
+        } else if (type === "Short Covering") {
+          setProductDataOption(top10AscPrice.map(item => item.data))
+          setProductNameOption(top10AscPrice.map(item => item.label))
+        } else if (type === "Long Unwinding") {
+          setProductDataOption(top10DescPrice.map(item => item.data))
+          setProductNameOption(top10DescPrice.map(item => item.label))
+        }
+      }
+    })
+  }
+  function getOIFilter(type) {
+    shortProductListDataList().then(result => {
+      if (!isEmpty(result)) {
+        const iO = []
+        const iOChange = []
+        const label = []
+        console.log("result", result)
+        // Assuming result is an array of objects with properties OPEN, CLOSE, and INSTRUMENTIDENTIFIER
+        result.forEach(item => {
+          iO.push(item.OPEN)
+          iOChange.push(item.SELLPRICE)
+          label.push(item.INSTRUMENTIDENTIFIER)
+        })
+        // Create an array of objects with data and label properties
+        const productList = iOChange.map((value, index) => ({
+          iO: value,
+          iOChange: iOChange[index],
+          label: label[index],
+        }))
+
+        // Sort the array in ascending order based on the 'data' property
+        const sortedAsc = productList.slice().sort((a, b) => a.iO - b.iO)
+
+        // Get the top 10 items in ascending order
+        const top10Asc = sortedAsc.slice(0, 10)
+
+        // Sort the array in descending order based on the 'data' property
+        const sortedDesc = productList.slice().sort((a, b) => b.iO - a.iO)
+
+        // Get the top 10 items in descending order
+        const top10Desc = sortedDesc.slice(0, 10)
+        if (type === "Short Covering") {
+          setIoData(top10Asc.map(item => item.iO))
+          setIoDataPrice(top10Asc.map(item => item.iOChange))
+          setLabelName(top10Asc.map(item => item.label))
+        } else if (type === "Long Unwinding") {
+          setIoData(top10Desc.map(item => item.iO))
+          setIoDataPrice(top10Asc.map(item => item.iOChange))
+          setLabelName(top10Desc.map(item => item.label))
         }
       }
     })
   }
   const buildHandler = type => {
+    setTypeFilter(type)
     getProductFilter(type)
+  }
+  const buildIOHandler = type => {
+    setTypeOIpriceFilter(type)
+    getOIFilter(type)
   }
   return (
     <React.Fragment>
@@ -193,30 +270,23 @@ const Dashboard = props => {
             </div>
           </div>
           <Row>
-            <Col md={6} id="right">
+            <Col md={4} id="right">
               <CardDrag header={"Nifty Intraday Data"}>
                 <IntradayTableDeshboad data={intradayList} />
               </CardDrag>
             </Col>
-            <Col md={6} id="left">
+            <Col md={4} id="left">
               <CardDrag header={"Bank Nifty Intraday Data"}>
                 <IntradayTableDeshboad data={intradayListBank} />
               </CardDrag>
             </Col>
-          </Row>
-          <Row>
-            <Col md={6}>
-              <CardDrag header={"Movment Chart"}>
-                <BarChart ProductName={ProductName} Productdata={ProductData} />
-              </CardDrag>
-            </Col>
-            <Col md={6}>
-              <CardDrag header={"IO Chart"}>
+            <Col md={4} id="left2">
+              <CardDrag header={"Product Movment Chart"}>
                 {fetureBuild.map(item => (
                   <button
                     type="button"
                     className="btn btn-info m-1"
-                    onClick={() => buildHandler(item)}
+                    onClick={e => buildHandler(item)}
                   >
                     {item}
                   </button>
@@ -224,6 +294,32 @@ const Dashboard = props => {
                 <BarChart
                   ProductName={ProductNameOption}
                   Productdata={ProductDataOption}
+                />
+              </CardDrag>
+            </Col>
+            <Col md={4} id="left2">
+              <CardDrag header={"Option Movment Chart"}>
+                <BarChart ProductName={ProductName} Productdata={ProductData} />
+              </CardDrag>
+            </Col>
+            <Col md={8} id="right2">
+              <CardDrag header={"Movment Chart"}>
+                {fetureIO.map(item => (
+                  <button
+                    type="button"
+                    className="btn btn-info m-1"
+                    onClick={e => buildIOHandler(item)}
+                  >
+                    {item}
+                  </button>
+                ))}
+                <BuildBarChart
+                  dataLabel={LabelName}
+                  dataIOPrice={ioData}
+                  dataIOPriceChange={ioDataPrice}
+                  titleName={"Product Movment Chart"}
+                  horizontal={true}
+                  dataColors='["#643c9d","#cfbfe3"]'
                 />
               </CardDrag>
             </Col>

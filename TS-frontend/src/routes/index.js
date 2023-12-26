@@ -10,6 +10,7 @@ import PlanView from "pages/Authentication/planView"
 import IndicatorChart from "pages/Dashboard/Indicator-chart"
 // Dashboard
 import Dashboard from "../pages/Dashboard/index"
+import DeliveryAverageScanner from "pages/Dashboard/delivery-average-scanner"
 // Derivatives
 import DerivativeDashboard from "pages/Derivatives/DerivativeDashboard"
 import OptionChain from "pages/Derivatives/OptionChain"
@@ -29,6 +30,7 @@ const authProtectedRoutes = [
   { path: "/MidCapOptionChain", component: <OptionChain type="MIDCPNIFTY" /> },
   { path: "/mustwatch", component: <Mustwatch /> },
   { path: "/sectors/:product", component: <Sectors /> },
+  { path: "/delivery-average-scanner", component: <DeliveryAverageScanner /> },
 ]
 const publicRoutes = [
   { path: "/", component: <Login /> },

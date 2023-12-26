@@ -1086,4 +1086,68 @@ module.exports = function (TdDerivatives) {
       console.error(error);
     }
   };
+  TdDerivatives.getFnoRanking = async () => {
+    const dataList = [];
+    const listTime = ["MINUTE", "HOUR", "DAY", "WEEK", "MONTH"];
+    try {
+      const responseType = await new Promise((resolve, reject) => {
+        getIntradayData.getProductList((err, response) => {
+          if (err) reject(err);
+          else resolve(response);
+        });
+      });
+      if (_.isEmpty(responseType)) {
+        return dataList;
+      }
+      const promises = responseType.PRODUCTS.slice(16).map(async (type) => {
+        const filterPromises = listTime.map(async (timing) => {
+          const filter = getFilter(timing, type);
+          try {
+            const result = await TdDerivatives.find(filter);
+            if (!_.isEmpty(result)) {
+              return result;
+            }
+          } catch (e) {
+            console.error(e);
+          }
+        });
+
+        return Promise.all(filterPromises);
+      });
+
+      const resolvedDataList = await Promise.all(promises);
+      const filteredDataList = resolvedDataList
+        .flat()
+        .filter((result) => result !== undefined);
+
+      return filteredDataList;
+    } catch (error) {
+      console.error(error);
+      return dataList;
+    }
+  };
+
+  function getFilter(timing, type) {
+    const filter = {
+      where: {
+        INSTRUMENTIDENTIFIER: `${type}-I`,
+      },
+      order: "id desc",
+    };
+
+    if (timing === "MINUTE") {
+      filter.limit = 1;
+    } else if (timing === "HOUR") {
+      filter.limit = 12;
+    } else if (timing === "DAY") {
+      filter.limit = 72;
+    } else if (timing === "WEEK") {
+      filter.limit = 360;
+    } else if (timing === "MONTH") {
+      filter.limit = 1440;
+    }
+
+    return filter;
+  }
+  
 };
