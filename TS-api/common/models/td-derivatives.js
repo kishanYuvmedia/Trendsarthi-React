@@ -1111,15 +1111,13 @@ module.exports = function (TdDerivatives) {
             console.error(e);
           }
         });
-
         return Promise.all(filterPromises);
       });
-
       const resolvedDataList = await Promise.all(promises);
       const filteredDataList = resolvedDataList
-        .flat()
-        .filter((result) => result !== undefined);
-
+        .flat() // Flatten the array
+        .filter((result) => result !== undefined)
+        .flat(); // Flatten the array again
       return filteredDataList;
     } catch (error) {
       console.error(error);
@@ -1128,26 +1126,47 @@ module.exports = function (TdDerivatives) {
   };
 
   function getFilter(timing, type) {
+    const currentDate = new Date();
     const filter = {
       where: {
         INSTRUMENTIDENTIFIER: `${type}-I`,
       },
-      order: "id desc",
+      limit: 1,
+      order: "id asc",
     };
-
     if (timing === "MINUTE") {
-      filter.limit = 1;
+      // Handle minute filter if needed
     } else if (timing === "HOUR") {
-      filter.limit = 12;
+      setHourlyFilter(filter, currentDate, 1);
     } else if (timing === "DAY") {
-      filter.limit = 72;
+      setDailyFilter(filter, currentDate, 1);
     } else if (timing === "WEEK") {
-      filter.limit = 360;
+      setDailyFilter(filter, currentDate, 5);
     } else if (timing === "MONTH") {
-      filter.limit = 1440;
+      setDailyFilter(filter, currentDate, 30);
     }
-
     return filter;
   }
-  
+
+  function setHourlyFilter(filter, currentDate, hoursAgo) {
+    const startOfRange = new Date(currentDate);
+    startOfRange.setHours(startOfRange.getHours() - hoursAgo);
+    filter.where.and = [
+      { createdAt: { gte: startOfRange } },
+      { createdAt: { lte: currentDate } },
+    ];
+  }
+
+  function setDailyFilter(filter, currentDate, daysAgo) {
+    const startOfRange = new Date(currentDate);
+    startOfRange.setDate(startOfRange.getDate() - daysAgo);
+    startOfRange.setHours(9, 0, 0, 0);
+    const endOfRange = new Date(currentDate);
+    endOfRange.setDate(endOfRange.getDate() - daysAgo);
+    endOfRange.setHours(15, 59, 59, 999);
+    filter.where.and = [
+      { createdAt: { gte: startOfRange } },
+      { createdAt: { lte: endOfRange } },
+    ];
+  }
 };

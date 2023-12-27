@@ -270,17 +270,18 @@ const Dashboard = props => {
             </div>
           </div>
           <Row>
-            <Col md={4} id="right">
+            <Col md={6} id="right">
               <CardDrag header={"Nifty Intraday Data"}>
                 <IntradayTableDeshboad data={intradayList} />
               </CardDrag>
             </Col>
-            <Col md={4} id="left">
+            <Col md={6} id="left">
               <CardDrag header={"Bank Nifty Intraday Data"}>
                 <IntradayTableDeshboad data={intradayListBank} />
               </CardDrag>
             </Col>
-            <Col md={4} id="left2">
+            
+            <Col md={6} id="left2">
               <CardDrag header={"Product Movment Chart"}>
                 {fetureBuild.map(item => (
                   <button
@@ -297,12 +298,12 @@ const Dashboard = props => {
                 />
               </CardDrag>
             </Col>
-            <Col md={4} id="left2">
+            <Col md={6} id="left2">
               <CardDrag header={"Option Movment Chart"}>
                 <BarChart ProductName={ProductName} Productdata={ProductData} />
               </CardDrag>
             </Col>
-            <Col md={8} id="right2">
+            <Col md={12} id="right2">
               <CardDrag header={"Movment Chart"}>
                 {fetureIO.map(item => (
                   <button
