@@ -1088,6 +1088,7 @@ module.exports = function (TdDerivatives) {
   };
   TdDerivatives.getFnoRanking = async () => {
     const dataList = [];
+    const dataListTime = {};
     const listTime = ["MINUTE", "HOUR", "DAY", "WEEK", "MONTH"];
     try {
       const responseType = await new Promise((resolve, reject) => {
@@ -1105,6 +1106,7 @@ module.exports = function (TdDerivatives) {
           try {
             const result = await TdDerivatives.find(filter);
             if (!_.isEmpty(result)) {
+              dataListTime[timing] = result;
               return result;
             }
           } catch (e) {
@@ -1113,18 +1115,23 @@ module.exports = function (TdDerivatives) {
         });
         return Promise.all(filterPromises);
       });
+
       const resolvedDataList = await Promise.all(promises);
-      const filteredDataList = resolvedDataList
-        .flat() // Flatten the array
-        .filter((result) => result !== undefined)
-        .flat(); // Flatten the array again
-      return filteredDataList;
+
+      // Flatten the nested array
+      const filteredDataList = resolvedDataList.flat();
+
+      // Filter out undefined
+      const finalDataList = filteredDataList.filter(
+        (result) => result !== undefined
+      );
+
+      return { dataList: finalDataList, dataListTime };
     } catch (error) {
       console.error(error);
-      return dataList;
+      return { dataList, dataListTime };
     }
   };
-
   function getFilter(timing, type) {
     const currentDate = new Date();
     const filter = {
