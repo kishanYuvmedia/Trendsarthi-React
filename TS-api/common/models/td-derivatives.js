@@ -1087,9 +1087,9 @@ module.exports = function (TdDerivatives) {
     }
   };
   TdDerivatives.getFnoRanking = async () => {
-    const dataList = [];
     const dataListTime = {};
     const listTime = ["MINUTE", "HOUR", "DAY", "WEEK", "MONTH"];
+
     try {
       const responseType = await new Promise((resolve, reject) => {
         getIntradayData.getProductList((err, response) => {
@@ -1097,17 +1097,20 @@ module.exports = function (TdDerivatives) {
           else resolve(response);
         });
       });
+
       if (_.isEmpty(responseType)) {
-        return dataList;
+        return { dataListTime };
       }
+
       const promises = responseType.PRODUCTS.slice(16).map(async (type) => {
         const filterPromises = listTime.map(async (timing) => {
           const filter = getFilter(timing, type);
           try {
             const result = await TdDerivatives.find(filter);
             if (!_.isEmpty(result)) {
-              dataListTime[timing] = result;
-              return result;
+              // Update existing data or create a new array
+              dataListTime[timing] = dataListTime[timing] || [];
+              dataListTime[timing] = dataListTime[timing].concat(result);
             }
           } catch (e) {
             console.error(e);
@@ -1116,22 +1119,22 @@ module.exports = function (TdDerivatives) {
         return Promise.all(filterPromises);
       });
 
-      const resolvedDataList = await Promise.all(promises);
+      await Promise.all(promises);
 
-      // Flatten the nested array
-      const filteredDataList = resolvedDataList.flat();
+      // Sort the data by PRICECHANGEPERCENTAGE
+      Object.keys(dataListTime).forEach((timing) => {
+        dataListTime[timing] = dataListTime[timing].sort((a, b) => {
+          return b.PRICECHANGEPERCENTAGE - a.PRICECHANGEPERCENTAGE;
+        });
+      });
 
-      // Filter out undefined
-      const finalDataList = filteredDataList.filter(
-        (result) => result !== undefined
-      );
-
-      return { dataList: finalDataList, dataListTime };
+      return { dataListTime };
     } catch (error) {
       console.error(error);
-      return { dataList, dataListTime };
+      return { dataListTime };
     }
   };
+
   function getFilter(timing, type) {
     const currentDate = new Date();
     const filter = {
@@ -1154,7 +1157,6 @@ module.exports = function (TdDerivatives) {
     }
     return filter;
   }
-
   function setHourlyFilter(filter, currentDate, hoursAgo) {
     const startOfRange = new Date(currentDate);
     startOfRange.setHours(startOfRange.getHours() - hoursAgo);
@@ -1163,7 +1165,6 @@ module.exports = function (TdDerivatives) {
       { createdAt: { lte: currentDate } },
     ];
   }
-
   function setDailyFilter(filter, currentDate, daysAgo) {
     const startOfRange = new Date(currentDate);
     startOfRange.setDate(startOfRange.getDate() - daysAgo);
