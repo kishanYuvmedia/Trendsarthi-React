@@ -236,3 +236,21 @@ export const shortProductListDataList = () => {
       })
   })
 }
+export const fnoranking = () => {
+  return new Promise((resolve, reject) => {
+    axiosRequest(
+      "GET",
+      `${["TdDerivatives", "getFnoRanking"].join("/")}`,
+      undefined,
+      undefined,
+      {},
+      true
+    )
+      .then(response => {
+        resolve(response) // Resolve the promise with the response data
+      })
+      .catch(error => {
+        reject(error) // Reject the promise with the error
+      })
+  })
+}

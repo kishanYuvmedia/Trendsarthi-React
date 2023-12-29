@@ -7,6 +7,7 @@ import {
   geIntradayDataLimit,
   shortGraphList,
   shortProductListDataList,
+  fnoranking,
 } from "services/api/api-service"
 import CardDrag from "./components/CardDrag"
 import dragula from "dragula"
@@ -32,43 +33,40 @@ const Dashboard = props => {
   const [fetureBuild] = useState(["Long Buildup", "Short Buildup"])
   const [fetureIO] = useState(["Long Unwinding", "Short Covering"])
   useEffect(() => {
-    // Define your function to be called every 1 minute
-    const yourFunction = () => {
-      getStrikePrice("NIFTY").then(result => {
-        setNifty(result.StrikePrice)
-        console.log("NIFTY", result.StrikePrice)
-      })
-      getStrikePrice("BANKNIFTY").then(result => {
-        setBankNifty(result.StrikePrice)
-        console.log("BANKNIFTY", result.StrikePrice)
-      })
-      getIntraday("NIFTY", setintradayList)
-      getIntraday("BANKNIFTY", setintradayListBank)
-      console.log("NIFTY List", intradayListBank)
-      console.log("BANKNIFTY List", intradayList)
-      shortGraphList().then(result => {
-        if (!isEmpty(result)) {
-          const data = []
-          const label = []
-          console.log("short Image", result)
-          result.map(item => {
-            data.push(item.OPEN - item.CLOSE)
-            label.push(item.INSTRUMENTIDENTIFIER)
-          })
+    const fetchData = async () => {
+      try {
+        const niftyResult = await getStrikePrice("NIFTY")
+        if (!_.isEmpty(niftyResult)) {
+          setNifty(niftyResult.StrikePrice)
+        }
+        const bankNiftyResult = await getStrikePrice("BANKNIFTY")
+        if (!_.isEmpty(bankNiftyResult)) {
+          setBankNifty(bankNiftyResult.StrikePrice)
+          console.log("BANKNIFTY", bankNiftyResult.StrikePrice)
+        }
+        getIntraday("NIFTY", setintradayList)
+        getIntraday("BANKNIFTY", setintradayListBank)
+        console.log("NIFTY List", intradayList)
+        console.log("BANKNIFTY List", intradayListBank)
+        const shortGraphResult = await shortGraphList()
+        if (!isEmpty(shortGraphResult)) {
+          const data = shortGraphResult.map(item => item.OPEN - item.CLOSE)
+          const label = shortGraphResult.map(item => item.INSTRUMENTIDENTIFIER)
           setProductName(label)
           setProductData(data)
           console.log(ProductData)
           console.log(ProductName)
         }
-      })
+        const rankingResult = await fnoranking()
+        console.log("list data", rankingResult)
+        getProductFilter(typeFilter)
+        getOIFilter(typeOIpriceFilter)
+      } catch (error) {
+        console.error("Error fetching data:", error)
+      }
     }
-    yourFunction()
-    getProductFilter(typeFilter)
-    getOIFilter(typeOIpriceFilter)
-    const intervalId = setInterval(yourFunction, 10000)
-    return () => clearInterval(intervalId)
-  }, [fetureBuild])
-  useEffect(() => {
+    fetchData()
+    const intervalId = setInterval(fetchData, 10000)
     dragula([
       document.getElementById("left"),
       document.getElementById("right"),
@@ -77,7 +75,9 @@ const Dashboard = props => {
       document.getElementById("left3"),
       document.getElementById("right3"),
     ])
-  }, [])
+    return () => clearInterval(intervalId)
+  }, [fetureBuild, typeFilter, typeOIpriceFilter]) // Include relevant dependencies
+
   function getIntraday(type, list) {
     geIntradayDataLimit(type, 5)
       .then(result => {
@@ -280,7 +280,7 @@ const Dashboard = props => {
                 <IntradayTableDeshboad data={intradayListBank} />
               </CardDrag>
             </Col>
-            
+
             <Col md={6} id="left2">
               <CardDrag header={"Product Movment Chart"}>
                 {fetureBuild.map(item => (
