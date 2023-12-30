@@ -352,7 +352,7 @@ module.exports = function (TdDerivatives) {
         }
       });
   };
-  
+
   cron.schedule(scheduletwo, async () => {
     const gettime = getTimeCurrent();
     getIntradayData.getProductList((err, response) => {
@@ -469,7 +469,7 @@ module.exports = function (TdDerivatives) {
       }
     });
   });
-  
+
   cron.schedule(scheduleone, async () => {
     const gettime = getTimeCurrent();
     const listType = ["NIFTY", "BANKNIFTY", "FINNIFTY", "MIDCPNIFTY"];
@@ -582,8 +582,6 @@ module.exports = function (TdDerivatives) {
       });
     }
   });
-
-
 
   function getTimeCurrent() {
     let date_ob = new Date();
@@ -1121,14 +1119,17 @@ module.exports = function (TdDerivatives) {
         })
       );
 
-      // Sort the data by PRICECHANGEPERCENTAGE
+      // Sort and get top 10 products by PRICECHANGEPERCENTAGE for each timing category
+      const topTenDataListTime = {};
       Object.keys(dataListTime).forEach((timing) => {
-        dataListTime[timing] = dataListTime[timing].sort(
+        const sortedData = dataListTime[timing].sort(
           (a, b) => b.PRICECHANGEPERCENTAGE - a.PRICECHANGEPERCENTAGE
         );
+        const topTen = sortedData.slice(0, 10);
+        topTenDataListTime[timing] = topTen;
       });
 
-      return { dataListTime };
+      return { dataListTime: topTenDataListTime };
     } catch (error) {
       console.error(error);
       return { dataListTime };

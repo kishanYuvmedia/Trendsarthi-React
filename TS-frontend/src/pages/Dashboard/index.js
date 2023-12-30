@@ -57,8 +57,9 @@ const Dashboard = props => {
           console.log(ProductData)
           console.log(ProductName)
         }
-        const rankingResult = await fnoranking()
-        console.log("list data", rankingResult)
+        fnoranking().then(result => {
+          console.log("list data", result)
+        })
         getProductFilter(typeFilter)
         getOIFilter(typeOIpriceFilter)
       } catch (error) {
