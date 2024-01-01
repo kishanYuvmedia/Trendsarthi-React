@@ -1,5 +1,5 @@
-import React from "react";
-import { Bar } from "react-chartjs-2";
+import React from "react"
+import { Bar } from "react-chartjs-2"
 
 const BarChart = ({ ProductName, Productdata }) => {
   // Sample data for the bar chart
@@ -16,7 +16,7 @@ const BarChart = ({ ProductName, Productdata }) => {
         data: Productdata,
       },
     ],
-  };
+  }
   const options = {
     scales: {
       y: {
@@ -29,13 +29,13 @@ const BarChart = ({ ProductName, Productdata }) => {
         },
       },
     },
-  };
+  }
 
   return (
     <div>
       <Bar data={data} options={options} />
     </div>
-  );
-};
+  )
+}
 
-export default BarChart;
+export default BarChart

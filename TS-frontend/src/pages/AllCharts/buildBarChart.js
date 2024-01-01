@@ -1,7 +1,14 @@
 import React, { Fragment, useState } from "react"
 import ReactApexChart from "react-apexcharts"
 import getChartColorsArray from "../../components/Common/ChartsDynamicColor"
-const BuildBarChart = ({ dataLabel, dataIOPrice, dataIOPriceChange,titleName,horizontal,dataColors }) => {
+const BuildBarChart = ({
+  dataLabel,
+  dataIOPrice,
+  dataIOPriceChange,
+  titleName,
+  horizontal,
+  dataColors,
+}) => {
   const apaexlineColumnColors = getChartColorsArray(dataColors)
   const series = [
     {
@@ -41,7 +48,7 @@ const BuildBarChart = ({ dataLabel, dataIOPrice, dataIOPriceChange,titleName,hor
     },
     yaxis: {
       title: {
-        text:titleName,
+        text: titleName,
       },
     },
     grid: {
@@ -65,7 +72,7 @@ const BuildBarChart = ({ dataLabel, dataIOPrice, dataIOPriceChange,titleName,hor
           options={options}
           series={series}
           type="bar"
-          height={500}
+          height={400}
         />
       </Fragment>
     </div>
