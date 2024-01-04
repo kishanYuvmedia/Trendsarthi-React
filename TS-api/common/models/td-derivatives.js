@@ -1034,161 +1034,36 @@ module.exports = function (TdDerivatives) {
       }
     );
   };
-  TdDerivatives.getProductListData = (callback) => {
+  TdDerivatives.getProductListOption = (callback) => {
+    const product = "NIFTY-I+BANKNIFTY-I+FINNIFTY-I+MIDCPNIFTY-I";
     try {
-      const responseType = new Promise((resolve, reject) => {
-        getIntradayData.getProductList((err, type) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(type);
-          }
-        });
-      });
-
-      if (!_.isEmpty(responseType)) {
-        const query = {
-          where: {
-            INSTRUMENTIDENTIFIER: { inq: responseType.PRODUCTS },
-          },
-          limit: 1,
-          order: [["id", "desc"]], // Fix for the order parameter
-        };
-
-        console.log(query); // Log the query for debugging
-
-        const result =  TdDerivatives.findOne(query);
-
-        if (!_.isEmpty(result)) {
-          callback(null, result);
-        }
-      } else {
-        // If responseType is empty, call the callback with an empty array
-        callback(null, []);
-      }
-    } catch (e) {
-      console.error(e);
-      callback(e, null);
-    }
-  };
-  TdDerivatives.getProductListOption = async (callback) => {
-    const listType = ["NIFTY", "BANKNIFTY", "FINNIFTY", "MIDCPNIFTY"];
-    try {
-      // Use Promise.all to wait for all findOne promises to resolve
-      const promises = await Promise.all(
-        listType.map(async (type) => {
-          return TdDerivatives.findOne({
-            where: {
-              INSTRUMENTIDENTIFIER: `${type}-I`,
-            },
-            limit: 1,
-            order: "id desc",
-          });
-        })
-      );
-      const resolvedDataList = await Promise.all(promises);
-      callback(null, resolvedDataList);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  TdDerivatives.getFnoRanking = async () => {
-    const dataListTime = {};
-    const listTime = ["MINUTE", "HOUR", "DAY", "WEEK", "MONTH"];
-
-    try {
-      const responseType = await getIntradayData.getProductListAsync();
-
-      if (!responseType || !responseType.PRODUCTS) {
-        return { dataListTime };
-      }
-
-      await Promise.all(
-        responseType.PRODUCTS.slice(16).map(async (type) => {
-          await Promise.all(
-            listTime.map(async (timing) => {
-              const filter = getFilter(timing, type);
-              try {
-                const result = await TdDerivatives.find(filter);
-                if (result && result.length > 0) {
-                  dataListTime[timing] = dataListTime[timing] || [];
-                  dataListTime[timing] = dataListTime[timing].concat(result);
-                }
-              } catch (e) {
-                console.error(e);
-              }
-            })
-          );
-        })
-      );
-
-      // Sort and get top 10 products by PRICECHANGEPERCENTAGE for each timing category
-      const topTenDataListTime = {};
-      Object.keys(dataListTime).forEach((timing) => {
-        const sortedData = dataListTime[timing].sort(
-          (a, b) => b.PRICECHANGEPERCENTAGE - a.PRICECHANGEPERCENTAGE
-        );
-        const topTen = sortedData.slice(0, 10);
-        topTenDataListTime[timing] = topTen;
-      });
-
-      return { dataListTime: topTenDataListTime };
-    } catch (error) {
-      console.error(error);
-      return { dataListTime };
-    }
-  };
-
-  // Utility function to promisify getIntradayData.getProductList
-  getIntradayData.getProductListAsync = () => {
-    return new Promise((resolve, reject) => {
-      getIntradayData.getProductList((err, response) => {
+      getIntradayData.GetMultiOptionChain(product, (err, response) => {
         if (err) reject(err);
-        else resolve(response);
+        else callback(null, response);
       });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  TdDerivatives.getMultiOptionChain = (callback) => {
+    getIntradayData.getProductList((err, type) => {
+      if (err) {
+        reject(err);
+      } else {
+        if (!_.isEmpty(type)) {
+          const groupedArrays = [];
+          for (let i = 16; i < type.PRODUCTS.length; i += 25) {
+            const group = type.PRODUCTS.slice(i, i + 25);
+            const result = group.map((symbol) => `${symbol}-I`).join("+");
+            console.log("Result", result);
+            getIntradayData.GetMultiOptionChain(result, (err, response) => {
+              if (err) reject(err);
+              else groupedArrays.push(response);
+            });
+          }
+          callback(null, groupedArrays);
+        }
+      }
     });
   };
-
-  function getFilter(timing, type) {
-    const currentDate = new Date();
-    const filter = {
-      where: {
-        INSTRUMENTIDENTIFIER: `${type}-I`,
-      },
-      limit: 1,
-      order: "id asc",
-    };
-    if (timing === "MINUTE") {
-      // Handle minute filter if needed
-    } else if (timing === "HOUR") {
-      setHourlyFilter(filter, currentDate, 1);
-    } else if (timing === "DAY") {
-      setDailyFilter(filter, currentDate, 1);
-    } else if (timing === "WEEK") {
-      setDailyFilter(filter, currentDate, 5);
-    } else if (timing === "MONTH") {
-      setDailyFilter(filter, currentDate, 30);
-    }
-    return filter;
-  }
-  function setHourlyFilter(filter, currentDate, hoursAgo) {
-    const startOfRange = new Date(currentDate);
-    startOfRange.setHours(startOfRange.getHours() - hoursAgo);
-    filter.where.and = [
-      { createdAt: { gte: startOfRange } },
-      { createdAt: { lte: currentDate } },
-    ];
-  }
-  function setDailyFilter(filter, currentDate, daysAgo) {
-    const startOfRange = new Date(currentDate);
-    startOfRange.setDate(startOfRange.getDate() - daysAgo);
-    startOfRange.setHours(9, 0, 0, 0);
-    const endOfRange = new Date(currentDate);
-    endOfRange.setDate(endOfRange.getDate() - daysAgo);
-    endOfRange.setHours(15, 59, 59, 999);
-    filter.where.and = [
-      { createdAt: { gte: startOfRange } },
-      { createdAt: { lte: endOfRange } },
-    ];
-  }
 };
