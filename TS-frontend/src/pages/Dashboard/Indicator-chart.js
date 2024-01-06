@@ -24,7 +24,7 @@ export default function IndicatorChart() {
     getProductDatalist(selectType)
   }, [selectType])
   function getProductDatalist(type) {
-    getHistoryList("MINUTE", `${type}-I`, 5000, 5).then(result => {
+    getHistoryList("MINUTE", `${type}-I`, 5000, 30).then(result => {
       const dataResult = []
       if (!isEmpty(result)) {
         console.log("Product stock data", result)
@@ -41,7 +41,6 @@ export default function IndicatorChart() {
       setData(dataResult)
     })
   }
-
   return (
     <div>
       <React.Fragment>

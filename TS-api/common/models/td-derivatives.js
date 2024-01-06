@@ -1046,64 +1046,51 @@ module.exports = function (TdDerivatives) {
     }
   };
   TdDerivatives.getMultiOptionChain = (callback) => {
-    // getIntradayData.getProductList((err, type) => {
-    //   if (err) {
-    //     reject(err);
-    //   } else {
-    //     if (!_.isEmpty(type)) {
-    //       const groupedArrays = [];
-    //       for (let i = 16; i < type.PRODUCTS.length; i += 25) {
-    //         const group = type.PRODUCTS.slice(i, i + 25);
-    //         const result = group.map((symbol) => `${symbol}-I`).join("+");
-    //         getIntradayData.GetMultiOptionChain(result, (err, response) => {
-    //           if (err) reject(err);
-    //           else {
-    //             groupedArrays.push(response);
-    //           }
-    //         });
-    //       }
-    //       callback(null, groupedArrays);
-    //     }
-    //   }
-    // });
-
-    try {
-      const type = new Promise((resolve, reject) => {
-        getIntradayData.getProductList((err, type) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(type);
-          }
-        });
-      });
-
-      if (!_.isEmpty(type)) {
-        const groupedArrays = [];
-
+    getIntradayData.getProductList((err, type) => {
+      if (err) {
+        reject(err);
+      } else {
+        if (!_.isEmpty(type)) {
+          processProductGroups(type)
+            .then((result) => {
+              callback(null, result);
+            })
+            .catch((error) => {
+              console.error(error); // Handle errors here
+            });
+        }
+      }
+    });
+    function processProductGroups(type) {
+      return new Promise((resolve, reject) => {
+        const promises = [];
         for (let i = 16; i < type.PRODUCTS.length; i += 25) {
-          const group = type.PRODUCTS.slice(i, i + 25);
+          let value =
+            25 < type.PRODUCTS.length - i ? 25 : type.PRODUCTS.length - i;
+          const group = type.PRODUCTS.slice(i, i + value);
           const result = group.map((symbol) => `${symbol}-I`).join("+");
-          console.log("Result", result);
 
-          const response = new Promise((resolve, reject) => {
+          const promise = new Promise((innerResolve, innerReject) => {
             getIntradayData.GetMultiOptionChain(result, (err, response) => {
               if (err) {
-                reject(err);
+                innerReject(err);
               } else {
-                resolve(response);
+                innerResolve(response);
               }
             });
           });
 
-          console.log(response);
-          groupedArrays.push(response);
+          promises.push(promise);
         }
-
-        return groupedArrays;
-      }
-    } catch (error) {
-      throw error;
+        // Wait for all promises to resolve
+        Promise.all(promises)
+          .then((groupedArrays) => {
+            // Flatten the array of arrays into a single array
+            const allResponses = groupedArrays.flat();
+            resolve(allResponses);
+          })
+          .catch(reject);
+      });
     }
   };
 };
