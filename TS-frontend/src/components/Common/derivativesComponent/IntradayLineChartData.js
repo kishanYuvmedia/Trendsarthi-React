@@ -55,19 +55,21 @@ const LineChart = ({ dataColors, datalist, timelist, zerolistv }) => {
       },
     ],
   }
+
   var option = {
     scales: {
       yAxes: [
         {
           ticks: {
             max: result.highest,
-            min:result.lowest,
-            stepSize: result.highest / 10,
+            min: result.lowest,
+            suggestedMin: 0, // Add this line to set the baseline to 0
           },
         },
       ],
     },
   }
+
   function findHighestAndLowest(arr) {
     if (arr.length === 0) {
       return { highest: undefined, lowest: undefined }
@@ -87,6 +89,7 @@ const LineChart = ({ dataColors, datalist, timelist, zerolistv }) => {
 
     return { highest, lowest }
   }
+
   return <Line data={data} options={option} />
 }
 

@@ -16,7 +16,7 @@ const BuildBarChart = ({
       data: dataIOPrice,
     },
     {
-      name: "OI Change",
+      name: "Price",
       data: dataIOPriceChange,
     },
   ]

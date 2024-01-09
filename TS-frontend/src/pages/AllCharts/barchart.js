@@ -7,12 +7,12 @@ const BarChart = ({ ProductName, Productdata }) => {
     labels: ProductName,
     datasets: [
       {
-        label: "Product Movment",
-        backgroundColor: "rgba(89, 225, 255,0.4)",
-        borderColor: "rgba(89, 225, 255,1)",
+        label: "Option IO",
+        backgroundColor: "rgba(3, 61, 252,0.4)",
+        borderColor: "rgba(3, 61, 252,1)",
         borderWidth: 1,
-        hoverBackgroundColor: "rgba(89, 225, 255,0.6)",
-        hoverBorderColor: "rgba(89, 225, 255,1)",
+        hoverBackgroundColor: "rgba(3, 61, 252,0.6)",
+        hoverBorderColor: "rgba(3, 61, 252,1)",
         data: Productdata,
       },
     ],

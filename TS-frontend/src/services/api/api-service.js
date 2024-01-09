@@ -222,7 +222,7 @@ export const shortProductListDataList = () => {
   return new Promise((resolve, reject) => {
     axiosRequest(
       "GET",
-      `${["TdDerivatives", "getProductListData"].join("/")}`,
+      `${["TdDerivatives", "getMultiOptionChain"].join("/")}`,
       undefined,
       undefined,
       {},

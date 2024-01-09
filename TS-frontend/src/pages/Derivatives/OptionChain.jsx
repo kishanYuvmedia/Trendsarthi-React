@@ -54,7 +54,6 @@ const OptionChain = props => {
                 })
                 setlist(data)
                 setStrikePrice(result1.strike)
-                
               })
               .catch(err => {
                 console.error("Error fetching getOptionDataTable:", err)
@@ -67,17 +66,17 @@ const OptionChain = props => {
       .catch(err => {
         console.error("Error fetching getStrikePrice:", err)
       })
-      getIntraday()
+    getIntraday()
   }, [type])
   function getIntraday() {
     geIntradayData(type)
       .then(result => {
         if (!_.isEmpty(result)) {
-          console.log("database",result);
-          const timevalue = [];
-          const dataValue = [];
-          const zerolist = [];
-          const IntraDay=[];
+          console.log("database", result)
+          const timevalue = []
+          const dataValue = []
+          const zerolist = []
+          const IntraDay = []
           result.map(item => {
             IntraDay.push({
               time: item.time,
@@ -88,7 +87,7 @@ const OptionChain = props => {
               optionSignal:
                 Number(Number(item.putTotal) / Number(item.callTotal)).toFixed(
                   2
-                ) > .50
+                ) > 0.5
                   ? "BUY"
                   : "SELL",
               vwap: item.AVERAGETRADEDPRICE,
@@ -96,19 +95,19 @@ const OptionChain = props => {
               vwapSignal:
                 Number(
                   Number(item.AVERAGETRADEDPRICE) < Number(item.BUYPRICE)
-                ).toFixed(2) > .50
+                ).toFixed(2) > 0.5
                   ? "BUY"
                   : "SELL",
             })
-           
+
             dataValue.push(Number(item.putTotal) - Number(item.callTotal))
             timevalue.push(item.time)
             zerolist.push(0)
           })
-          setintradayList(IntraDay);
-          setDataArray(dataValue);
-          setTimeArray(timevalue);
-          setzerolistArray(zerolist);
+          setintradayList(IntraDay)
+          setDataArray(dataValue)
+          setTimeArray(timevalue)
+          setzerolistArray(zerolist)
         }
       })
       .catch(err => {
@@ -139,12 +138,16 @@ const OptionChain = props => {
           PCRstatus={true}
         />
         <IntradayTableContainer data={intradayList} />
-        <NiftyIntradayChart
-          title={type}
-          datalist={dataArray}
-          timeValue={timeArray}
-          zerolist={zerolistArray}
-        />
+        <Row>
+          <Col md={6}>
+            <NiftyIntradayChart
+              title={type}
+              datalist={dataArray}
+              timeValue={timeArray}
+              zerolist={zerolistArray}
+            />
+          </Col>
+        </Row>
       </div>
     </div>
   )

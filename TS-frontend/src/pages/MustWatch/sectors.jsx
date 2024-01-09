@@ -10,6 +10,7 @@ import { useEffect } from "react"
 import Apaexlinecolumn from "pages/Derivatives/DashboardComponents/apaexlinecolumn"
 import FnoHeader from "./Section/fnoHeader"
 import { BiCaretDown, BiCaretUp } from "react-icons/bi"
+import {_,isEmpty} from "lodash"
 import {
   getStrikePrice,
   getExpairDate,
@@ -67,7 +68,7 @@ export default function Sectors() {
                 let ciototal = 0
                 let piogetotal = 0
                 console.log("result one data", result1)
-                if (_.get(result1, "list")) {
+                if (result1.length > 0) {
                   result1.list.map(item => {
                     data.push({
                       openIntCE: item.call.OPENINTEREST,
@@ -215,7 +216,9 @@ export default function Sectors() {
         intervals[i],
         100
       )
-      dataList.push(data.list)
+      if (!isEmpty(data)) {
+        dataList.push(data.list)
+      }
     }
     countUpDown(dataList)
     setIntradayTable(dataList)

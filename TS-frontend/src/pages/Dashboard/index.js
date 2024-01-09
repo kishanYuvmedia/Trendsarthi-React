@@ -26,7 +26,7 @@ const Dashboard = props => {
   const [ioData, setIoData] = useState([])
   const [LabelName, setLabelName] = useState([])
   const [ioDataPrice, setIoDataPrice] = useState([])
-  const [typeOIpriceFilter, setTypeOIpriceFilter] = useState("Long Unwinding")
+  const [typeOIpriceFilter, setTypeOIpriceFilter] = useState("Long Buildup")
   const [fetureIO] = useState([
     "Long Buildup",
     "Short Buildup",
@@ -34,6 +34,7 @@ const Dashboard = props => {
     "Short Covering",
   ])
   useEffect(() => {
+    getOIFilter(typeOIpriceFilter)
     const fetchData = async () => {
       try {
         const niftyResult = await getStrikePrice("NIFTY")
@@ -51,7 +52,7 @@ const Dashboard = props => {
         console.log("BANKNIFTY List", intradayListBank)
         const shortGraphResult = await shortGraphList()
         if (!isEmpty(shortGraphResult)) {
-          const data = shortGraphResult.map(item => item.OPEN - item.CLOSE)
+          const data = shortGraphResult.map(item => item.PRICECHANGEPERCENTAGE)
           const label = shortGraphResult.map(item => item.INSTRUMENTIDENTIFIER)
           setProductName(label)
           setProductData(data)
@@ -62,7 +63,6 @@ const Dashboard = props => {
           console.log("list data", result)
         })
         getProductFilter(typeFilter)
-        getOIFilter(typeOIpriceFilter)
       } catch (error) {
         console.error("Error fetching data:", error)
       }
@@ -119,64 +119,64 @@ const Dashboard = props => {
     shortProductListDataList().then(result => {
       if (!isEmpty(result)) {
         const iO = []
-        const iOChange = []
         const label = []
+        const Price = []
         console.log("result", result)
         // Assuming result is an array of objects with properties OPEN, CLOSE, and INSTRUMENTIDENTIFIER
         result.forEach(item => {
-          iO.push(item.OPEN)
-          iOChange.push(item.SELLPRICE)
+          iO.push(item.PRICECHANGE)
+          Price.push(item.OPENINTERESTCHANGE)
           label.push(item.INSTRUMENTIDENTIFIER)
         })
         // Create an array of objects with data and label properties
-        const productList = iOChange.map((value, index) => ({
+        const productList = Price.map((value, index) => ({
           iO: value,
-          iOChange: iOChange[index],
+          Price: Price[index],
           label: label[index],
         }))
+        let longBuildup = 0
+        let shortBuildup = 0
+        let longUnwinding = 0
+        let shortCovering = 0
+        productList.forEach(entry => {
+          const oiChange = entry.OPENINTERESTCHANGE
+          const priceChange = entry.PRICECHANGE
+          if (oiChange > 0 && priceChange > 0) {
+            longBuildup++
+            console.log(`Long Buildup for ${entry.INSTRUMENTIDENTIFIER}`)
+          } else if (oiChange > 0 && priceChange < 0) {
+            shortBuildup++
+            console.log(`Short Buildup for ${entry.INSTRUMENTIDENTIFIER}`)
+          } else if (oiChange < 0 && priceChange < 0) {
+            longUnwinding++
+            console.log(`Long Unwinding for ${entry.INSTRUMENTIDENTIFIER}`)
+          } else if (oiChange < 0 && priceChange > 0) {
+            shortCovering++
+            console.log(`Short Covering for ${entry.INSTRUMENTIDENTIFIER}`)
+          }
+        })
+        console.log("Total Long Buildup:", longBuildup)
+        console.log("Total Short Buildup:", shortBuildup)
+        console.log("Total Long Unwinding:", longUnwinding)
+        console.log("Total Short Covering:", shortCovering)
 
-        // Sort the array in ascending order based on the 'data' property
-        const sortedAsc = productList.slice().sort((a, b) => a.iO - b.iO)
-
-        // Get the top 10 items in ascending order
-        const top10Asc = sortedAsc.slice(0, 10)
-
-        // Sort the array in descending order based on the 'data' property
-        const sortedDesc = productList.slice().sort((a, b) => b.iO - a.iO)
-
-        // Get the top 10 items in descending order
-        const top10Desc = sortedDesc.slice(0, 10)
-
-        // Sort the array in ascending order based on the 'data' property
-        const sortedAscBuildup = productList.slice().sort((a, b) => a.iO - b.iO)
-
-        // Get the top 10 items in ascending order
-        const top10AscBuildup = sortedAscBuildup.slice(0, 10)
-
-        // Sort the array in descending order based on the 'data' property
-        const sortedDescBuildup = productList
-          .slice()
-          .sort((a, b) => b.iO - a.iO)
-
-        // Get the top 10 items in descending order
-        const top10DescBuildup = sortedDescBuildup.slice(0, 10)
-        if (type === "Short Covering") {
-          setIoData(top10Asc.map(item => item.iO))
-          setIoDataPrice(top10Asc.map(item => item.iOChange))
-          setLabelName(top10Asc.map(item => item.label))
-        } else if (type === "Long Unwinding") {
-          setIoData(top10Desc.map(item => item.iO))
-          setIoDataPrice(top10Asc.map(item => item.iOChange))
-          setLabelName(top10Desc.map(item => item.label))
-        } else if (type === "Long Buildup") {
-          setIoData(top10AscBuildup.map(item => item.iO))
-          setIoDataPrice(top10AscBuildup.map(item => item.iOChange))
-          setLabelName(top10AscBuildup.map(item => item.label))
-        } else if (type === "Short Buildup") {
-          setIoData(top10DescBuildup.map(item => item.iO))
-          setIoDataPrice(top10DescBuildup.map(item => item.iOChange))
-          setLabelName(top10DescBuildup.map(item => item.label))
-        }
+        // if (type === "Short Covering") {
+        //   setIoData(top10Asc.map(item => item.iO))
+        //   setIoDataPrice(top10Asc.map(item => item.iOChange))
+        //   setLabelName(top10Asc.map(item => item.label))
+        // } else if (type === "Long Unwinding") {
+        //   setIoData(top10Desc.map(item => item.iO))
+        //   setIoDataPrice(top10Asc.map(item => item.iOChange))
+        //   setLabelName(top10Desc.map(item => item.label))
+        // } else if (type === "Long Buildup") {
+        //   setIoData(top10AscBuildup.map(item => item.iO))
+        //   setIoDataPrice(top10AscBuildup.map(item => item.iOChange))
+        //   setLabelName(top10AscBuildup.map(item => item.label))
+        // } else if (type === "Short Buildup") {
+        //   setIoData(top10DescBuildup.map(item => item.iO))
+        //   setIoDataPrice(top10DescBuildup.map(item => item.iOChange))
+        //   setLabelName(top10DescBuildup.map(item => item.label))
+        // }
       }
     })
   }
@@ -259,7 +259,7 @@ const Dashboard = props => {
                   dataLabel={LabelName}
                   dataIOPrice={ioData}
                   dataIOPriceChange={ioDataPrice}
-                  titleName={"Product Movment Chart"}
+                  titleName={"Product OI Movment Chart"}
                   horizontal={true}
                   dataColors='["#643c9d","#cfbfe3"]'
                 />

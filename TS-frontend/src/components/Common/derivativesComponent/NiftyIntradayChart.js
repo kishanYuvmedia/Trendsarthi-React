@@ -1,10 +1,6 @@
 import React from "react"
 
 import { Row, Col, Card, CardBody, CardTitle, Container } from "reactstrap"
-//Import Breadcrumb
-import Breadcrumbs from "../Breadcrumb"
-
-// import chartJs
 
 import LineChart from "../derivativesComponent/IntradayLineChartData"
 
@@ -27,7 +23,7 @@ const NiftyIntradayChart = ({ datalist, timeValue, zerolist, title }) => {
                     datalist={dataItem}
                     timelist={timeItem}
                     zerolistv={zerolistList}
-                    dataColors='["--bs-primary-rgb, 0.2", "--bs-primary", "--bs-light-rgb, 0.2", "--bs-light"]'
+                    dataColors='["--bs-primary-rgb, 0.2"]'
                   />
                 </CardBody>
               </Card>
