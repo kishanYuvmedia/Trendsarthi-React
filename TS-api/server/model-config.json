@@ -67,5 +67,9 @@
   "TdFnoRanking":{
     "dataSource": "mongoDB",
     "public": true
+  },
+  "TdProduct":{
+    "dataSource": "mongoDB",
+    "public": true
   }
 }
