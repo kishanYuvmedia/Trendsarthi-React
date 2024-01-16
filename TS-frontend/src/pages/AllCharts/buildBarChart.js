@@ -45,6 +45,7 @@ const BuildBarChart = ({
     colors: apaexlineColumnColors,
     xaxis: {
       categories: dataLabel,
+      OI: dataIOPrice,
     },
     yaxis: {
       title: {

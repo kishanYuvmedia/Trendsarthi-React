@@ -116,70 +116,50 @@ const Dashboard = props => {
       })
   }
   function getOIFilter(type) {
-    shortProductListDataList().then(result => {
-      if (!isEmpty(result)) {
-        const iO = []
-        const label = []
-        const Price = []
-        console.log("result", result)
-        // Assuming result is an array of objects with properties OPEN, CLOSE, and INSTRUMENTIDENTIFIER
+    shortProductListDataList()
+      .then(result => {
+        if (isEmpty(result)) {
+          return
+        }
+
+        const dataOI = []
+        const dataPrice = []
+        const dataLabel = []
+
+        // Push the data that satisfies the conditions
         result.forEach(item => {
-          iO.push(item.PRICECHANGE)
-          Price.push(item.OPENINTERESTCHANGE)
-          label.push(item.INSTRUMENTIDENTIFIER)
-        })
-        // Create an array of objects with data and label properties
-        const productList = Price.map((value, index) => ({
-          iO: value,
-          Price: Price[index],
-          label: label[index],
-        }))
-        let longBuildup = 0
-        let shortBuildup = 0
-        let longUnwinding = 0
-        let shortCovering = 0
-        productList.forEach(entry => {
-          const oiChange = entry.OPENINTERESTCHANGE
-          const priceChange = entry.PRICECHANGE
-          if (oiChange > 0 && priceChange > 0) {
-            longBuildup++
-            console.log(`Long Buildup for ${entry.INSTRUMENTIDENTIFIER}`)
-          } else if (oiChange > 0 && priceChange < 0) {
-            shortBuildup++
-            console.log(`Short Buildup for ${entry.INSTRUMENTIDENTIFIER}`)
-          } else if (oiChange < 0 && priceChange < 0) {
-            longUnwinding++
-            console.log(`Long Unwinding for ${entry.INSTRUMENTIDENTIFIER}`)
-          } else if (oiChange < 0 && priceChange > 0) {
-            shortCovering++
-            console.log(`Short Covering for ${entry.INSTRUMENTIDENTIFIER}`)
+          const oiChange = item.OPENINTERESTCHANGE
+          const priceChange = item.PRICECHANGE
+          const oilabel = item.INSTRUMENTIDENTIFIER
+          if (
+            (oiChange > 0 && priceChange > 0 && type === "Long Buildup") ||
+            (oiChange > 0 && priceChange < 0 && type === "Short Buildup") ||
+            (oiChange < 0 && priceChange < 0 && type === "Long Unwinding") ||
+            (oiChange < 0 && priceChange > 0 && type === "Short Covering")
+          ) {
+            dataOI.push(oiChange)
+            dataPrice.push(priceChange)
+            dataLabel.push(oilabel)
           }
         })
-        console.log("Total Long Buildup:", longBuildup)
-        console.log("Total Short Buildup:", shortBuildup)
-        console.log("Total Long Unwinding:", longUnwinding)
-        console.log("Total Short Covering:", shortCovering)
+        // Sort the arrays based on OPENINTERESTCHANGE
+        const sortedIndices = dataOI
+          .map((_, index) => index)
+          .sort((a, b) => dataOI[a] - dataOI[b])
 
-        // if (type === "Short Covering") {
-        //   setIoData(top10Asc.map(item => item.iO))
-        //   setIoDataPrice(top10Asc.map(item => item.iOChange))
-        //   setLabelName(top10Asc.map(item => item.label))
-        // } else if (type === "Long Unwinding") {
-        //   setIoData(top10Desc.map(item => item.iO))
-        //   setIoDataPrice(top10Asc.map(item => item.iOChange))
-        //   setLabelName(top10Desc.map(item => item.label))
-        // } else if (type === "Long Buildup") {
-        //   setIoData(top10AscBuildup.map(item => item.iO))
-        //   setIoDataPrice(top10AscBuildup.map(item => item.iOChange))
-        //   setLabelName(top10AscBuildup.map(item => item.label))
-        // } else if (type === "Short Buildup") {
-        //   setIoData(top10DescBuildup.map(item => item.iO))
-        //   setIoDataPrice(top10DescBuildup.map(item => item.iOChange))
-        //   setLabelName(top10DescBuildup.map(item => item.label))
-        // }
-      }
-    })
+        const sortedDataOI = sortedIndices.map(index => dataOI[index])
+        const sortedDataPrice = sortedIndices.map(index => dataPrice[index])
+        const sortedDataLabel = sortedIndices.map(index => dataLabel[index])
+
+        setIoDataPrice(sortedDataPrice.slice(0, 10))
+        setLabelName(sortedDataLabel.slice(0, 10))
+        setIoData(sortedDataOI.slice(0, 10))
+      })
+      .catch(error => {
+        console.error("Error fetching data:", error)
+      })
   }
+
   const buildIOHandler = type => {
     setTypeOIpriceFilter(type)
     getOIFilter(type)
@@ -249,7 +229,9 @@ const Dashboard = props => {
                 {fetureIO.map(item => (
                   <button
                     type="button"
-                    className="btn btn-sm btn-warning m-1"
+                    className={`btn btn-sm m-1 ${
+                      typeOIpriceFilter === item ? 'btn-warning' : ' btn-info'
+                    }`}
                     onClick={e => buildIOHandler(item)}
                   >
                     {item}
@@ -259,7 +241,7 @@ const Dashboard = props => {
                   dataLabel={LabelName}
                   dataIOPrice={ioData}
                   dataIOPriceChange={ioDataPrice}
-                  titleName={"Product OI Movment Chart"}
+                  titleName={"Product OI/Price Movment Chart"}
                   horizontal={true}
                   dataColors='["#643c9d","#cfbfe3"]'
                 />

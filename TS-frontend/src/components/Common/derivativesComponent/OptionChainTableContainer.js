@@ -82,24 +82,12 @@ const OptionChainTableContainer = ({
     {
       columns,
       data,
-      // defaultColumn: { Filter: DefaultColumnFi lter },
       initialState: {
         pageIndex: 0,
         pageSize: customPageSize,
-        // sortBy: [
-        //   {
-        //     id: 'sr',
-        //     desc: false,
-        //   },
-        //   {
-        //     id: 'openIntCE',
-        //     desc: false,
-        //   },
-        // ],
       },
     },
     useGlobalFilter,
-    // useFilters,
     useSortBy,
     useExpanded,
     usePagination
@@ -143,29 +131,48 @@ const OptionChainTableContainer = ({
 
   return (
     <>
-    {PCRstatus && 
-    <div>
-    {totalOpenIntCE && (
-      <PCR totalOpenIntCE={totalOpenIntCE} totalOpenIntPE={totalOpenIntPE} />
-    )}
-    </div>
-    }
-     
+      {PCRstatus && (
+        <div>
+          {totalOpenIntCE && (
+            <PCR
+              totalOpenIntCE={totalOpenIntCE}
+              totalOpenIntPE={totalOpenIntPE}
+            />
+          )}
+        </div>
+      )}
+
       <Fragment>
         <div className="table-responsive">
           <Table {...getTableProps()} className={` ${tableClass} bdr`}>
             <thead className={theadClass}>
               <tr>
                 <th colSpan={5} className="text-white fw-bold">
-                  Call Option <svg className="text-success me-1" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
-  <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-</svg>
+                  Call Option{" "}
+                  <svg
+                    className="text-success me-1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="green"
+                    class="bi bi-caret-up-fill"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z" />
+                  </svg>
                 </th>
                 <th colSpan={6} className="text-end text-white fw-bold">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-  <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-</svg> Put
-                  Option
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="red"
+                    class="bi bi-caret-down-fill"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
+                  </svg>{" "}
+                  Put Option
                 </th>
               </tr>
               {headerGroups.map(headerGroup => (

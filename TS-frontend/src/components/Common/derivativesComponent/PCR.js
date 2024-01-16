@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react"
 
 import { Table, Row, Col, Card, CardBody } from "reactstrap"
 
-const PCR = (props) => {
-  const [data,setData]=useState({
+const PCR = props => {
+  const [data, setData] = useState({
     PCR: 0,
     PCRStrength: "NON",
-  });
+  })
   function calculatePCRStrength2(vtotalOpenIntCE, vtotalOpenIntPE) {
     let PCR = vtotalOpenIntPE / vtotalOpenIntCE
     if (PCR >= 3) {
@@ -41,9 +41,9 @@ const PCR = (props) => {
       }
     }
   }
-  useEffect(()=>{
-  setData(calculatePCRStrength2(props.totalOpenIntCE,props.totalOpenIntPE))
-  },[props.totalOpenIntCE,props.totalOpenIntPE])
+  useEffect(() => {
+    setData(calculatePCRStrength2(props.totalOpenIntCE, props.totalOpenIntPE))
+  }, [props.totalOpenIntCE, props.totalOpenIntPE])
   return (
     <div>
       <Row>

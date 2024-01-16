@@ -122,21 +122,25 @@ const OptionChain = props => {
           title="Derivatives"
           breadcrumbItem={`${type} Option Chain`}
         />
-        <OptionChainTableContainer
-          columns={columnsNiftyOption}
-          data={list}
-          isGlobalFilter={false}
-          isAddOptions={false}
-          strickP={strickPrice}
-          customPageSize={10}
-          isPagination={false}
-          tableClass="align-middle table-nowrap table-check table-hover table"
-          theadClass="table-light"
-          tbodyClass="table-striped"
-          paginationDiv="col-12"
-          pagination="justify-content-center pagination pagination-rounded"
-          PCRstatus={true}
-        />
+        <Row>
+          <Col md={12}>
+            <OptionChainTableContainer
+              columns={columnsNiftyOption}
+              data={list}
+              isGlobalFilter={false}
+              isAddOptions={false}
+              strickP={strickPrice}
+              customPageSize={10}
+              isPagination={false}
+              tableClass="align-middle table-nowrap table-check table-hover table"
+              theadClass="table-light"
+              tbodyClass="table-striped"
+              paginationDiv="col-12"
+              pagination="justify-content-center pagination pagination-rounded"
+              PCRstatus={true}
+            />
+          </Col>
+        </Row>
         <IntradayTableContainer data={intradayList} />
         <Row>
           <Col md={6}>

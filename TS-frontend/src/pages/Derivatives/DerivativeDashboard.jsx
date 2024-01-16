@@ -62,7 +62,7 @@ const index = () => {
                     })
                   })
                   setlist(dataOption)
-                  setStrikePrice(result1.strike)  
+                  setStrikePrice(result1.strike)
 
                   const datacl = []
                   const datap = []
@@ -118,7 +118,7 @@ const index = () => {
             title="Derivative"
             breadcrumbItem="Derivative Dashboard"
           />
-          
+
           <Row>
             <Col md={7}>
               {!_.isEmpty(dataCall) && (
@@ -126,7 +126,7 @@ const index = () => {
                   dataCallValue={dataCall}
                   dataPutValue={dataPut}
                   categoryValue={category}
-                  titleName={'Intraday data chart'}
+                  titleName={"Intraday data chart"}
                   horizontal={true}
                   dataColors='["#ed0c00","#8afff3"]'
                 />
@@ -144,8 +144,7 @@ const index = () => {
                 />
               )}
             </Col>
-            <Col md={12}
-            >
+            <Col md={12}>
               <OptionChainTableContainer
                 columns={columnsNiftyOption}
                 data={list}
@@ -161,7 +160,6 @@ const index = () => {
                 pagination="justify-content-center pagination pagination-rounded"
                 PCRstatus={false}
               />
-
             </Col>
           </Row>
         </Container>
