@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Container, Row, Col } from "reactstrap"
+import { Container, Row, Col,Progress } from "reactstrap"
 import Settings from "./DashboardComponents/FilterTabs"
 import Apaexlinecolumn from "./DashboardComponents/apaexlinecolumn"
 import OptionChainTableContainer from "../../components/Common/derivativesComponent/OptionChainTableContainer"
@@ -133,6 +133,13 @@ const index = () => {
               )}
             </Col>
             <Col md={5}>
+              <Progress multi>
+                <Progress bar value="15" />
+                <Progress bar color="success" value="20" />
+                <Progress bar color="info" value="25" />
+                <Progress bar color="warning" value="20" />
+                <Progress bar color="danger" value="15" />
+              </Progress>
               {totalcal != 0 && (
                 <Settings
                   expdatelist={expdatelist}

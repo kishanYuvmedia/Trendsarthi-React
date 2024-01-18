@@ -11,55 +11,7 @@ module.exports = function (TdFnoRanking) {
           console.log(responseType);
           const listTime = ["MINUTE", "HOUR", "DAY", "WEEK", "MONTH"];
           await Promise.all(
-            responseType.PRODUCTS.slice(16).map(async (type) => {
-              try {
-                const responses = await Promise.all(
-                  listTime.map(async (timing) => {
-                    try {
-                      return await new Promise((resolve) => {
-                        getIntradayData.GetHistory(
-                          timing,
-                          type + "-I",
-                          1,
-                          1,
-                          (err, data) => {
-                            resolve(data);
-                          }
-                        );
-                      });
-                    } catch (error) {
-                      console.log(
-                        `Error fetching history for ${type} - ${timing}:`,
-                        error
-                      );
-                      return null; // or handle the error accordingly
-                    }
-                  })
-                );
-                responses.forEach((response2, index) => {
-                  if (_.isEmpty(response2)) {
-                    console.log(
-                      `Error: Empty response2 for ${type} - ${listTime[index]}`
-                    );
-                  } else {
-                    timeHistory.push({
-                      CLOSE: response2.OHLC[0].CLOSE,
-                      HIGH: response2.OHLC[0].CLOSE,
-                      LASTTRADETIME: response2.OHLC[0].CLOSE,
-                      LOW: response2.OHLC[0].CLOSE,
-                      OPEN: response2.OHLC[0].CLOSE,
-                      OPENINTEREST: response2.OHLC[0].CLOSE,
-                      QUOTATIONLOT: response2.OHLC[0].CLOSE,
-                      TRADEDQTY: response2.OHLC[0].CLOSE,
-                      type: type,
-                      timing: listTime[index],
-                    });
-                  }
-                });
-              } catch (error) {
-                console.log(`Error fetching data for ${type}:`, error);
-              }
-            })
+            responseType.PRODUCTS.slice(16)
           );
           const dataarry = compareAndCreateRanking(timeHistory);
           callback(null, { list: timeHistory });

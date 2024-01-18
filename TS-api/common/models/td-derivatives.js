@@ -1069,7 +1069,6 @@ module.exports = function (TdDerivatives) {
             25 < type.PRODUCTS.length - i ? 25 : type.PRODUCTS.length - i;
           const group = type.PRODUCTS.slice(i, i + value);
           const result = group.map((symbol) => `${symbol}-I`).join("+");
-
           const promise = new Promise((innerResolve, innerReject) => {
             getIntradayData.GetMultiOptionChain(result, (err, response) => {
               if (err) {
