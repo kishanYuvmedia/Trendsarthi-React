@@ -13,8 +13,8 @@ import CardDrag from "./components/CardDrag"
 import dragula from "dragula"
 import _, { isEmpty, result, set } from "lodash"
 import BarChart from "../AllCharts/barchart"
+import ProgressBar from "components/Common/ProgressBar"
 import BuildBarChart from "../AllCharts/buildBarChart"
-import IntradayTableDeshboad from "../../components/Common/derivativesComponent/IntradayTableDeshboad"
 const Dashboard = props => {
   document.title = "Dashboard | Trendsarthi- React Admin & Dashboard Template"
   const [nifty, setNifty] = useState({})
@@ -33,6 +33,8 @@ const Dashboard = props => {
     "Long Unwinding",
     "Short Covering",
   ])
+  const [typeList] = useState(["NIFTY", "BANKNIFTY", "FINNIFTY", "MIDCPNIFTY"])
+  const [optionType, setOptionType] = useState("NIFTY")
   useEffect(() => {
     getOIFilter(typeOIpriceFilter)
     const fetchData = async () => {
@@ -79,7 +81,6 @@ const Dashboard = props => {
     ])
     return () => clearInterval(intervalId)
   }, []) // Include relevant dependencies
-
   function getIntraday(type, list) {
     geIntradayDataLimit(type, 5)
       .then(result => {
@@ -151,15 +152,14 @@ const Dashboard = props => {
         const sortedDataPrice = sortedIndices.map(index => dataPrice[index])
         const sortedDataLabel = sortedIndices.map(index => dataLabel[index])
 
-        setIoDataPrice(sortedDataPrice.slice(0, 10))
-        setLabelName(sortedDataLabel.slice(0, 10))
-        setIoData(sortedDataOI.slice(0, 10))
+        setIoDataPrice(sortedDataPrice.slice(0, 5))
+        setLabelName(sortedDataLabel.slice(0, 5))
+        setIoData(sortedDataOI.slice(0, 5))
       })
       .catch(error => {
         console.error("Error fetching data:", error)
       })
   }
-
   const buildIOHandler = type => {
     setTypeOIpriceFilter(type)
     getOIFilter(type)
@@ -209,28 +209,34 @@ const Dashboard = props => {
             </div>
           </div>
           <Row>
-            <Col md={6} id="right">
-              <CardDrag header={"Nifty Intraday Data"}>
-                <IntradayTableDeshboad data={intradayList} />
-              </CardDrag>
-            </Col>
-            <Col md={6} id="left">
-              <CardDrag header={"Bank Nifty Intraday Data"}>
-                <IntradayTableDeshboad data={intradayListBank} />
-              </CardDrag>
-            </Col>
-            <Col md={6} id="left2">
+          <Col md={4} id="right">
               <CardDrag header={"Option Movment Chart"}>
                 <BarChart ProductName={ProductName} Productdata={ProductData} />
               </CardDrag>
             </Col>
-            <Col md={6} id="right2">
+            <Col md={4} id="right">
+              <CardDrag header={"Progress Chart"}>
+                {typeList.map(item => (
+                  <button
+                    type="button"
+                    className={`btn btn-sm m-1 ${
+                      optionType === item ? "btn-warning" : " btn-info"
+                    }`}
+                    onClick={e => setOptionType(item)}
+                  >
+                    {item}
+                  </button>
+                ))}
+                <ProgressBar type={optionType} />
+              </CardDrag>
+            </Col>
+            <Col md={12} id="left">
               <CardDrag header={"Movment Chart"}>
                 {fetureIO.map(item => (
                   <button
                     type="button"
                     className={`btn btn-sm m-1 ${
-                      typeOIpriceFilter === item ? 'btn-warning' : ' btn-info'
+                      typeOIpriceFilter === item ? "btn-warning" : " btn-info"
                     }`}
                     onClick={e => buildIOHandler(item)}
                   >
@@ -247,6 +253,7 @@ const Dashboard = props => {
                 />
               </CardDrag>
             </Col>
+           
           </Row>
         </Container>
       </div>

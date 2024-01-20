@@ -29,12 +29,12 @@ const BuildBarChart = ({
     plotOptions: {
       bar: {
         horizontal: horizontal,
-        columnWidth: "90%",
+        columnWidth: "100%",
         endingShape: "rounded",
       },
     },
     dataLabels: {
-      enabled: false,
+      enabled: true,
     },
     stroke: {
       show: true,

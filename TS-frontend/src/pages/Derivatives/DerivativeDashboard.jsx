@@ -3,6 +3,8 @@ import { Container, Row, Col,Progress } from "reactstrap"
 import Settings from "./DashboardComponents/FilterTabs"
 import Apaexlinecolumn from "./DashboardComponents/apaexlinecolumn"
 import OptionChainTableContainer from "../../components/Common/derivativesComponent/OptionChainTableContainer"
+import ProgressBar from "components/Common/ProgressBar"
+import CardDrag from "pages/Dashboard/components/CardDrag"
 //Import Breadcrumb
 import Breadcrumbs from "../../components/Common/Breadcrumb"
 import { columnsNiftyOption } from "./optionChainData.js"
@@ -133,13 +135,7 @@ const index = () => {
               )}
             </Col>
             <Col md={5}>
-              <Progress multi>
-                <Progress bar value="15" />
-                <Progress bar color="success" value="20" />
-                <Progress bar color="info" value="25" />
-                <Progress bar color="warning" value="20" />
-                <Progress bar color="danger" value="15" />
-              </Progress>
+            
               {totalcal != 0 && (
                 <Settings
                   expdatelist={expdatelist}
@@ -151,7 +147,12 @@ const index = () => {
                 />
               )}
             </Col>
-            <Col md={12}>
+            <Col md={4} id="right">
+              <CardDrag header={`${type} Progress Chart`}>
+                <ProgressBar type={type} />
+              </CardDrag>
+            </Col>
+            <Col md={8}>
               <OptionChainTableContainer
                 columns={columnsNiftyOption}
                 data={list}
