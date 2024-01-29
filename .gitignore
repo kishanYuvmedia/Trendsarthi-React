@@ -22,3 +22,5 @@ TS-frontend/yarn-debug.log*
 TS-frontend/yarn-error.log*
 TS-api/package-lock.json
 TS-api/node_modules
+TS-backend/node_modules
+ts-website/node_modules
