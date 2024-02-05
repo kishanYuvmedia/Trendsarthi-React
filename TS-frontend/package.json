@@ -1,6 +1,6 @@
 {
-  "name": "skote-react-hook",
-  "version": "2.0.0",
+  "name": "TS-Frontend",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@amcharts/amcharts5": "^5.5.7",
