@@ -8,6 +8,6 @@ export default {
   modalHeaderTextColor: "#FFF",
   topMenuHeaderColor: "#3f51b5",
   linkTextColor: "#556ee6",
-  apiUrl: "http://api.marbiz.in:3000/api",
+  apiUrl: "http://trading.marbiz.in:3000/api",
   //apiUrl: "http://localhost:3000/api",
 }

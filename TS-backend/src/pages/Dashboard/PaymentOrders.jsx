@@ -22,6 +22,8 @@ import Swal from "sweetalert2"
 import { Link } from "react-router-dom"
 
 export default function PaymentOrders() {
+    document.title = "Payment Orders | Marbiz"
+
     const [data, setData] = useState({})
     const [modelValue, modelSetValue] = useState(false)
     const [viewdata, setviewdata] = useState({})

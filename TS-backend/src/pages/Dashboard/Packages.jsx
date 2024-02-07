@@ -16,7 +16,7 @@ import Swal from "sweetalert2"
 
 export default function Packages(props) {
     const navigate = useNavigate()
-    document.title = "Add Category | Marbiz"
+    document.title = "Packages | Marbiz"
     const [formData, setFormData] = useState({
         categoryType: "",
         fullName: "",

@@ -16,18 +16,22 @@ import {
     getProfileList,
     UpdateProfile,
     deleteProfile,
+    UpdateUser,
+    getAllUser,
 } from "services/api/api-service"
 import { isEmpty, result } from "lodash"
 import Swal from "sweetalert2"
 import { Link } from "react-router-dom"
 
 export default function UserList() {
+    document.title = "All Users | Marbiz"
     const [data, setData] = useState({})
     const [modelValue, modelSetValue] = useState(false)
     const [viewdata, setviewdata] = useState({})
+
     const updatesHandler = data => {
         console.log(data)
-        UpdateProfile(data).then(result => {
+        UpdateUser(data).then(result => {
             if (!isEmpty(result)) {
                 Swal.fire(
                     "Status Update",
@@ -46,18 +50,18 @@ export default function UserList() {
         }
     }
     function getdata() {
-        getProfileList().then(result => {
+        getAllUser().then(result => {
             console.log("first", result)
             if (!isEmpty(result)) {
                 console.log(result)
                 const dataList = []
                 result.map(list =>
                     dataList.push({
-                        coverImage: (
-                            <img src={list.coverImage} className="rounded-circle avatar-sm" />
-                        ),
+                        // coverImage: (
+                        //     <img src={list.coverImage} className="rounded-circle avatar-sm" />
+                        // ),
                         regName: list.regName,
-                        fullName: list.fullName,
+                        fullName: list.username,
                         categoryType: (
                             <Badge color="warning" style={{ fontSize: 12, color: "black" }}>
                                 {list.categoryType}
