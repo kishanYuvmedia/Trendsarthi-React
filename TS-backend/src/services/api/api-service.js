@@ -36,6 +36,11 @@ export const getPlan = () => {
     where: {},
   })
 }
+
+export const updatePlan = data => {
+  return upsertPatch("TdPlans", data)
+}
+
 export const createOrder = data => {
   return create("TdPaymentLists", data)
 }

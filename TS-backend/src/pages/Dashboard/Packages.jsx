@@ -1,458 +1,304 @@
-import React, { useState } from "react"
-import { Table, Col, Row, Container, Label, Input, Button } from "reactstrap"
+import React, { useEffect, useState } from "react"
+import {
+    Col,
+    Row,
+    Container,
+    Badge,
+    Input,
+    FormGroup,
+    Button,
+} from "reactstrap"
 //Import Breadcrumb
 import Breadcrumbs from "../../components/Common/Breadcrumb"
-import { CardView } from "../ui-components"
+import { CardView, ModelBox } from "../ui-components"
+import TableData from "pages/ui-components/table-data"
 import {
-    getPublicList,
-    createProfileListing,
-    checkPublicName,
-} from "../../services/api/api-service"
-import Select from "react-select"
-import { useNavigate } from "react-router-dom"
-import { useEffect } from "react"
-import { MultiSelect } from "react-multi-select-component"
+    getPlan,
+    updatePlan,
+    
+    deleteUser,
+    UpdateUser,
+    getAllUser,
+} from "services/api/api-service"
+import { isEmpty, result } from "lodash"
 import Swal from "sweetalert2"
+import { Link } from "react-router-dom"
 
-export default function Packages(props) {
-    const navigate = useNavigate()
-    document.title = "Packages | Marbiz"
-    const [formData, setFormData] = useState({
-        categoryType: "",
-        fullName: "",
-        regName: "",
-        category: [],
-        businessNumber: "",
-        about: "",
-        bio: "",
-        businessEmail: "",
-        coverImage: "",
-        idProofType: "",
-        idProofNo: "",
-        location: "",
-        status: "A",
-        mtUserId: "",
-    })
-    const [isButtonDisabled, setIsButtonDisabled] = useState(false)
-    const [platformList, setplatformList] = useState([])
-    const [documentList, setdocumentList] = useState([])
-    const [selected, setSelected] = useState([])
-    const [categoryList, setcategoryList] = useState([])
-    const [imgeurl, setUlr] = useState("")
-    const [selectdoctype, setdoctype] = useState("")
-    const [selectCategory, setSelectedCategory] = useState("")
-    const [regerror, setregerror] = useState({
-        status: "3",
-        message: "new",
-    })
-    const handleChange = event => {
-        const { name, value } = event.target
-        setFormData({
-            ...formData,
-            [name]: value,
-        })
-        if (formData.regName != null && name == "regName") {
-            checkPublicName(value)
-                .then(result => {
-                    console.log("API Response:", result) // Log the response for debugging
-                    if (result && result.count !== undefined) {
-                        if (result.count > 0) {
-                            setregerror({
-                                status: "0",
-                                message: "Already taken any one",
-                            })
-                        } else {
-                            setregerror({ status: "1", message: "Available" })
-                        }
-                    } else {
-                        setregerror({ status: "0", message: "Already taken any one" })
-                    }
-                })
-                .catch(error => {
-                    console.error("API Error:", error) // Log any API errors
-                    setregerror({ status: "0", message: "Already taken any one" })
-                })
-        }
-    }
-    const handleSubmit = event => {
-        event.preventDefault()
-        if (!formData.businessNumber || !formData.fullName) {
-            return
-        }
-        const listMulti = []
-        if (Array.isArray(selected)) {
-            selected.map(item => listMulti.push(item.label))
-        } else {
-            // Handle the case when 'selected' is not an array or is undefined
-            console.error("'selected' is not an array or is undefined")
-        }
-        const data = []
-        data.push({
-            categoryType: selectCategory,
-            fullName: formData.fullName,
-            regName: formData.regName,
-            category: listMulti,
-            businessNumber: formData.businessNumber,
-            about: formData.about,
-            bio: formData.bio,
-            businessEmail: formData.businessEmail,
-            coverImage: imgeurl,
-            idProofType: selectdoctype,
-            idProofNo: formData.idProofNo,
-            location: formData.location,
-            status: "A",
-            mtUserId: "1",
-        })
-        createProfileListing(data).then(result => {
-            if (result) {
+export default function Packages() {
+    document.title = "All Packages | Trend Sarthi"
+    const [data, setData] = useState({})
+    const [modelValue, modelSetValue] = useState(false)
+    const [viewdata, setviewdata] = useState({})
+
+    const updatesHandler = data => {
+        console.log(data)
+        updatePlan(data).then(result => {
+            if (!isEmpty(result)) {
                 Swal.fire(
-                    "Add Influencer Profile",
-                    "Influencer Profile upload successfuly",
+                    "Status Update",
+                    "User Plan Status Update successfuly",
                     "success"
                 )
-                navigate(`/`, {
-                    replace: true,
+                getdata()
+            }
+        })
+    }
+    const viewHandler = data => {
+        console.log(data)
+        if (!isEmpty(data)) {
+            modelSetValue(true)
+            setviewdata(data)
+        }
+    }
+
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = getMonthName(date.getMonth() + 1);
+        const year = date.getFullYear();
+
+        return `${day} ${month} ${year}`;
+    }
+
+    function getMonthName(monthNumber) {
+        const months = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+
+        return months[monthNumber - 1];
+    }
+
+    function getdata() {
+        getPlan().then(result => {
+            if (!isEmpty(result)) {
+                console.log("Plans", result);
+
+                const dataList = []
+
+                result.map(plan =>
+                    dataList.push({
+                        planName: (
+                            <div className="fw-bold text-capitalize">{plan.planName}</div>
+                        ),
+                        planDuration: plan.Duration,
+                        durationValue: plan.durationValue,
+                        planPricing: (
+                            <div>₹
+                                {plan.pricing}
+                            </div>
+                        ),
+                        planFeatures: ( 
+                            <ul>
+                                {plan.fetures.map((feature, index) => (
+                                    <li key={index}>{feature.label}</li>
+                                ))}
+                            </ul>
+                        ),
+                        planStatus: (
+                            <div className={plan.planStatus === "A" ? "text-success fw-bold" : "text-danger fw-bold"}>
+                                {plan.status === "A" ? "ACTIVE" : "INACTIVE"}
+                            </div>
+                        ),
+                        toggleStatus: (
+                            <FormGroup switch>
+                                <Input
+                                    type="switch"
+                                    checked={plan.planStatus === "A" ? true : false}
+                                    onChange={() =>
+                                        updatesHandler({
+                                            ...plan,
+                                            ...{ status: plan.planStatus === "A" ? "I" : "A" },
+                                        })
+                                    }
+                                />
+                            </FormGroup>
+                        ),
+                        action: (
+                            <Button
+                                className="btn btn-success"
+                                onClick={() => viewHandler(plan)}
+                            >
+                                View
+                            </Button>
+                        ),
+                    })
+                )
+                setData({
+                    columns: [
+                        {
+                            label: "Plan",
+                            field: "planName",
+                            width: 100,
+                        },
+                        {
+                            label: "Plan Duration",
+                            field: "planDuration",
+                            sort: "asc",
+                            width: 100,
+                        },
+                        {
+                            label: "Value",
+                            field: "durationValue",
+                            sort: "asc",
+                            width: 100,
+                        },
+                        {
+                            label: "Pricing",
+                            field: "planPricing",
+                            sort: "asc",
+                            width: 100,
+                        },
+                        {
+                            label: "Fetures List",
+                            field: "planFeatures",
+                            sort: "asc",
+                            width: 100,
+                        },
+                        {
+                            label: "Plan Status",
+                            field: "planStatus",
+                            sort: "asc",
+                            width: 100,
+                        },
+
+                        {
+                            label: "Status",
+                            field: "toggleStatus",
+                            width: 100,
+                        },
+                        // {
+                        //     label: "Fetured",
+                        //     field: "fetured",
+                        //     width: 100,
+                        // },
+                        {
+                            label: "Action",
+                            field: "action",
+                            width: 100,
+                        },
+                    ],
+                    rows: dataList,
                 })
             }
         })
     }
+    const deleteUser = id => {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!",
+        }).then(result => {
+            if (result.isConfirmed) {
+                deleteUser(id).then(result => {
+                    Swal.fire(
+                        "Delete successfully",
+                        "Influencer Profile Delete successfuly",
+                        "success"
+                    );
+                    getdata();
+                });
+            }
+        });
+    };
     useEffect(() => {
-        getPublicList("Platform").then(result => {
-            setplatformList(result)
-        })
-        getPublicList("Document").then(result => {
-            setdocumentList(result)
-        })
-        getPublicList("Category").then(result => {
-            setcategoryList(result)
-        })
+        getdata()
     }, [])
-    const [selectedFile, setSelectedFile] = useState(null)
-    const [errorMessage, setErrorMessage] = useState("")
-    const [imagePreview, setImagePreview] = useState(null)
 
-    const handleFileChange = event => {
-        const file = event.target.files[0]
-        if (file) {
-            const allowedTypes = [
-                "image/jpeg",
-                "image/jpg",
-                "image/png",
-                "image/webp",
-            ]
-            if (allowedTypes.includes(file.type)) {
-                setSelectedFile(file)
-                setErrorMessage("")
-
-                // Create a FileReader to read the selected file
-                const reader = new FileReader()
-                reader.onload = e => {
-                    setImagePreview(e.target.result) // Set the imagePreview state with the data URL
-                }
-                reader.readAsDataURL(file)
-            } else {
-                setSelectedFile(null)
-                setErrorMessage("Please select a valid image file (jpg, jpeg, or png).")
-                setImagePreview(null) // Clear the image preview
-            }
-        }
-    }
-
-    const handleUpload = async () => {
-        if (selectedFile) {
-            const formDataImage = new FormData()
-            formDataImage.append("image", selectedFile, "compressed-image.jpg") // You can set the filename here
-            fetch("https://marbiz.yuvmedia.in/upload.php", {
-                method: "POST",
-                body: formDataImage,
-            })
-                .then(response => response.json()) // Parse the JSON response
-                .then(data => {
-                    if (data) {
-                        Swal.fire(
-                            "Cover Image",
-                            "Your cover page updated successfully",
-                            "success"
-                        )
-                        setUlr(data.imageUrl)
-                        setImagePreview(data.imageUrl)
-                        console.log(data.imageUrl)
-                    } else {
-                        Swal.fire({
-                            icon: "error",
-                            title: "Oops...",
-                            text: "Something went wrong please Retry uploading Image",
-                        })
-                    }
-                })
-                .catch(error => {
-                    // Handle any errors
-                    console.error(error)
-                })
-        }
-    }
-    function handleMulti(e) {
-        setSelected(e.label)
-    }
     return (
-        <div>
-            <React.Fragment>
-                <div className="page-content">
-                    <Container fluid={true}>
-                        <Breadcrumbs title="Influencer" breadcrumbItem="Add Influencer" />
-                        <Row>
-                            <Col md={12}>
-                                <CardView title="Add Category">
-                                    <form onSubmit={handleSubmit}>
-                                        <Row>
-                                            <Col md={3}>
-                                                <div className="mb-3">
-                                                    <Label htmlFor="formrow-label-Input">
-                                                        Category Type
-                                                    </Label>
-                                                    <Input
-                                                        id="categoryType"
-                                                        name="categoryType"
-                                                        type="select"
-                                                        value={selectCategory}
-                                                        onChange={e => {
-                                                            setSelectedCategory(e.target.value)
-                                                        }}
-                                                    >
-                                                        {platformList.map(list => (
-                                                            <option key={list.label}>{list.label}</option>
-                                                        ))}
-                                                    </Input>
-                                                </div>
-                                            </Col>
-                                            <Col md={3}>
-                                                <div className="mb-3">
-                                                    <Label htmlFor="formrow-label-Input">FullName</Label>
-                                                    <Input
-                                                        type="text"
-                                                        className="form-control"
-                                                        id="formrow-fullName-Input"
-                                                        name="fullName"
-                                                        placeholder="Enter Your full Name"
-                                                        value={formData.fullName}
-                                                        onChange={handleChange}
-                                                    />
-                                                </div>
-                                            </Col>
-                                            <Col md={3}>
-                                                <div className="mb-3">
-                                                    <Label htmlFor="formrow-label-Input">
-                                                        Profile Name
-                                                    </Label>
-                                                    <Input
-                                                        type="text"
-                                                        className="form-control"
-                                                        id="formrow-regName-Input"
-                                                        name="regName"
-                                                        placeholder="Enter Your Profile Name"
-                                                        value={formData.regName}
-                                                        onChange={handleChange}
-                                                    />
-                                                    {regerror.status != 3 && (
-                                                        <p
-                                                            style={
-                                                                regerror.status == 0
-                                                                    ? { color: "red" }
-                                                                    : { color: "green" }
-                                                            }
-                                                        >
-                                                            {regerror.message}
-                                                        </p>
-                                                    )}
-                                                </div>
-                                            </Col>
-                                            <Col md={3}>
-                                                <div className="mb-3">
-                                                    <Label htmlFor="formrow-businessNumber-Input">
-                                                        Business Number
-                                                    </Label>
-                                                    <Input
-                                                        type="text"
-                                                        className="form-control"
-                                                        autoComplete="off"
-                                                        id="formrow-businessNumber-Input"
-                                                        name="businessNumber"
-                                                        placeholder="Enter business number Value"
-                                                        value={formData.businessNumber}
-                                                        onChange={handleChange}
-                                                    />
-                                                </div>
-                                            </Col>
-                                            <Col md={3}>
-                                                <div className="mb-3">
-                                                    <Label htmlFor="formrow-businessEmail-Input">
-                                                        Business Email
-                                                    </Label>
-                                                    <Input
-                                                        type="email"
-                                                        className="form-control"
-                                                        autoComplete="off"
-                                                        id="formrow-businessEmail-Input"
-                                                        name="businessEmail"
-                                                        placeholder="Enter business email Value"
-                                                        value={formData.businessEmail}
-                                                        onChange={handleChange}
-                                                    />
-                                                </div>
-                                            </Col>
-                                            <Col md={3}>
-                                                <div className="mb-3">
-                                                    <Label htmlFor="formrow-idProofType-Input">
-                                                        Id Proof Type
-                                                    </Label>
-                                                    <Input
-                                                        id="idProofType"
-                                                        name="idProofType"
-                                                        type="select"
-                                                        value={selectdoctype}
-                                                        onChange={e => {
-                                                            setdoctype(e.target.value)
-                                                        }}
-                                                    >
-                                                        {documentList.map(list => (
-                                                            <option key={list.label}>{list.label}</option>
-                                                        ))}
-                                                    </Input>
-                                                </div>
-                                            </Col>
-                                            <Col md={3}>
-                                                <div className="mb-3">
-                                                    <Label htmlFor="formrow-idProofNo-Input">
-                                                        ID Number
-                                                    </Label>
-                                                    <Input
-                                                        type="text"
-                                                        className="form-control"
-                                                        autoComplete="off"
-                                                        id="formrow-idProofNo-Input"
-                                                        name="idProofNo"
-                                                        placeholder="Enter Id Proof No"
-                                                        value={formData.idProofNo}
-                                                        onChange={handleChange}
-                                                    />
-                                                </div>
-                                            </Col>
-                                            <Col md={3}>
-                                                <div className="mb-3">
-                                                    <Label htmlFor="formrow-location-Input">
-                                                        Location
-                                                    </Label>
-                                                    <Input
-                                                        type="text"
-                                                        className="form-control"
-                                                        autoComplete="off"
-                                                        id="formrow-location-Input"
-                                                        name="location"
-                                                        placeholder="Enter location"
-                                                        value={formData.location}
-                                                        onChange={handleChange}
-                                                    />
-                                                </div>
-                                            </Col>
-                                            <Col md={12}>
-                                                <div className="mb-3">
-                                                    <Label htmlFor="formrow-category-Input">
-                                                        category
-                                                    </Label>
-                                                    <Select
-                                                        value={selected}
-                                                        isMulti={true}
-                                                        name="category"
-                                                        onChange={e => handleMulti(e)}
-                                                        options={categoryList}
-                                                        className="select2-selection"
-                                                    />
-                                                </div>
-                                            </Col>
-                                            <Col md={12}>
-                                                <div className="mb-3">
-                                                    <Label htmlFor="formrow-bio-Input">Bio</Label>
-                                                    <Input
-                                                        type="textarea"
-                                                        className="form-control"
-                                                        autoComplete="off"
-                                                        id="formrow-bio-Input"
-                                                        name="bio"
-                                                        placeholder="Enter bio"
-                                                        value={formData.bio}
-                                                        onChange={handleChange}
-                                                    />
-                                                </div>
-                                            </Col>
-                                            <Col md={12}>
-                                                <div className="mb-3">
-                                                    <Label htmlFor="formrow-about-Input">About</Label>
-                                                    <Input
-                                                        type="textarea"
-                                                        className="form-control"
-                                                        autoComplete="off"
-                                                        id="formrow-about-Input"
-                                                        name="about"
-                                                        placeholder="Enter about"
-                                                        value={formData.about}
-                                                        onChange={handleChange}
-                                                    />
-                                                </div>
-                                            </Col>
-                                            <Col md={6}>
-                                                <div className="mb-3" style={{ display: "flex" }}>
-                                                    <Label htmlFor="formrow-about-Input">
-                                                        Upload Your Profile Image
-                                                    </Label>
-                                                    <Input
-                                                        type="file"
-                                                        className="form-control"
-                                                        autoComplete="off"
-                                                        id="formrow-coverImage-Input"
-                                                        name="imagesselect"
-                                                        placeholder="Enter coverImage"
-                                                        style={{ height: 38 }}
-                                                        onChange={handleFileChange}
-                                                    />
-                                                    <Button
-                                                        type="button"
-                                                        className="btn btn-info"
-                                                        style={{ height: 38, width: 200 }}
-                                                        onClick={handleUpload}
-                                                    >
-                                                        Upload Image
-                                                    </Button>
-                                                </div>
-                                            </Col>
-                                            <Col md={3}>
+        <React.Fragment>
+            <div className="page-content">
+                <Container fluid={true}>
+                    <Breadcrumbs title="users" breadcrumbItem="All Users" />
+                    <Row>
+                        <Col md={12}>
+                            <CardView title="All Users">
+                                <TableData tabledata={data} />
+                            </CardView>
+                        </Col>
+                    </Row>
+                </Container>
+            </div>
 
-                                                {imagePreview && (
-                                                    <img
-                                                        src={imagePreview}
-                                                        alt="Img Preview"
-                                                        name="coverImage"
-                                                        className="img-fluid"
-                                                    />
-                                                )}
-                                            </Col>
+            {/* modal view box */}
+            <ModelBox
+                modelValue={modelValue}
+                sizeValue={"lg"}
+                modelSetValue={modelSetValue}
+                titleLabel="View User Details"
+            >
+                <div className="table-responsive">
+                    <table className="table table-hover mb-0">
+                        <tbody>
+                            <tr>
+                                <th>User Type</th>
+                                <td >{viewdata.userType}</td>
+                            </tr>
+                            <tr>
+                                <th>Account Created</th>
+                                <td >{viewdata.codeCreatedAt}</td>
+                            </tr>
+                            <tr>
+                                <th>Name</th>
+                                <td className="fw-bold text-capitalize">{viewdata.contactName}</td>
+                            </tr>
+                            <tr>
+                                <th>Contact Number</th>
+                                <td>{viewdata.contactNumber}</td>
+                            </tr>
 
-                                            <Col md={12}>
-                                                <Button
-                                                    type="submit"
-                                                    className="btn btn-success mt-4"
-                                                    disabled={isButtonDisabled}
-                                                >
-                                                    Submit
-                                                </Button>
-                                            </Col>
-                                        </Row>
-                                    </form>
-                                </CardView>
-                            </Col>
-                        </Row>
-                    </Container>
+                            <tr>
+                                <th>Email</th>
+                                <td>{viewdata.email}</td>
+                            </tr>
+                            <tr>
+                                <th>City</th>
+                                <td>{viewdata.city}</td>
+                            </tr>
+                            <tr>
+                                <th>State</th>
+                                <td>{viewdata.state}</td>
+                            </tr>
+                            <tr>
+                                <th>Country</th>
+                                <td>{viewdata.country}</td>
+                            </tr>
+                            <tr>
+                                <th>Current Plan</th>
+                                <td>{viewdata.planId}</td>
+                            </tr>
+                            <tr>
+                                <th>PLan Status</th>
+                                <td className={viewdata.status === "A" ? "text-success fw-bold" : "text-danger fw-bold"}>
+                                    {viewdata.status === "A" ? "ACTIVE" : "INACTIVE"}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>User Expiry</th>
+                                <td>{viewdata.expairyDate ? formatDate(viewdata.expairyDate) : ''}</td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+
+                    {/* <Link
+                        to={`/influencer/add-Images-Vedio/${viewdata.id}`}
+                        className="btn btn-info mt-3"
+                    >
+                        Add Images and video
+                    </Link> */}
+                    <Button
+                        onClick={() => deleteUser(viewdata.id)}
+                        className="btn btn-danger mt-3"
+                    >
+                        Delete
+                    </Button>
                 </div>
-            </React.Fragment>
-        </div>
+            </ModelBox>
+        </React.Fragment>
     )
 }
