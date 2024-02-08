@@ -75,6 +75,10 @@ export const getHistoryList = (periodicity, type, max, period) => {
   )
 }
 
+export const deleteUser = id => {
+  return deleteById("TdUsers", id)
+}
+
 
 // ===================== MARBIZ API ==========================
 

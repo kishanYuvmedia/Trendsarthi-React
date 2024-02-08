@@ -182,7 +182,7 @@ const SidebarContent = props => {
                 
               </ul>
             </li> */}
-            <dr></dr>
+            <hr/>
             <li>
               <Link to="/dashboard/user-list">
                 <i className='bx bx-user' ></i>

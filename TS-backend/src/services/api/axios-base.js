@@ -101,14 +101,14 @@ export const axiosRequest = async (
       filter = `?filter=${encodeURI(JSON.stringify(filter))}`
     }
   }
-  console.log(url)
+  // console.log(url)
   const queryConfig = {
     headers: header,
     method: method,
     url: `/${url}${filter ? filter : ""}`,
   }
 
-  console.log(queryConfig)
+  // console.log(queryConfig);
 
   if (!_.isEmpty(body)) {
     queryConfig["data"] = body ? JSON.stringify(body) : undefined
