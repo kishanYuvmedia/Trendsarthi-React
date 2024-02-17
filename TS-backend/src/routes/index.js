@@ -15,12 +15,14 @@ import InfluencerList from "pages/Registered-Users/influencer-list"
 import Upload from "pages/Registered-Users/upload"
 import PaymentOrders from "pages/Dashboard/PaymentOrders"
 import Packages from "pages/Dashboard/Packages"
+import Courses from "pages/Dashboard/Courses"
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
   { path: "/dashboard/paymentOrders", component: <PaymentOrders /> },
   { path: "/dashboard/packages", component: <Packages /> },
   { path: "/dashboard/user-list", component: <UserList /> },
+  { path: "/dashboard/courses", component: <Courses /> },
   
   // old navigation
   { path: "/settings/add-category", component: <AddCategory /> },

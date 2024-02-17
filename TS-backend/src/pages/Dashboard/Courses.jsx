@@ -24,8 +24,8 @@ import { isEmpty, result } from "lodash"
 import Swal from "sweetalert2"
 import { Link } from "react-router-dom"
 
-export default function Packages() {
-    document.title = "All Packages | Trend Sarthi"
+export default function Courses() {
+    document.title = "All Courses | Trend Sarthi"
     const [data, setData] = useState({})
     const [modelValue, modelSetValue] = useState(false)
     const [viewdata, setviewdata] = useState({})
@@ -213,10 +213,10 @@ export default function Packages() {
         <React.Fragment>
             <div className="page-content">
                 <Container fluid={true}>
-                    <Breadcrumbs title="Packages" breadcrumbItem="All Packages" />
+                    <Breadcrumbs title="Courses" breadcrumbItem="All Courses" />
                     <Row>
                         <Col md={12}>
-                            <CardView title="Packages">
+                            <CardView title="Courses">
                                 <TableData tabledata={data} />
                             </CardView>
                         </Col>

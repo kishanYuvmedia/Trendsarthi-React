@@ -181,10 +181,10 @@ export default function PaymentOrders() {
         <React.Fragment>
             <div className="page-content">
                 <Container fluid={true}>
-                    <Breadcrumbs title="Influencer" breadcrumbItem="Influencer List" />
+                    <Breadcrumbs title="Payment" breadcrumbItem="Payment List" />
                     <Row>
                         <Col md={12}>
-                            <CardView title="Influencer List">
+                            <CardView title="All Payment">
                                 <TableData tabledata={data} />
                             </CardView>
                         </Col>
