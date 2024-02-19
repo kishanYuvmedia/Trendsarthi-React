@@ -17,24 +17,25 @@ import {
     updatePlan,
 
     getCourse,
-    updateTdCourses,
+    getCourseVideos,
+    updateCourseVideos,
     deleteUser,
     UpdateUser,
     getAllUser,
 } from "services/api/api-service"
 import { isEmpty, result } from "lodash"
 import Swal from "sweetalert2"
-import { Link, Navigate, useNavigate } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 
-export default function Courses() {
-    document.title = "All Courses | Trend Sarthi"
+export default function ViewCourse() {
+    document.title = "ViewCourse | Trend Sarthi"
     const [data, setData] = useState({})
     const [modelValue, modelSetValue] = useState(false)
     const [viewdata, setviewdata] = useState({})
-
+    const { courseID } = useParams();
     const updatesHandler = data => {
         console.log(data)
-        updateTdCourses(data).then(result => {
+        updateCourseVideos(data).then(result => {
             if (!isEmpty(result)) {
                 Swal.fire(
                     "Status Update",
@@ -48,12 +49,31 @@ export default function Courses() {
     const viewHandler = data => {
         console.log(data)
         if (!isEmpty(data)) {
-
-            useNavigate
-            // modelSetValue(true)
-            // setviewdata(data)
+            modelSetValue(true)
+            setviewdata(data)
         }
     }
+
+    const handleUpdate = data => {
+        console.log(data)
+        updateCourseVideos(data).then(result => {
+            if (!isEmpty(result)) {
+                Swal.fire(
+                    "Status Update",
+                    "User Plan Status Update successfuly",
+                    "success"
+                )
+                getdata()
+            }
+        })
+    };
+    const handleDelete = () => {
+        deleteUser(viewData.id).then(() => {
+            Swal.fire("Delete successfully", "Course Video Delete Successfully", "success");
+            getModelData();
+            setModelValue(false);
+        });
+    };
 
     function formatDate(dateString) {
         const date = new Date(dateString);
@@ -73,81 +93,72 @@ export default function Courses() {
         return months[monthNumber - 1];
     }
 
-    function getdata() {
-        getCourse().then(result => {
+    function getdata(courseID) {
+
+        getCourseVideos().then(result => {
             if (!isEmpty(result)) {
-                console.log("Courses", result);
+                console.log("Courses Chapters", result);
+                console.log("Courses ID", courseID);
 
+                const filteredResult = result.filter(course => course.courseId === courseID);
                 const dataList = []
+                console.log("Courses Chapters filter", filteredResult);
 
-                result.map(course =>
+                filteredResult.map(course =>
                     dataList.push({
                         coverImage: (
                             <div className="">
-                                <img src={course.coverImage} className=" img-thumbnail" style={{
+                                <img src={course.coverImage} className="img-thumbnail " style={{
                                     width: "250px",
-                                }}
-                                />
+                                }} />
                             </div>
                         ),
-                        courseTitle: (
+                        Chapter: (
                             <div className="fw-bold text-capitalize">{course.title}</div>
                         ),
                         shortDetail: course.shortDetail,
-                        courseID: course.id,
-                        CoursePricing: (
-                            <div className="text-success fw-bold">₹&#160;
-                                {course.pricing}
-                            </div>
-                        ),
-
-                        courseStatus: (
-                            <div className={course.courseStatus === "A" ? "text-success fw-bold" : "text-danger fw-bold"}>
-                                {course.courseStatus === "A" ? "ACTIVE" : "INACTIVE"}
+                        videoID: course.id,
+                        courseID: course.courseId,
+                        updateAt: course.updateAt ? formatDate(course.updateAt) : '',
+                        chapterStatus: (
+                            <div className={course.chapterStatus === "A" ? "text-success fw-bold" : "text-danger fw-bold"}>
+                                {course.status === "A" ? "ACTIVE" : "INACTIVE"}
                             </div>
                         ),
                         toggleStatus: (
                             <FormGroup switch>
                                 <Input
                                     type="switch"
-                                    checked={course.courseStatus === "A" ? true : false}
+                                    checked={course.chapterStatus === "A" ? true : false}
                                     onChange={() =>
                                         updatesHandler({
                                             ...course,
-                                            ...{ courseStatus: course.courseStatus === "A" ? "I" : "A" },
+                                            ...{ chapterStatus: course.chapterStatus === "A" ? "I" : "A" },
                                         })
                                     }
                                 />
                             </FormGroup>
                         ),
                         action: (
-                            <div className="d-flex">
-                                {/* <Button
-                                    className="btn btn-success"
-                                    onClick={() => viewHandler(course.id)}
-                                >
-                                    View
-                                </Button> */}
-                                <Link
-                                    to={`/LMS/courses/viewCourse/${course.id}`}
-                                    className="btn btn-success mt-3"
-                                >
-                                    View
-                                </Link>
-                            </div>
+                            <Button
+                                className="btn btn-info"
+                                onClick={() => viewHandler(course)}
+                            >
+                                Edit
+                            </Button>
                         ),
                     })
                 )
                 setData({
                     columns: [
                         {
-                            label: "Course Thumbnail",
+                            label: "Cover Image",
                             field: "coverImage",
-                            width: 100,
+                            width: 50,
                         },
                         {
-                            label: "Course title",
-                            field: "courseTitle",
+                            label: "Chapter No.",
+                            field: "Chapter",
                             width: 100,
                         },
                         {
@@ -157,8 +168,14 @@ export default function Courses() {
                             width: 100,
                         },
                         {
-                            label: "Pricing",
-                            field: "CoursePricing",
+                            label: "Last Updated",
+                            field: "updateAt",
+                            sort: "asc",
+                            width: 100,
+                        },
+                        {
+                            label: "video ID",
+                            field: "videoID",
                             sort: "asc",
                             width: 100,
                         },
@@ -169,8 +186,8 @@ export default function Courses() {
                             width: 100,
                         },
                         {
-                            label: "Course Status",
-                            field: "courseStatus",
+                            label: "Chapter Status",
+                            field: "chapterStatus",
                             sort: "asc",
                             width: 100,
                         },
@@ -195,7 +212,6 @@ export default function Courses() {
                 })
             }
         })
-
     }
     const deleteUser = id => {
         Swal.fire({
@@ -220,17 +236,17 @@ export default function Courses() {
         });
     };
     useEffect(() => {
-        getdata()
-    }, [])
+        getdata(courseID)
+    }, [courseID])
 
     return (
         <React.Fragment>
             <div className="page-content">
                 <Container fluid={true}>
-                    <Breadcrumbs title="LMS" breadcrumbItem="Courses" />
+                    <Breadcrumbs title="LMS" breadcrumbItem="View Course" />
                     <Row>
                         <Col md={12}>
-                            <CardView title="LMS Courses" >
+                            <CardView title={data.title}>
                                 <TableData tabledata={data} />
                             </CardView>
                         </Col>
@@ -243,70 +259,71 @@ export default function Courses() {
                 modelValue={modelValue}
                 sizeValue={"lg"}
                 modelSetValue={modelSetValue}
-                titleLabel="View User Details"
+                titleLabel="Edit Course Video"
             >
                 <div className="table-responsive">
                     <table className="table table-hover mb-0">
                         <tbody>
                             <tr>
-                                <th>User Type</th>
-                                <td >{viewdata.userType}</td>
+                                <th>Video ID</th>
+                                <td>
+                                    {viewdata.id}
+                                </td>
                             </tr>
                             <tr>
-                                <th>Account Created</th>
-                                <td >{viewdata.codeCreatedAt}</td>
+                                <th>Cover Image</th>
+                                <td >
+                                    <div className="d-grid">
+                                        <img src={viewdata.coverImage} className="img-thumbnail" style={{ width: "250px" }} />
+                                        <input type="file" className="" id="" />
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
-                                <th>Name</th>
-                                <td className="fw-bold text-capitalize">{viewdata.contactName}</td>
+                                <th>Chapter No.</th>
+                                <td className="fw-bold text-capitalize">
+                                    <input type="input" className="" id=""
+                                        value={viewdata.title}>
+                                    </input>
+                                </td>
                             </tr>
                             <tr>
-                                <th>Contact Number</th>
-                                <td>{viewdata.contactNumber}</td>
+                                <th>Description</th>
+                                <td>
+                                    <input type="input" className="" id=""
+                                        value={viewdata.shortDetail}>
+                                    </input>
+                                </td>
                             </tr>
                             <tr>
-                                <th>Email</th>
-                                <td>{viewdata.email}</td>
+                                <th>URL:</th>
+                                <td>
+                                    <input type="url" className="" id=""
+                                        value={viewdata.vediourl}>
+                                    </input>
+                                </td>
                             </tr>
-                            <tr>
-                                <th>City</th>
-                                <td>{viewdata.city}</td>
-                            </tr>
-                            <tr>
-                                <th>State</th>
-                                <td>{viewdata.state}</td>
-                            </tr>
-                            <tr>
-                                <th>Country</th>
-                                <td>{viewdata.country}</td>
-                            </tr>
-                            <tr>
-                                <th>Current Plan</th>
-                                <td>{viewdata.planId}</td>
-                            </tr>
+
                             <tr>
                                 <th>PLan Status</th>
-                                <td className={viewdata.status === "A" ? "text-success fw-bold" : "text-danger fw-bold"}>
-                                    {viewdata.status === "A" ? "ACTIVE" : "INACTIVE"}
+                                <td className={viewdata.chapterStatus === "A" ? "text-success fw-bold" : "text-danger fw-bold"}>
+                                    {viewdata.chapterStatus === "A" ? "ACTIVE" : "INACTIVE"}
                                 </td>
                             </tr>
                             <tr>
                                 <th>User Expiry</th>
-                                <td>{viewdata.expairyDate ? formatDate(viewdata.expairyDate) : ''}</td>
+                                <td>{viewdata.updateAt ? formatDate(viewdata.updateAt) : ''}</td>
                             </tr>
                         </tbody>
 
                     </table>
 
-                    {/* <Link
-                        to={`/influencer/add-Images-Vedio/${viewdata.id}`}
-                        className="btn btn-info mt-3"
-                    >
-                        Add Images and video
-                    </Link> */}
+                    <Button className="btn btn-success mt-3" onClick={handleUpdate}>
+                        Update
+                    </Button>
                     <Button
                         onClick={() => deleteUser(viewdata.id)}
-                        className="btn btn-danger mt-3"
+                        className="btn btn-danger mt-3 ms-3"
                     >
                         Delete
                     </Button>

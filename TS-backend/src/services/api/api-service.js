@@ -90,8 +90,19 @@ export const getCourse = () => {
     where: {},
   })
 }
+export const updateTdCourses = data => {
+  return upsertPatch("TdCourses", data)
+}
 
+export const getCourseVideos = () => {
+  return find("CourseVideos", {
+    where: {},
+  })
+}
 
+export const updateCourseVideos = data => {
+  return upsertPatch("CourseVideos", data)
+}
 // ===================== MARBIZ API ==========================
 
 export const getSystemList = type => {
