@@ -15,14 +15,24 @@ import InfluencerList from "pages/Registered-Users/influencer-list"
 import Upload from "pages/Registered-Users/upload"
 import PaymentOrders from "pages/Dashboard/PaymentOrders"
 import Packages from "pages/Dashboard/Packages"
-import Courses from "pages/Dashboard/Courses"
+import Courses from "pages/LMS/Courses"
+import StudyMaterial from "pages/LMS/StudyMaterial"
+import Newsfeed from "pages/LMS/Newsfeed"
+import SubscriberTips from "pages/LMS/SubscriberTips"
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
-  { path: "/dashboard/paymentOrders", component: <PaymentOrders /> },
-  { path: "/dashboard/packages", component: <Packages /> },
-  { path: "/dashboard/user-list", component: <UserList /> },
-  { path: "/dashboard/courses", component: <Courses /> },
+
+  // Admin navigation
+  { path: "/admin/paymentOrders", component: <PaymentOrders /> },
+  { path: "/admin/packages", component: <Packages /> },
+  { path: "/admin/user-list", component: <UserList /> },
+  
+  // LMS navigation
+  { path: "/LMS/courses", component: <Courses /> },
+  { path: "/LMS/StudyMaterial", component: <StudyMaterial /> },
+  { path: "/LMS/Newsfeed", component: <Newsfeed /> },
+  { path: "/LMS/SubscriberTips", component: <SubscriberTips /> },
   
   // old navigation
   { path: "/settings/add-category", component: <AddCategory /> },

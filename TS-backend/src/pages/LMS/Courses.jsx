@@ -15,7 +15,9 @@ import TableData from "pages/ui-components/table-data"
 import {
     getPlan,
     updatePlan,
-    
+
+    getCourse,
+
     deleteUser,
     UpdateUser,
     getAllUser,
@@ -24,8 +26,8 @@ import { isEmpty, result } from "lodash"
 import Swal from "sweetalert2"
 import { Link } from "react-router-dom"
 
-export default function Packages() {
-    document.title = "All Packages | Trend Sarthi"
+export default function Courses() {
+    document.title = "All Courses | Trend Sarthi"
     const [data, setData] = useState({})
     const [modelValue, modelSetValue] = useState(false)
     const [viewdata, setviewdata] = useState({})
@@ -70,45 +72,45 @@ export default function Packages() {
     }
 
     function getdata() {
-        getPlan().then(result => {
+        getCourse().then(result => {
             if (!isEmpty(result)) {
-                console.log("Plans", result);
+                console.log("Courses", result);
 
                 const dataList = []
 
-                result.map(plan =>
+                result.map(course =>
                     dataList.push({
-                        planName: (
-                            <div className="fw-bold text-capitalize">{plan.planName}</div>
-                        ),
-                        planDuration: plan.Duration,
-                        durationValue: plan.durationValue,
-                        planPricing: (
-                            <div>₹
-                                {plan.pricing}
+                        coverImage: (
+                            <div className="">
+                                <img src={course.coverImage} className="img-thumbnail " style={{
+                                    width: "250px",
+                                }} />
                             </div>
                         ),
-                        planFeatures: ( 
-                            <ul>
-                                {plan.fetures.map((feature, index) => (
-                                    <li key={index}>{feature.label}</li>
-                                ))}
-                            </ul>
+                        courseTitle: (
+                            <div className="fw-bold text-capitalize">{course.title}</div>
                         ),
+                        shortDetail: course.shortDetail,
+                        planPricing: (
+                            <div>₹
+                                {course.pricing}
+                            </div>
+                        ),
+
                         planStatus: (
-                            <div className={plan.planStatus === "A" ? "text-success fw-bold" : "text-danger fw-bold"}>
-                                {plan.status === "A" ? "ACTIVE" : "INACTIVE"}
+                            <div className={course.planStatus === "A" ? "text-success fw-bold" : "text-danger fw-bold"}>
+                                {course.status === "A" ? "ACTIVE" : "INACTIVE"}
                             </div>
                         ),
                         toggleStatus: (
                             <FormGroup switch>
                                 <Input
                                     type="switch"
-                                    checked={plan.planStatus === "A" ? true : false}
+                                    checked={course.planStatus === "A" ? true : false}
                                     onChange={() =>
                                         updatesHandler({
-                                            ...plan,
-                                            ...{ status: plan.planStatus === "A" ? "I" : "A" },
+                                            ...course,
+                                            ...{ status: course.planStatus === "A" ? "I" : "A" },
                                         })
                                     }
                                 />
@@ -117,7 +119,7 @@ export default function Packages() {
                         action: (
                             <Button
                                 className="btn btn-success"
-                                onClick={() => viewHandler(plan)}
+                                onClick={() => viewHandler(course)}
                             >
                                 View
                             </Button>
@@ -127,31 +129,24 @@ export default function Packages() {
                 setData({
                     columns: [
                         {
-                            label: "Plan",
-                            field: "planName",
+                            label: "Cover Image",
+                            field: "coverImage",
+                            width: 50,
+                        },
+                        {
+                            label: "Course title",
+                            field: "courseTitle",
                             width: 100,
                         },
                         {
-                            label: "Plan Duration",
-                            field: "planDuration",
-                            sort: "asc",
-                            width: 100,
-                        },
-                        {
-                            label: "Value",
-                            field: "durationValue",
+                            label: "Description",
+                            field: "shortDetail",
                             sort: "asc",
                             width: 100,
                         },
                         {
                             label: "Pricing",
                             field: "planPricing",
-                            sort: "asc",
-                            width: 100,
-                        },
-                        {
-                            label: "Fetures List",
-                            field: "planFeatures",
                             sort: "asc",
                             width: 100,
                         },
@@ -213,10 +208,10 @@ export default function Packages() {
         <React.Fragment>
             <div className="page-content">
                 <Container fluid={true}>
-                    <Breadcrumbs title="Admin" breadcrumbItem="All Packages" />
+                    <Breadcrumbs title="LMS" breadcrumbItem="Courses" />
                     <Row>
                         <Col md={12}>
-                            <CardView title="Packages">
+                            <CardView title="LMS Courses">
                                 <TableData tabledata={data} />
                             </CardView>
                         </Col>
@@ -250,7 +245,6 @@ export default function Packages() {
                                 <th>Contact Number</th>
                                 <td>{viewdata.contactNumber}</td>
                             </tr>
-
                             <tr>
                                 <th>Email</th>
                                 <td>{viewdata.email}</td>

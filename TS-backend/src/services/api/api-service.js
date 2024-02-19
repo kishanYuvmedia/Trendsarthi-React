@@ -85,6 +85,13 @@ export const deleteUser = id => {
 }
 
 
+export const getCourse = () => {
+  return find("TdCourses", {
+    where: {},
+  })
+}
+
+
 // ===================== MARBIZ API ==========================
 
 export const getSystemList = type => {

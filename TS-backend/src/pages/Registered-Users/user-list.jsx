@@ -214,7 +214,7 @@ export default function UserList() {
         <React.Fragment>
             <div className="page-content">
                 <Container fluid={true}>
-                    <Breadcrumbs title="users" breadcrumbItem="All Users" />
+                    <Breadcrumbs title="Admin" breadcrumbItem="All Users" />
                     <Row>
                         <Col md={12}>
                             <CardView title="All Users">

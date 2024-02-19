@@ -143,7 +143,7 @@ const SidebarContent = props => {
       <SimpleBar className="h-100" ref={ref}>
         <div id="sidebar-menu">
           <ul className="metismenu list-unstyled" id="side-menu">
-            <li className="menu-title">{props.t("Navigation")} </li>
+            <li className="menu-title">{props.t("Master")} </li>
             <li>
               <Link to="/dashboard">
                 <i className="bx bx-home-circle"></i>
@@ -183,30 +183,51 @@ const SidebarContent = props => {
               </ul>
             </li> */}
             <hr/>
+            <li className="menu-title">{props.t("Admin")} </li>
+
             <li>
-              <Link to="/dashboard/user-list">
+              <Link to="/admin/user-list">
                 <i className='bx bx-user' ></i>
                 <span>{props.t("Users List")}</span>
               </Link>
             </li>
             <li>
-              <Link to="/dashboard/paymentOrders">
+              <Link to="/admin/paymentOrders">
                 <i className='bx bx-credit-card'></i>
                 <span>{props.t("Payment Orders")}</span>
               </Link>
             </li>
             <li>
-              <Link to="/dashboard/packages">
+              <Link to="/admin/packages">
                 <i className='bx bx-list-ol' ></i>
                 <span>{props.t("Packages")}</span>
               </Link>
             </li>
             <hr/>
+            <li className="menu-title">{props.t("LMS")} </li>
 
             <li>
-              <Link to="/dashboard/Courses">
+              <Link to="/LMS/Courses">
                 <i className='bx bx-video' ></i>
                 <span>{props.t("Courses")}</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/LMS/StudyMaterial">
+              <i className='bx bxs-file-pdf' ></i>
+                <span>{props.t("Study Material")}</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/LMS/Newsfeed">
+                <i className='bx bx-news' ></i>
+                <span>{props.t("Newsfeed")}</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/LMS/SubscriberTips">
+                <i className='bx bx-rocket' ></i>
+                <span>{props.t("Subscriber Tips")}</span>
               </Link>
             </li>
           </ul>
