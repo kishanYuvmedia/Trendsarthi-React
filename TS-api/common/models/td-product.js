@@ -10,18 +10,25 @@ module.exports = function (TdProduct) {
       if (!_.isEmpty(response)) {
         if (!_.isEmpty(response)) {
           await new Promise((resolve, reject) => {
-            TdProduct.then(JSON.toJSON).then((data) => {
-              console.log(data);
-            });
-            // TdProduct.create({ List: response.PRODUCTS }, (err, data) => {
-            //   if (err) {
-            //     console.error(err);
-            //     reject(err);
-            //   } else {
-            //     console.log("Data updated successfully.");
-            //     resolve();
-            //   }
-            // });
+            TdProduct.find()
+              .then(JSON.toJSON)
+              .then((data) => {
+                TdProduct.deleteById(data[0].id).then((result) => {});
+              });
+            TdProduct.create(
+              { List: response.PRODUCTS.slice(16) },
+              (err, data) => {
+                if (err) {
+                  console.error(err);
+                  reject(err);
+                } else {
+                  callback(null, {
+                    result: "Data updated successfully.and old data deleted",
+                  });
+                  resolve();
+                }
+              }
+            );
           });
         }
       }
@@ -37,20 +44,40 @@ module.exports = function (TdProduct) {
               .then((data) => {
                 TdProduct.deleteById(data[0].id).then((result) => {});
               });
-            TdProduct.create({ List: response.PRODUCTS }, (err, data) => {
-              if (err) {
-                console.error(err);
-                reject(err);
-              } else {
-                callback(null, {
-                  result: "Data updated successfully.and old data deleted",
-                });
-                resolve();
+            TdProduct.create(
+              { List: response.PRODUCTS.slice(16) },
+              (err, data) => {
+                if (err) {
+                  console.error(err);
+                  reject(err);
+                } else {
+                  callback(null, {
+                    result: "Data updated successfully.and old data deleted",
+                  });
+                  resolve();
+                }
               }
-            });
+            );
           });
         }
       }
     });
+  };
+  TdProduct.GetFnoRacking = (time, callback) => {
+    const dataArray = [];
+    TdProduct.find()
+      .then((data) => {
+        const promises = data[0].List.map((item) => {
+          return getIntradayData.GetSnapshot(`${item}-I`, time);
+        });
+        return Promise.all(promises);
+      })
+      .then((results) => {
+        dataArray.push(...results.map((result) => result[0].item));
+        callback(null, dataArray);
+      })
+      .catch((error) => {
+        callback(error, null);
+      });
   };
 };

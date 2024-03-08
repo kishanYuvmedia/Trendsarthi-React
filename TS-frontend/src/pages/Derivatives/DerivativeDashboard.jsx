@@ -18,6 +18,8 @@ const index = () => {
   //meta title
   const [strickPrice, setStrikePrice] = useState(0)
   const [list, setlist] = useState([])
+  const [typeList] = useState(["NIFTY", "BANKNIFTY", "FINNIFTY", "MIDCPNIFTY"])
+  const [optionType, setOptionType] = useState("NIFTY")
   document.title = "Derivative Dashboard"
   const [type, settype] = useState("Nifty")
   const [dataCall, setdatacall] = useState([])
@@ -149,7 +151,18 @@ const index = () => {
             </Col>
             <Col md={4} id="right">
               <CardDrag header={`${type} Progress Chart`}>
-                <ProgressBar type={type} />
+              {typeList.map(item => (
+                  <button
+                    type="button"
+                    className={`btn btn-sm m-1 ${
+                      optionType === item ? "btn-warning" : " btn-info"
+                    }`}
+                    onClick={e => setOptionType(item)}
+                  >
+                    {item}
+                  </button>
+                ))}
+                <ProgressBar type={optionType} />
               </CardDrag>
             </Col>
             <Col md={8}>

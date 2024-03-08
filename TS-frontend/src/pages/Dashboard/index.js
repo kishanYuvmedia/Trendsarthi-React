@@ -209,12 +209,12 @@ const Dashboard = props => {
             </div>
           </div>
           <Row>
-          <Col md={4} id="right">
+            <Col md={6} id="right">
               <CardDrag header={"Option Movment Chart"}>
                 <BarChart ProductName={ProductName} Productdata={ProductData} />
               </CardDrag>
             </Col>
-            <Col md={4} id="right">
+            <Col md={6} id="left">
               <CardDrag header={"Progress Chart"}>
                 {typeList.map(item => (
                   <button
@@ -253,7 +253,6 @@ const Dashboard = props => {
                 />
               </CardDrag>
             </Col>
-           
           </Row>
         </Container>
       </div>
