@@ -1,14 +1,33 @@
 {
-  "name": "TdProduct",
+  "name": "TdNews",
   "base": "PersistedModel",
   "idInjection": true,
   "options": {
     "validateUpsert": true
   },
   "properties": {
-    "List": {
-      "type": "array",
+    "title": {
+      "type": "string",
       "required": true
+    },
+    "type": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "string",
+      "required": true
+    },
+    "urlToImage": {
+      "type": "string",
+      "required": true
+    },
+    "content": {
+      "type": "string",
+      "required": true
+    },
+    "url": {
+      "type": "string"
     },
     "createdAt": {
       "type": "date",
@@ -20,7 +39,16 @@
     }
   },
   "validations": [],
-  "relations": {},
+  "relations": {
+    "courseVideo": {
+      "type": "hasMany",
+      "model": "CourseVideo",
+      "foreignKey": "courseId",
+      "options": {
+        "nestRemoting": true
+      }
+    }
+  },
   "acls": [
     {
       "accessType": "*",
@@ -42,27 +70,14 @@
     }
   ],
   "methods": {
-    "AddProductList": {
-      "accepts": [],
-      "returns": {
-        "type": "object",
-        "arg": "response",
-        "root": true
-      },
-      "description": "",
-      "http": [
+    "getNewsData": {
+      "accepts": [
         {
-          "path": "/AddProductList",
-          "verb": "get"
+          "arg": "type",
+          "type": "string",
+          "required": true
         }
-      ]
-    },
-    "GetFnoRacking": {
-      "accepts": [{
-        "arg": "time",
-        "type": "string",
-        "required": true
-      }],
+      ],
       "returns": {
         "type": "object",
         "arg": "response",
@@ -71,7 +86,7 @@
       "description": "",
       "http": [
         {
-          "path": "/getFnoRacking",
+          "path": "/getNewsData",
           "verb": "get"
         }
       ]
