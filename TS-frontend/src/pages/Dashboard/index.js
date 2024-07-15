@@ -16,7 +16,7 @@ import BarChart from "../AllCharts/barchart"
 import ProgressBar from "components/Common/ProgressBar"
 import BuildBarChart from "../AllCharts/buildBarChart"
 const Dashboard = props => {
-  document.title = "Dashboard | Trendsarthi- React Admin & Dashboard Template"
+  document.title = "Dashboard | Trendsarthi"
   const [nifty, setNifty] = useState({})
   const [bankNifty, setBankNifty] = useState({})
   const [intradayList, setintradayList] = useState([])

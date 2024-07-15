@@ -16,24 +16,30 @@ import DerivativeDashboard from "pages/Derivatives/DerivativeDashboard"
 import OptionChain from "pages/Derivatives/OptionChain"
 import { Mustwatch } from "pages/MustWatch/mustwatch"
 import Sectors from "pages/MustWatch/sectors"
+import MarketPulse from "pages/Marketpulse/MarketPulse"
+
+
+
 const authProtectedRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
   { path: "/Indicator-chart", component: <IndicatorChart /> },
   // derivatives
   { path: "/DerivativeDashboard", component: <DerivativeDashboard /> },
   { path: "/NiftyOptionChain", component: <OptionChain type="NIFTY" /> },
-  {
-    path: "/BankNiftyOptionChain",
-    component: <OptionChain type="BANKNIFTY" />,
-  },
+  { path: "/BankNiftyOptionChain", component: <OptionChain type="BANKNIFTY" />, },
   { path: "/FinNiftyOptionChain", component: <OptionChain type="FINNIFTY" /> },
   { path: "/MidCapOptionChain", component: <OptionChain type="MIDCPNIFTY" /> },
   { path: "/mustwatch", component: <Mustwatch /> },
   { path: "/sectors/:product", component: <Sectors /> },
   { path: "/delivery-average-scanner", component: <DeliveryAverageScanner /> },
+
+  // New page
+  { path: "/marketpulse", component: <MarketPulse /> },
 ]
 const publicRoutes = [
   { path: "/", component: <Login /> },
+  // { path: "/dashboard", component: <Dashboard /> },
+
   { path: "/login", component: <Login /> },
   { path: "/logout", component: <Logout /> },
   { path: "/successfully/:username", component: <Successfully /> },
