@@ -1,86 +1,87 @@
-import PropTypes from "prop-types"
-import React, { useRef, useEffect, useState } from "react"
-import { Container, Row, Col, Card } from "reactstrap"
-import { withTranslation } from "react-i18next"
+import PropTypes from "prop-types";
+import React, { useEffect } from "react";
+import { Container, Row, Col } from "reactstrap";
+import { withTranslation } from "react-i18next";
 import {
     getStrikePrice,
     geIntradayDataLimit,
     shortGraphList,
     shortProductListDataList,
     fnoranking,
-} from "services/api/api-service"
-import CardDrag from "pages/Dashboard/components/CardDrag"
-import dragula from "dragula"
-import _, { isEmpty, result, set } from "lodash"
-import BarChart from "../AllCharts/barchart"
-import ProgressBar from "components/Common/ProgressBar"
-import BuildBarChart from "../AllCharts/buildBarChart"
+} from "services/api/api-service";
+import CardDrag from "pages/Dashboard/components/CardDrag";
+import dragula from "dragula";
+import _, { isEmpty, result, set } from "lodash";
+import BarChart from "../AllCharts/barchart";
+import ProgressBar from "components/Common/ProgressBar";
+import BuildBarChart from "../AllCharts/buildBarChart";
+import TableCard from "pages/Dashboard/components/TableCard";
 
+const MarketPulse = (props) => {
+    useEffect(() => {
+        document.title = "Market Pulse | Trendsarthi";
 
-const MarketPulse = props => {
-    document.title = "Market Pulse | Trendsarthi"
+        dragula([
+            document.getElementById("left"),
+            document.getElementById("right"),
+            document.getElementById("left1"),
+            document.getElementById("right2"),
+            document.getElementById("left3"),
+            document.getElementById("right3"),
+        ]);
 
-    const buildIOHandler = type => {
-        setTypeOIpriceFilter(type)
-        getOIFilter(type)
-    }
+        if (!document.getElementById("tradingview-script")) {
+            const script = document.createElement("script");
+            script.id = "tradingview-script";
+            script.type = "text/javascript";
+            script.src = "https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js";
+            script.async = true;
+            script.innerHTML = JSON.stringify({
+                symbols: [
+                    { proName: "FOREXCOM:SPXUSD", title: "S&P 500 Index" },
+                    { proName: "FOREXCOM:NSXUSD", title: "US 100 Cash CFD" },
+                    { proName: "FX_IDC:EURUSD", title: "EUR to USD" },
+                    { proName: "BITSTAMP:BTCUSD", title: "Bitcoin" },
+                    { proName: "BITSTAMP:ETHUSD", title: "Ethereum" },
+                ],
+                isTransparent: false,
+                showSymbolLogo: true,
+                displayMode: "adaptive",
+                colorTheme: "dark",
+                locale: "en",
+            });
+
+            document.getElementById("tradingview-widget").appendChild(script);
+        }
+    }, []);
+
     return (
         <React.Fragment>
             <div className="page-content">
                 <Container fluid>
-                    <div className="card border-bottom">
+                    <div className="card mb-0">
                         <div className="card-body">
-                            <div className="row">
-                                <div className="col-lg-8">
-                                    <div className="d-flex">
-                                        <div className="me-3"></div>
-                                        <div className="flex-grow-1 align-self-center">
-                                            <div className="text-muted">
-                                                <p className="mb-2 h1 bold text-gradient">
-                                                    Welcome to Trendsarthi
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="align-self-center col-lg-4">
-                                    <div className="text-lg-center mt-4 mt-lg-0">
-                                        <div className="row">
-                                            <div className="col-6">
-                                                <div>
-                                                    <p className="text-muted text-truncate mb-2 h5">
-                                                        Nifty Index
-                                                    </p>
-                                                    <h5 className="mb-0"></h5>
-                                                </div>
-                                            </div>
-                                            <div className="col-6">
-                                                <div>
-                                                    <p className="text-muted text-truncate mb-2 h5">
-                                                        BankNifty Index
-                                                    </p>
-                                                    <h5 className="mb-0"></h5>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div className="tradingview-widget-container h-0"  id="tradingview-widget">
+                                <div className="tradingview-widget-container__widget"></div>
                             </div>
+                        </div>
+                    </div>
+                    <div className="card mb-0">
+                        <div className="card-body">
+                            <div className="fs-1 fw-bold text-gradient">Market Pulse</div>
                         </div>
                     </div>
                     <Row>
                         <Col md={6} id="right">
-                            <CardDrag header={"Option Movment Chart"}>
-                                option
-                            </CardDrag>
+                            <TableCard header={"HIGH POW. STOCKS"} />
                         </Col>
                         <Col md={6} id="left">
                             <CardDrag header={"Progress Chart"}>
-                                table 1 
+                                table 1
                             </CardDrag>
                         </Col>
-                        <Col md={12} id="left">
-                            <CardDrag header={"Movment Chart"}>
+                        <Col md={12} id="left1">
+                            <CardDrag header={"Movement Chart"}>
                                 table 2
                             </CardDrag>
                         </Col>
@@ -88,12 +89,13 @@ const MarketPulse = props => {
                 </Container>
             </div>
         </React.Fragment>
-    )
-}
+    );
+};
+
 MarketPulse.propTypes = {
     t: PropTypes.any,
     chartsData: PropTypes.any,
     onGetChartsData: PropTypes.func,
-}
+};
 
-export default withTranslation()(MarketPulse)
+export default withTranslation()(MarketPulse);

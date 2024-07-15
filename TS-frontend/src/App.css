@@ -17,10 +17,13 @@
   color: green;
 }
 .text-gradient {
-  background: linear-gradient(to right, #3cff01, rgb(0, 0, 0));
+  /* background: linear-gradient(to right, #3cff01, rgb(0, 0, 0)); */
+  background: linear-gradient(92.35deg, #B4F7FE 0.67%, #C5FDFD 2.42%, #7265FD 34.18%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  width: 40%;
 }
+
 .Drag:hover {
   cursor: pointer;
 }
@@ -62,4 +65,13 @@
   0%{transform: rotate(3deg)}
   50%{transform: rotate(-3deg)}
   100%{transform: rotate(3deg)}
+}
+
+.table > :not(caption) > * > * {
+  background-color: #292B42;
+}
+
+.table th {
+  /* border-radius: 8px; */
+  background-color: #3D3F63;
 }
