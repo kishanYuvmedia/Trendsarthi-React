@@ -15,7 +15,7 @@ import _, { isEmpty, result, set } from "lodash";
 import BarChart from "../AllCharts/barchart";
 import ProgressBar from "components/Common/ProgressBar";
 import BuildBarChart from "../AllCharts/buildBarChart";
-import TableCard from "pages/Dashboard/components/TableCard";
+import TableCard from "pages/Marketpulse/TableCard";
 
 const MarketPulse = (props) => {
     useEffect(() => {

@@ -170,7 +170,7 @@ const SidebarContent = props => {
               </Link>
             </li>
             <li>
-              <Link to="#">
+              <Link to="/optionapex">
                 <i className="bx bx-home-circle"></i>
                 <span>{props.t("Options Apex")}</span>
               </Link>

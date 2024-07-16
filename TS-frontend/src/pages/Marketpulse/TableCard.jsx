@@ -38,7 +38,7 @@ export default function TableCard({ header, cssStyle, tableId }) {
                         <div className="text-white">
                             How to use
                             <span className="badge fs-6 ms-2" style={{ backgroundColor: "#F31C1C" }}>
-                                <i class='bx bx-play me-1'></i>
+                                <i className='bx bx-play me-1'></i>
                                 LIVE
                             </span>
                         </div>
@@ -80,9 +80,9 @@ export default function TableCard({ header, cssStyle, tableId }) {
                                     </td>
                                     <td className="text-white">
                                         <div>
-                                            <img src={candles} class="" alt="hdfc" />
+                                            <img src={candles} className="" alt="hdfc" />
 
-                                            <i class='btn bx bxs-bookmark-plus fs-4 p-0' ></i>
+                                            <i className='btn bx bxs-bookmark-plus fs-4 p-0' ></i>
                                         </div>
                                     </td>
                                     <td >
@@ -96,16 +96,16 @@ export default function TableCard({ header, cssStyle, tableId }) {
                                 </tr>
                                 <tr>
                                     <td className="text-white">
-                                        <img src="https://s3-symbol-logo.tradingview.com/crypto/XTVCETH.svg" class="me-2" alt="hdfc" style={{ borderRadius: "50%" }} />
+                                        <img src="https://s3-symbol-logo.tradingview.com/crypto/XTVCETH.svg" className="me-2" alt="hdfc" style={{ borderRadius: "50%" }} />
                                         <span>
                                             IDEA
                                         </span>
                                     </td>
                                     <td className="text-white">
                                         <div>
-                                            <img src={candles} class="" alt="hdfc" />
+                                            <img src={candles} className="" alt="hdfc" />
 
-                                            <i class='btn bx bxs-bookmark-plus fs-4 p-0' ></i>
+                                            <i className='btn bx bxs-bookmark-plus fs-4 p-0' ></i>
                                         </div>
                                     </td>
                                     <td>

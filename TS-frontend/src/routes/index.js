@@ -17,6 +17,7 @@ import OptionChain from "pages/Derivatives/OptionChain"
 import { Mustwatch } from "pages/MustWatch/mustwatch"
 import Sectors from "pages/MustWatch/sectors"
 import MarketPulse from "pages/Marketpulse/MarketPulse"
+import OptionApex from "pages/OptionApex/OptionApex"
 
 
 
@@ -35,6 +36,7 @@ const authProtectedRoutes = [
 
   // New page
   { path: "/marketpulse", component: <MarketPulse /> },
+  { path: "/optionapex", component: <OptionApex /> },
 ]
 const publicRoutes = [
   { path: "/", component: <Login /> },

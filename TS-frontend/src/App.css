@@ -82,6 +82,16 @@ table.table.dataTable > :not(caption) > * > * {
 }
 
 div.dt-container div.dt-info {
-  
   display: none;
+}
+
+body[data-sidebar="dark"] .vertical-menu {
+  background: linear-gradient(159.07deg, rgb(56 61 214 / 33%) -0.81%, rgba(18, 18, 20, 0.1) 126.11%) !important;
+}
+body[data-sidebar="dark"] .navbar-brand-box {
+  background: linear-gradient(159.07deg, rgba(56, 61, 214, 0) -0.81%, rgba(18, 18, 20, 0.1) 126.11%) !important;
+}
+
+body[data-topbar="dark"] #page-topbar {
+  background-color: #000000;
 }
