@@ -60,30 +60,29 @@ const MarketPulse = (props) => {
             <div className="page-content">
                 <Container fluid>
                     <div className="card mb-0">
-                        <div className="card-body">
-                            <div className="tradingview-widget-container h-0"  id="tradingview-widget">
+                        <div className="card-body px-0">
+                            <div className="tradingview-widget-container h-0" id="tradingview-widget">
                                 <div className="tradingview-widget-container__widget"></div>
                             </div>
                         </div>
                     </div>
                     <div className="card mb-0">
-                        <div className="card-body">
+                        <div className="card-body px-0">
                             <div className="fs-1 fw-bold text-gradient">Market Pulse</div>
                         </div>
                     </div>
                     <Row>
                         <Col md={6} id="right">
-                            <TableCard header={"HIGH POW. STOCKS"} />
+                            <TableCard header={"HIGH POW. STOCKS"} tableId={'pow1'} />
                         </Col>
                         <Col md={6} id="left">
-                            <CardDrag header={"Progress Chart"}>
-                                table 1
-                            </CardDrag>
+                            <TableCard header={"INTRADAY BOOST"} tableId={'pow2'} />
                         </Col>
-                        <Col md={12} id="left1">
-                            <CardDrag header={"Movement Chart"}>
-                                table 2
-                            </CardDrag>
+                        <Col md={6} id="left1">
+                            <TableCard header={"TOP LEVEL STOCKS"} tableId={'pow3'} />
+                        </Col>
+                        <Col md={6} id="left3">
+                            <TableCard header={"LOW LEVEL STOCKS"} tableId={'pow4'} />
                         </Col>
                     </Row>
                 </Container>

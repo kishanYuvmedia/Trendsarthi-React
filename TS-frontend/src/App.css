@@ -73,5 +73,15 @@
 
 .table th {
   /* border-radius: 8px; */
-  background-color: #3D3F63;
+  background-color: #3D3F63 !important;
+}
+
+table.table.dataTable > :not(caption) > * > * {
+  background-color: #292B42;
+
+}
+
+div.dt-container div.dt-info {
+  
+  display: none;
 }
