@@ -60,7 +60,7 @@ const MarketPulse = (props) => {
             <div className="page-content">
                 <Container fluid>
                     <div className="card mb-0">
-                        <div className="card-body px-0">
+                        <div className="card-body p-0">
                             <div className="tradingview-widget-container h-0" id="tradingview-widget">
                                 <div className="tradingview-widget-container__widget"></div>
                             </div>

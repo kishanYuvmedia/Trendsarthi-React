@@ -95,3 +95,33 @@ body[data-sidebar="dark"] .navbar-brand-box {
 body[data-topbar="dark"] #page-topbar {
   background-color: #000000;
 }
+
+div.dt-container div.dt-search input {
+  border: 1px solid white;
+  border-radius: 30px;
+  width: 80%;
+}
+
+div.dt-container .row.mt-2.justify-content-between {
+  position: absolute;
+  z-index: 99;
+  top: -78px;
+  right: 125px;
+}
+
+div.dt-container div.dt-search {
+  text-align: right;
+  width: 160%;
+}
+
+.form-control-sm {
+  min-height: calc(1.5em + 1rem + calc(var(--bs-border-width)* 2));
+  padding: 0.25rem 0.5rem;
+  font-size: 0.71094rem;
+  border-radius: var(--bs-border-radius-sm);
+  background-color: black;
+}
+
+.dt-search label {
+  display: none;
+}

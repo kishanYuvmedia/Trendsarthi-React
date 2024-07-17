@@ -22,6 +22,7 @@ import IndexMover from "pages/IndexMover/IndexMover"
 import InsiderStrategy from "pages/InsiderStrategy/InsiderStrategy"
 import SectorScope from "pages/Sector Scope/SectorScope"
 import OptionClock from "pages/Option Clock/OptionClock"
+import Swingspectrum from "pages/Swing Spectrum/SwingSpectrum"
 
 
 
@@ -45,6 +46,7 @@ const authProtectedRoutes = [
   { path: "/insiderstrategy", component: <InsiderStrategy /> },
   { path: "/sectorscope", component: <SectorScope /> },
   { path: "/optionclock", component: <OptionClock /> },
+  { path: "/swingspectrum", component: <Swingspectrum /> },
 ]
 const publicRoutes = [
   { path: "/", component: <Login /> },

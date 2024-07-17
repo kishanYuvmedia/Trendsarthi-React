@@ -16,11 +16,12 @@ import BarChart from "../AllCharts/barchart";
 import ProgressBar from "components/Common/ProgressBar";
 import BuildBarChart from "../AllCharts/buildBarChart";
 import TableCard from "pages/Marketpulse/TableCard";
-import MomentumSpike from "./MomentumSpike";
+import MomentumSpike from "pages/InsiderStrategy/MomentumSpike";
+import DailyScanner from "./DailyScanner";
 
-const InsiderStrategy = (props) => {
+const SwingSpectrum = (props) => {
     useEffect(() => {
-        document.title = "Insider Strategy | Trendsarthi";
+        document.title = "Swing Spectrum | Trendsarthi";
 
         dragula([
             document.getElementById("left"),
@@ -69,18 +70,9 @@ const InsiderStrategy = (props) => {
                     </div>
                     <div className="card mb-0">
                         <div className="card-body px-0">
-                            <div className="fs-1 fw-bold text-gradient">Insider Strategy</div>
+                            <div className="fs-1 fw-bold text-gradient">Swing Spectrum</div>
                         </div>
                     </div>
-                    <Row>
-                        <Col md={12}>
-                            <MomentumSpike header={"5 Min Momentum Spike"} />
-                        </Col>
-                        <Col md={12}>
-                            <MomentumSpike header={"10 Min Momentum Spike"} />
-                        </Col>
-                    </Row>
-
                     <Row>
                         <Col md={6} id="right">
                             <TableCard header={"HIGH POW. STOCKS"} tableId={'pow1'} />
@@ -95,16 +87,26 @@ const InsiderStrategy = (props) => {
                             <TableCard header={"LOW LEVEL STOCKS"} tableId={'pow4'} />
                         </Col>
                     </Row>
+                    <Row>
+                        <Col md={12} >
+                            <MomentumSpike header={"Weekly Watch"} />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={12} >
+                            <DailyScanner header={"Delivery Scanner"} tableId={'delivery'}/>
+                        </Col>
+                    </Row>
                 </Container>
             </div>
         </React.Fragment>
     );
 };
 
-InsiderStrategy.propTypes = {
+SwingSpectrum.propTypes = {
     t: PropTypes.any,
     chartsData: PropTypes.any,
     onGetChartsData: PropTypes.func,
 };
 
-export default withTranslation()(InsiderStrategy);
+export default withTranslation()(SwingSpectrum);

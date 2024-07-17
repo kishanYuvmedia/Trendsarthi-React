@@ -164,7 +164,7 @@ const SidebarContent = props => {
               </Link>
             </li>
             <li>
-              <Link to="#">
+              <Link to="/swingspectrum">
                 <i className="bx bx-home-circle"></i>
                 <span>{props.t("Swing Spectrum")}</span>
               </Link>
