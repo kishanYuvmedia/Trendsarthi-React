@@ -15,11 +15,13 @@ import _, { isEmpty, result, set } from "lodash";
 import BarChart from "../AllCharts/barchart";
 import ProgressBar from "components/Common/ProgressBar";
 import BuildBarChart from "../AllCharts/buildBarChart";
-import TableCard from "pages/Marketpulse/TableCard";
+
+import NiftyChart from "./NiftyChart";
+import MoneyFlux from "./MoneyFlux";
 
 const OptionApex = (props) => {
     useEffect(() => {
-        document.title = "Market Pulse | Trendsarthi";
+        document.title = "Option Apex | Trendsarthi";
 
         dragula([
             document.getElementById("left"),
@@ -30,31 +32,82 @@ const OptionApex = (props) => {
             document.getElementById("right3"),
         ]);
 
-        
+
     }, []);
 
     return (
         <React.Fragment>
             <div className="page-content">
                 <Container fluid>
-                    
+
                     <div className="card mb-0">
-                        <div className="card-body px-0">
-                            <div className="fs-1 fw-bold text-gradient">Option Apex</div>
+                        <div className="card-body px-0 pt-0">
+                            <div className="row d-flex justify-content-between">
+                                <div className="col-md-8 pb-3">
+                                    <div className="fs-1 fw-bold text-gradient">Option Apex</div>
+                                </div>
+                                <div className="col-md-4 d-flex justify-content-around">
+                                    <div className="dropdown">
+                                        <button className="btn btn-black  dropdown-toggle text-white" type="button" data-bs-toggle="dropdown" aria-expanded="false" style={{
+                                            border: '1px solid transparent',
+                                            borderRadius: '5px',
+                                            boxShadow: '0 0 0 1px rgba(56, 62, 214, 0.5), 0 0 0 2px rgba(18, 18, 20, 0.5)',
+                                            padding: '10px 20px',
+                                        }}>
+                                            Index: Nift50
+                                        </button>
+                                        <ul className="dropdown-menu">
+                                            <li><a className="dropdown-item" href="#">Nift50</a></li>
+                                            <li><a className="dropdown-item" href="#">Another action</a></li>
+                                            <li><a className="dropdown-item" href="#">Something else here</a></li>
+                                        </ul>
+                                    </div>
+                                    <div className="dropdown ">
+                                        <button className="btn btn-black  dropdown-toggle text-white" type="button" data-bs-toggle="dropdown" aria-expanded="false" style={{
+                                            border: '1px solid transparent',
+                                            borderRadius: '5px',
+                                            boxShadow: '0 0 0 1px rgba(56, 62, 214, 0.5), 0 0 0 2px rgba(18, 18, 20, 0.5)',
+                                            padding: '10px 20px',
+                                        }}>
+                                            Time: 3m
+                                        </button>
+                                        <ul className="dropdown-menu">
+                                            <li><a className="dropdown-item" href="#">Action</a></li>
+                                            <li><a className="dropdown-item" href="#">Another action</a></li>
+                                            <li><a className="dropdown-item" href="#">Something else here</a></li>
+                                        </ul>
+                                    </div>
+                                    <div className="dropdown">
+                                        <button className="btn btn-black  dropdown-toggle text-white" type="button" data-bs-toggle="dropdown" aria-expanded="false" style={{
+                                            border: '1px solid transparent',
+                                            borderRadius: '5px',
+                                            boxShadow: '0 0 0 1px rgba(56, 62, 214, 0.5), 0 0 0 2px rgba(18, 18, 20, 0.5)',
+                                            padding: '10px 20px',
+                                        }}>
+                                            Exp: Jul - 4 wk
+                                        </button>
+                                        <ul className="dropdown-menu dropdown-menu-end">
+                                            <li><a className="dropdown-item" href="#">Action</a></li>
+                                            <li><a className="dropdown-item" href="#">Another action</a></li>
+                                            <li><a className="dropdown-item" href="#">Something else here</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <Row>
                         <Col md={6} id="right">
-                            <TableCard header={"Nift 50"}  />
+                            <NiftyChart header={"Nift 50"} />
                         </Col>
                         <Col md={6} id="left">
-                            
-                            <TableCard header={"money flux"}  />
+
+                            <MoneyFlux header={"Money Flux"} />
 
                         </Col>
-                        
+
                     </Row>
-                </Container> 
+                </Container>
             </div>
         </React.Fragment>
     );

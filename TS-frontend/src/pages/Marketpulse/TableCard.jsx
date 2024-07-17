@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import { Card, CardHeader, CardBody } from "reactstrap"
 
-let candles = './candle-sticks.png';
+let candles = './images/candle-sticks.png';
 
 export default function TableCard({ header, cssStyle, tableId }) {
 
@@ -24,7 +24,7 @@ export default function TableCard({ header, cssStyle, tableId }) {
     return (
         <div>
             <Card
-                className="my-2 Drag m-3"
+                className="my-2 Drag"
                 style={{
                     border: '1px solid transparent',
                     borderRadius: '14px',

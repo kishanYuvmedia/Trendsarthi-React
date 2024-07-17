@@ -152,13 +152,13 @@ const SidebarContent = props => {
               </Link>
             </li>
             <li>
-              <Link to="#">
+              <Link to="/insiderstrategy">
                 <i className="bx bx-home-circle"></i>
                 <span>{props.t("Insider Strategy")}</span>
               </Link>
             </li>
             <li>
-              <Link to="#">
+              <Link to="/sectorscope">
                 <i className="bx bx-home-circle"></i>
                 <span>{props.t("Sector Scope")}</span>
               </Link>
@@ -170,13 +170,19 @@ const SidebarContent = props => {
               </Link>
             </li>
             <li>
+              <Link to="/optionclock">
+                <i className="bx bx-home-circle"></i>
+                <span>{props.t("Option Clock")}</span>
+              </Link>
+            </li>
+            <li>
               <Link to="/optionapex">
                 <i className="bx bx-home-circle"></i>
                 <span>{props.t("Options Apex")}</span>
               </Link>
             </li>
             <li>
-              <Link to="#">
+              <Link to="/indexmover">
                 <i className="bx bx-home-circle"></i>
                 <span>{props.t("Index Mover")}</span>
               </Link>

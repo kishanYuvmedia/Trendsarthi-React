@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 import { Card, CardHeader, CardBody } from "reactstrap"
 
 
-export default function NiftyChart({ header, cssStyle, tableId }) {
+export default function SectorBarScope({ header, status, tableId }) {
 
     useEffect(() => {
         // Initialize DataTable when the component mounts
@@ -32,30 +32,19 @@ export default function NiftyChart({ header, cssStyle, tableId }) {
                     backgroundColor: "#181a33"
                 }}
             >
-                <CardHeader className='d-flex justify-content-between rounded-4  ' style={{backgroundColor: "#181a33"}}>
-                    <div>
-                        <div className="text-white fs-3 fw-bold">
+                <CardHeader className=' rounded-4  ' style={{ backgroundColor: "#181a33" }}>
+                    <div className="d-flex align-items-center  ">
+                        <div className="text-white  fs-5">
                             {header}
-                            <span className="text-white fs-6 fw-normal ms-2">
-                                How to use
-                            </span>
                         </div>
-
+                        <span className="badge fs-6 ms-2 text-info">
+                            <i className='bx bxs-circle'></i>
+                            ACTIVE
+                        </span>
                     </div>
-
-
-                    <div className="dropdown">
-                        <button className="btn btn-black border dropdown-toggle text-white" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Chart Type
-                        </button>
-                        <ul className="dropdown-menu">
-                            <li><a className="dropdown-item" href="#">Action</a></li>
-                            <li><a className="dropdown-item" href="#">Another action</a></li>
-                            <li><a className="dropdown-item" href="#">Something else here</a></li>
-                        </ul>
+                    <div className="text-white">
+                        How to use
                     </div>
-
-
                 </CardHeader>
                 <CardBody className="p-3 pt-0">
                     <div className="border p-3 rounded-4 bg-black">

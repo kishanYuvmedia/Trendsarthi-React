@@ -18,6 +18,10 @@ import { Mustwatch } from "pages/MustWatch/mustwatch"
 import Sectors from "pages/MustWatch/sectors"
 import MarketPulse from "pages/Marketpulse/MarketPulse"
 import OptionApex from "pages/OptionApex/OptionApex"
+import IndexMover from "pages/IndexMover/IndexMover"
+import InsiderStrategy from "pages/InsiderStrategy/InsiderStrategy"
+import SectorScope from "pages/Sector Scope/SectorScope"
+import OptionClock from "pages/Option Clock/OptionClock"
 
 
 
@@ -37,6 +41,10 @@ const authProtectedRoutes = [
   // New page
   { path: "/marketpulse", component: <MarketPulse /> },
   { path: "/optionapex", component: <OptionApex /> },
+  { path: "/indexmover", component: <IndexMover /> },
+  { path: "/insiderstrategy", component: <InsiderStrategy /> },
+  { path: "/sectorscope", component: <SectorScope /> },
+  { path: "/optionclock", component: <OptionClock /> },
 ]
 const publicRoutes = [
   { path: "/", component: <Login /> },

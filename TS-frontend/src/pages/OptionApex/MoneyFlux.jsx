@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import { Card, CardHeader, CardBody } from "reactstrap"
 
-
-export default function NiftyChart({ header, cssStyle, tableId }) {
+export default function MoneyFlux({ header, cssStyle, tableId }) {
 
     useEffect(() => {
         // Initialize DataTable when the component mounts
@@ -23,7 +22,7 @@ export default function NiftyChart({ header, cssStyle, tableId }) {
     return (
         <div>
             <Card
-                className="my-2 Drag"
+                className="my-2 Drag "
                 style={{
                     border: '1px solid transparent',
                     borderRadius: '14px',
@@ -32,7 +31,13 @@ export default function NiftyChart({ header, cssStyle, tableId }) {
                     backgroundColor: "#181a33"
                 }}
             >
-                <CardHeader className='d-flex justify-content-between rounded-4  ' style={{backgroundColor: "#181a33"}}>
+
+                <CardBody className="p-3">
+                    <div className="border p-3 rounded-4 bg-black">
+                        Sentimantel dial - PCR
+                    </div>
+                </CardBody>
+                <CardHeader className='d-flex justify-content-between rounded-4  ' style={{ backgroundColor: "#181a33" }}>
                     <div>
                         <div className="text-white fs-3 fw-bold">
                             {header}
@@ -42,24 +47,10 @@ export default function NiftyChart({ header, cssStyle, tableId }) {
                         </div>
 
                     </div>
-
-
-                    <div className="dropdown">
-                        <button className="btn btn-black border dropdown-toggle text-white" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Chart Type
-                        </button>
-                        <ul className="dropdown-menu">
-                            <li><a className="dropdown-item" href="#">Action</a></li>
-                            <li><a className="dropdown-item" href="#">Another action</a></li>
-                            <li><a className="dropdown-item" href="#">Something else here</a></li>
-                        </ul>
-                    </div>
-
-
                 </CardHeader>
                 <CardBody className="p-3 pt-0">
                     <div className="border p-3 rounded-4 bg-black">
-                        candle stick chart will come here
+                        Money Flux chart
                     </div>
                 </CardBody>
             </Card>
