@@ -18,6 +18,7 @@ import {
   toggleLeftmenu,
   changeSidebarType,
 } from "../../store/actions"
+import MobileNavigation from "./MobileNavigation"
 
 const Header = props => {
   return (
@@ -43,6 +44,7 @@ const Header = props => {
           </div>
         </div>
       </header>
+      <MobileNavigation />
     </React.Fragment>
   )
 }

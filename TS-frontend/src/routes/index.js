@@ -23,6 +23,7 @@ import InsiderStrategy from "pages/InsiderStrategy/InsiderStrategy"
 import SectorScope from "pages/Sector Scope/SectorScope"
 import OptionClock from "pages/Option Clock/OptionClock"
 import Swingspectrum from "pages/Swing Spectrum/SwingSpectrum"
+import MarketPulseTabs from "pages/Marketpulse/MarketPulseTabs"
 
 
 
@@ -41,6 +42,7 @@ const authProtectedRoutes = [
 
   // New page
   { path: "/marketpulse", component: <MarketPulse /> },
+  { path: "/marketpulsetabs", component: <MarketPulseTabs /> },
   { path: "/optionapex", component: <OptionApex /> },
   { path: "/indexmover", component: <IndexMover /> },
   { path: "/insiderstrategy", component: <InsiderStrategy /> },

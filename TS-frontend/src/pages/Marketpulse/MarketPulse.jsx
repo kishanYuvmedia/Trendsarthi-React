@@ -16,6 +16,7 @@ import BarChart from "../AllCharts/barchart";
 import ProgressBar from "components/Common/ProgressBar";
 import BuildBarChart from "../AllCharts/buildBarChart";
 import TableCard from "pages/Marketpulse/TableCard";
+import CardSlider from "./CardSlider";
 
 const MarketPulse = (props) => {
     useEffect(() => {
@@ -71,17 +72,32 @@ const MarketPulse = (props) => {
                             <div className="fs-1 fw-bold text-gradient">Market Pulse</div>
                         </div>
                     </div>
+
                     <Row>
-                        <Col md={6} id="right">
+                        <Col md={12} className="hideOnDesktop mb-3">
+                            <CardSlider header={"HIGH POWERED STOCKS"} />
+                        </Col>
+                        <Col md={12} className="hideOnDesktop mb-3">
+                            <CardSlider header={"INTRADAY BOOST"} />
+                        </Col>
+                        <Col md={12} className="hideOnDesktop mb-3">
+                            <CardSlider header={"TOP LEVEL STOCKS"} />
+                        </Col>
+                        <Col md={12} className="hideOnDesktop mb-3">
+                            <CardSlider header={"LOW LEVEL STOCKS"} />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={6} id="right" className="hideOnMobile">
                             <TableCard header={"HIGH POW. STOCKS"} tableId={'pow1'} />
                         </Col>
-                        <Col md={6} id="left">
+                        <Col md={6} id="left" className="hideOnMobile">
                             <TableCard header={"INTRADAY BOOST"} tableId={'pow2'} />
                         </Col>
-                        <Col md={6} id="left1">
+                        <Col md={6} id="left1" className="hideOnMobile">
                             <TableCard header={"TOP LEVEL STOCKS"} tableId={'pow3'} />
                         </Col>
-                        <Col md={6} id="left3">
+                        <Col md={6} id="left3" className="hideOnMobile">
                             <TableCard header={"LOW LEVEL STOCKS"} tableId={'pow4'} />
                         </Col>
                     </Row>

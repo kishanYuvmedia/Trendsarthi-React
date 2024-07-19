@@ -54,9 +54,9 @@ export default function TableCard({ header, cssStyle, tableId }) {
 
                     </div>
                 </CardHeader>
-                <CardBody className="p-2 pt-0 position-relative">
-                    <div className="border p-3 rounded-4 table-responsive" style={{ backgroundColor: "#292B42" }}>
-                        <table id={tableId} className="table ">
+                <CardBody className="p-0 position-relative">
+                    <div className="border p-2 rounded-4 table-responsive" style={{ backgroundColor: "#292B42" }}>
+                        <table id={tableId} className="table table-sm">
 
                             <thead>
                                 <tr >

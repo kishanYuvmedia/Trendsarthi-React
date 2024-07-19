@@ -1,3 +1,11 @@
+.hideOnDesktop{
+  display: none;
+}
+.hideOnMobile {
+  display: block;
+}
+
+
 .custom-strike-price {
   background-color: #22262e !important;
   color: white !important;
@@ -124,4 +132,35 @@ div.dt-container div.dt-search {
 
 .dt-search label {
   display: none;
+}
+
+.navbar {
+  border-bottom: solid 1px #EBEBEB;
+}
+.bottom-tab-nav {
+  border-top: solid 1px #EBEBEB;
+}
+.nav-link,
+.bottom-nav-link {
+  color: #55575b;
+}
+.bottom-nav-link.active {
+  color: #f5e5ff;
+}
+.bottom-tab-label {
+  font-size: 12px;
+}
+
+.nav-tabs-custom {
+  display: flex;
+  white-space: nowrap;
+  overflow-x: auto;
+  -ms-overflow-style: none;
+  flex-wrap: nowrap;
+  column-gap: 10px;
+  padding-block: 12px;
+}
+
+.nav-tabs-custom::-webkit-scrollbar {
+  display: none; /* for Chrome, Safari, and Opera */
 }
