@@ -144,56 +144,78 @@ const SidebarContent = props => {
       <SimpleBar className="h-100" ref={ref}>
         <div id="sidebar-menu">
           <ul className="metismenu list-unstyled" id="side-menu">
+            <li>
+              <Link to="/dashboard">
+                <img className="me-3" width="20" height="20" src="https://img.icons8.com/3d-fluency/94/home.png" alt="home" />
+                <span className=" text-uppercase">{props.t("Dashboard")}</span>
+              </Link>
+            </li>
             <li className="menu-title">{props.t("Navigation")} </li>
             <li>
               <Link to="/marketpulse">
-                <i className="bx bx-home-circle"></i>
+                <img className="me-3" width="20" height="20" src="https://img.icons8.com/3d-fluency/94/heart-with-pulse.png" alt="heart-with-pulse" />
                 <span>{props.t("Market Pulse")}</span>
               </Link>
             </li>
             <li>
               <Link to="/insiderstrategy">
-                <i className="bx bx-home-circle"></i>
+                <img className="me-3" width="20" height="20" src="https://img.icons8.com/3d-fluency/94/hard-to-find.png" alt="hard-to-find" />
                 <span>{props.t("Insider Strategy")}</span>
               </Link>
             </li>
             <li>
               <Link to="/sectorscope">
-                <i className="bx bx-home-circle"></i>
+                <img className="me-3" width="20" height="20" src="https://img.icons8.com/3d-fluency/94/statistic.png" alt="statistic" />
                 <span>{props.t("Sector Scope")}</span>
               </Link>
             </li>
             <li>
               <Link to="/swingspectrum">
-                <i className="bx bx-home-circle"></i>
+                <img className="me-3" width="20" height="20" src="https://img.icons8.com/3d-fluency/94/line-chart.png" alt="line-chart" />
                 <span>{props.t("Swing Spectrum")}</span>
               </Link>
             </li>
             <li>
               <Link to="/optionclock">
-                <i className="bx bx-home-circle"></i>
+                <img className="me-3" width="20" height="20" src="https://img.icons8.com/3d-fluency/94/alarm-clock--v1.png" alt="alarm-clock--v1" />
                 <span>{props.t("Option Clock")}</span>
               </Link>
             </li>
             <li>
               <Link to="/optionapex">
-                <i className="bx bx-home-circle"></i>
+                <img className="me-3" width="20" height="20" src="https://img.icons8.com/3d-fluency/94/combo-chart.png" alt="combo-chart" />
                 <span>{props.t("Options Apex")}</span>
               </Link>
             </li>
             <li>
               <Link to="/indexmover">
-                <i className="bx bx-home-circle"></i>
+                <img className="me-3" width="20" height="20" src="https://img.icons8.com/3d-fluency/94/candle-sticks.png" alt="candle-sticks" />
                 <span>{props.t("Index Mover")}</span>
               </Link>
             </li>
-            <hr />
             <li>
-              <Link to="/dashboard">
-                <i className="bx bx-home-circle"></i>
-                <span>{props.t("Dashboards")}</span>
+              <Link to="/#" className="has-arrow">
+                <img className="me-3" width="20" height="20" src="https://img.icons8.com/3d-fluency/94/radar.png" alt="radar" />
+                <span>{props.t("Indicators")}</span>
               </Link>
+              <ul className="sub-menu">
+                <li>
+                  <Link to="#">
+                    <img className="me-3" width="20" height="20" src="https://img.icons8.com/isometric/50/vertical-timeline.png" alt="vertical-timeline" />
+                    {props.t("Moving Avg.")}
+                  </Link>
+                </li>
+                <li>
+                  <Link to="#">
+                    <img className="me-3" width="20" height="20" src="https://img.icons8.com/3d-fluency/94/cave.png" alt="cave" />
+                    {props.t("Pivot Point")}
+                  </Link>
+                </li>
+
+              </ul>
             </li>
+            <hr />
+
 
             <li>
               <Link to="/#" className="has-arrow">
@@ -241,7 +263,7 @@ const SidebarContent = props => {
                 <span>{props.t("Delivery Average Scanner")}</span>
               </Link>
             </li>
-            
+
           </ul>
         </div>
       </SimpleBar>

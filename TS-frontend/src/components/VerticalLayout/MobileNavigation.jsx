@@ -7,29 +7,29 @@ const tabs = [
 
     {
         route: "/marketpulse",
-        icon: faSquarePollVertical,
-        label: "Stocks"
+        icon: 'https://img.icons8.com/3d-fluency/94/heart-with-pulse.png',
+        label: "Pulse"
     },
     {
-        route: "/marketpulse",
-        icon: faChartLine,
-        label: "F&O"
+        route: "/insiderstrategy",
+        icon: 'https://img.icons8.com/3d-fluency/94/hard-to-find.png',
+        label: "Strategy"
     },
     {
-        route: "/marketpulse",
-        icon: faHome,
+        route: "/dashboard",
+        icon: 'https://img.icons8.com/3d-fluency/94/home.png',
         label: "Home"
     },
     {
-        route: "/marketpulse",
-        icon: faScrewdriverWrench,
-        label: "Tools"
+        route: "/sectorscope",
+        icon: 'https://img.icons8.com/3d-fluency/94/statistic.png',
+        label: "Scope"
     },
 
     {
-        route: "/marketpulse",
-        icon: faEllipsis,
-        label: "More"
+        route: "/swingspectrum",
+        icon: 'https://img.icons8.com/3d-fluency/94/line-chart.png',
+        label: "Spectrum"
     }
 ]
 
@@ -44,10 +44,10 @@ export default function MobileNavigation() {
                         {
                             tabs.map((tab, index) => (
                                 <NavItem key={`tab-${index}`}>
-                                    <NavLink to={tab.route} className="nav-link bottom-nav-link px-0" activeClassName="active">
-                                        <div className="row d-flex flex-column justify-content-center align-items-center">
-                                            <FontAwesomeIcon size="lg" icon={tab.icon} />
-                                            <div className="bottom-tab-label">{tab.label}</div>
+                                    <NavLink to={tab.route} className="nav-link bottom-nav-link p-0" activeClassName="active">
+                                        <div className="row d-flex flex-column align-items-center text-center">
+                                            <img className=""  src={tab.icon} alt="tab-icons" style={{width: "35%"}} />
+                                            <div className="bottom-tab-label fw-bold">{tab.label}</div>
                                         </div>
                                     </NavLink>
                                 </NavItem>
