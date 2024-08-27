@@ -16,24 +16,44 @@ import DerivativeDashboard from "pages/Derivatives/DerivativeDashboard"
 import OptionChain from "pages/Derivatives/OptionChain"
 import { Mustwatch } from "pages/MustWatch/mustwatch"
 import Sectors from "pages/MustWatch/sectors"
+import MarketPulse from "pages/Marketpulse/MarketPulse"
+import OptionApex from "pages/OptionApex/OptionApex"
+import IndexMover from "pages/IndexMover/IndexMover"
+import InsiderStrategy from "pages/InsiderStrategy/InsiderStrategy"
+import SectorScope from "pages/Sector Scope/SectorScope"
+import OptionClock from "pages/Option Clock/OptionClock"
+import Swingspectrum from "pages/Swing Spectrum/SwingSpectrum"
+import MarketPulseTabs from "pages/Marketpulse/MarketPulseTabs"
+
+
+
 const authProtectedRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
   { path: "/Indicator-chart", component: <IndicatorChart /> },
   // derivatives
   { path: "/DerivativeDashboard", component: <DerivativeDashboard /> },
   { path: "/NiftyOptionChain", component: <OptionChain type="NIFTY" /> },
-  {
-    path: "/BankNiftyOptionChain",
-    component: <OptionChain type="BANKNIFTY" />,
-  },
+  { path: "/BankNiftyOptionChain", component: <OptionChain type="BANKNIFTY" />, },
   { path: "/FinNiftyOptionChain", component: <OptionChain type="FINNIFTY" /> },
   { path: "/MidCapOptionChain", component: <OptionChain type="MIDCPNIFTY" /> },
   { path: "/mustwatch", component: <Mustwatch /> },
   { path: "/sectors/:product", component: <Sectors /> },
   { path: "/delivery-average-scanner", component: <DeliveryAverageScanner /> },
+
+  // New page
+  { path: "/marketpulse", component: <MarketPulse /> },
+  { path: "/marketpulsetabs", component: <MarketPulseTabs /> },
+  { path: "/optionapex", component: <OptionApex /> },
+  { path: "/indexmover", component: <IndexMover /> },
+  { path: "/insiderstrategy", component: <InsiderStrategy /> },
+  { path: "/sectorscope", component: <SectorScope /> },
+  { path: "/optionclock", component: <OptionClock /> },
+  { path: "/swingspectrum", component: <Swingspectrum /> },
 ]
 const publicRoutes = [
   { path: "/", component: <Login /> },
+  // { path: "/dashboard", component: <Dashboard /> },
+
   { path: "/login", component: <Login /> },
   { path: "/logout", component: <Logout /> },
   { path: "/successfully/:username", component: <Successfully /> },

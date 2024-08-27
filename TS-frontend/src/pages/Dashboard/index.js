@@ -15,8 +15,9 @@ import _, { isEmpty, result, set } from "lodash"
 import BarChart from "../AllCharts/barchart"
 import ProgressBar from "components/Common/ProgressBar"
 import BuildBarChart from "../AllCharts/buildBarChart"
+import BoxNavMob from "./components/BoxNavMob"
 const Dashboard = props => {
-  document.title = "Dashboard | Trendsarthi- React Admin & Dashboard Template"
+  document.title = "Dashboard | Trendsarthi"
   const [nifty, setNifty] = useState({})
   const [bankNifty, setBankNifty] = useState({})
   const [intradayList, setintradayList] = useState([])
@@ -171,18 +172,21 @@ const Dashboard = props => {
           <div className="card border-bottom">
             <div className="card-body">
               <div className="row">
+
+
                 <div className="col-lg-8">
                   <div className="d-flex">
-                    <div className="me-3"></div>
                     <div className="flex-grow-1 align-self-center">
                       <div className="text-muted">
-                        <p className="mb-2 h1 bold text-gradient">
+                        <p className="mb-2 h1 bold w-100 text-gradient">
                           Welcome to Trendsarthi
                         </p>
                       </div>
                     </div>
                   </div>
                 </div>
+
+
                 <div className="align-self-center col-lg-4">
                   <div className="text-lg-center mt-4 mt-lg-0">
                     <div className="row">
@@ -208,6 +212,11 @@ const Dashboard = props => {
               </div>
             </div>
           </div>
+
+          <div>
+            <BoxNavMob />
+          </div>
+
           <Row>
             <Col md={6} id="right">
               <CardDrag header={"Option Movment Chart"}>
@@ -219,9 +228,8 @@ const Dashboard = props => {
                 {typeList.map(item => (
                   <button
                     type="button"
-                    className={`btn btn-sm m-1 ${
-                      optionType === item ? "btn-warning" : " btn-info"
-                    }`}
+                    className={`btn btn-sm m-1 ${optionType === item ? "btn-warning" : " btn-info"
+                      }`}
                     onClick={e => setOptionType(item)}
                   >
                     {item}
@@ -235,9 +243,8 @@ const Dashboard = props => {
                 {fetureIO.map(item => (
                   <button
                     type="button"
-                    className={`btn btn-sm m-1 ${
-                      typeOIpriceFilter === item ? "btn-warning" : " btn-info"
-                    }`}
+                    className={`btn btn-sm m-1 ${typeOIpriceFilter === item ? "btn-warning" : " btn-info"
+                      }`}
                     onClick={e => buildIOHandler(item)}
                   >
                     {item}

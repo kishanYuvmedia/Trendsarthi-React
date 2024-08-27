@@ -18,6 +18,7 @@ import {
   toggleLeftmenu,
   changeSidebarType,
 } from "../../store/actions"
+import MobileNavigation from "./MobileNavigation"
 
 const Header = props => {
   return (
@@ -28,12 +29,12 @@ const Header = props => {
             <div className="navbar-brand-box d-lg-none d-md-block">
               <Link to="/dashboard" className="logo logo-dark">
                 <span className="logo-sm">
-                  <img src={logo} alt="" height="22" />
+                  <img src={logo} alt="" height="50" />
                 </span>
               </Link>
               <Link to="/dashboard" className="logo logo-light">
                 <span className="logo-sm">
-                  <img src={logoLightSvg} alt="" height="22" />
+                  <img src={logoLightSvg} alt="" height="50" />
                 </span>
               </Link>
             </div>
@@ -43,6 +44,7 @@ const Header = props => {
           </div>
         </div>
       </header>
+      <MobileNavigation />
     </React.Fragment>
   )
 }
