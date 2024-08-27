@@ -5,8 +5,8 @@ import { connect } from "react-redux"
 import { Link } from "react-router-dom"
 import ProfileMenu from "../CommonForBoth/TopbarDropdown/ProfileMenu"
 
-import logo from "../../assets/image/marbiz-logo.png"
-import logoLightSvg from "../../assets/image/marbiz-logo.png"
+import logo from "../../assets/image/logo.png"
+import logoLightSvg from "../../assets/image/logo.png"
 
 //i18n
 import { withTranslation } from "react-i18next"

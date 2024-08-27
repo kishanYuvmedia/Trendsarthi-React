@@ -118,7 +118,6 @@ const SidebarContent = props => {
   useEffect(() => {
     ref.current.recalculate()
   }, [])
-
   useEffect(() => {
     new MetisMenu("#side-menu")
     activeMenu()
@@ -163,25 +162,7 @@ const SidebarContent = props => {
                 </li>
               </ul>
             </li>
-            {/* <li>
-              <Link to="/#" className="has-arrow">
-                <i className="bx bx-store"></i>
-                <span>{props.t("Influencer")}</span>
-              </Link>
-              <ul className="sub-menu">
-                <li>
-                  <Link to="/influencer/add-influencer">
-                    {props.t("Add Influencer")}
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/influencer/influencer-list">
-                    {props.t("Influencer List")}
-                  </Link>
-                </li>
-                
-              </ul>
-            </li> */}
+            
             <hr/>
             <li className="menu-title">{props.t("Admin")} </li>
 
@@ -219,17 +200,12 @@ const SidebarContent = props => {
               </Link>
             </li>
             <li>
-              <Link to="/LMS/Newsfeed">
-                <i className='bx bx-news' ></i>
-                <span>{props.t("Newsfeed")}</span>
+              <Link to="/LMS/Unverse">
+              <i className='bx bxs-file-pdf' ></i>
+                <span>{props.t("Unverse")}</span>
               </Link>
             </li>
-            <li>
-              <Link to="/LMS/SubscriberTips">
-                <i className='bx bx-rocket' ></i>
-                <span>{props.t("Subscriber Tips")}</span>
-              </Link>
-            </li>
+          
           </ul>
         </div>
       </SimpleBar>

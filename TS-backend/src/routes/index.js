@@ -17,6 +17,7 @@ import PaymentOrders from "pages/Dashboard/PaymentOrders"
 import Packages from "pages/Dashboard/Packages"
 import Courses from "pages/LMS/Courses"
 import StudyMaterial from "pages/LMS/StudyMaterial"
+import Unverse from "pages/LMS/Unverse"
 import Newsfeed from "pages/LMS/Newsfeed"
 import SubscriberTips from "pages/LMS/SubscriberTips"
 import ViewCourse from "pages/LMS/ViewCourse"
@@ -35,7 +36,7 @@ const authProtectedRoutes = [
   { path: "/LMS/StudyMaterial", component: <StudyMaterial /> },
   { path: "/LMS/Newsfeed", component: <Newsfeed /> },
   { path: "/LMS/SubscriberTips", component: <SubscriberTips /> },
-  
+  { path: "/LMS/Unverse", component: <Unverse /> },
   // old navigation
   { path: "/settings/add-category", component: <AddCategory /> },
   { path: "/influencer/add-influencer", component: <AddInfluencer /> },

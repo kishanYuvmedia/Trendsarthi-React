@@ -68,14 +68,11 @@ export default function Packages() {
 
         return months[monthNumber - 1];
     }
-
     function getdata() {
         getPlan().then(result => {
             if (!isEmpty(result)) {
                 console.log("Plans", result);
-
                 const dataList = []
-
                 result.map(plan =>
                     dataList.push({
                         planName: (
@@ -96,7 +93,7 @@ export default function Packages() {
                             </ul>
                         ),
                         planStatus: (
-                            <div className={plan.planStatus === "A" ? "text-success fw-bold" : "text-danger fw-bold"}>
+                            <div className={plan.status === "A" ? "text-success fw-bold" : "text-danger fw-bold"}>
                                 {plan.status === "A" ? "ACTIVE" : "INACTIVE"}
                             </div>
                         ),
@@ -104,11 +101,11 @@ export default function Packages() {
                             <FormGroup switch>
                                 <Input
                                     type="switch"
-                                    checked={plan.planStatus === "A" ? true : false}
+                                    checked={plan.status === "A" ? true : false}
                                     onChange={() =>
                                         updatesHandler({
                                             ...plan,
-                                            ...{ status: plan.planStatus === "A" ? "I" : "A" },
+                                            ...{ status: plan.status === "A" ? "I" : "A" },
                                         })
                                     }
                                 />
@@ -167,11 +164,6 @@ export default function Packages() {
                             field: "toggleStatus",
                             width: 100,
                         },
-                        // {
-                        //     label: "Fetured",
-                        //     field: "fetured",
-                        //     width: 100,
-                        // },
                         {
                             label: "Action",
                             field: "action",

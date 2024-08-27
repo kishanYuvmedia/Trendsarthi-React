@@ -13,44 +13,46 @@ import {
 import Breadcrumbs from "../../components/Common/Breadcrumb"
 import { CardView } from "../ui-components"
 import {
-  createPublicList,
-  getPublicList,
-  deletePublicList,
+  createMtSystemLists,
+  deleteMtSystemLists,
+  getSystemList
 } from "../../services/api/api-service"
 import SweetAlert from "react-bootstrap-sweetalert"
 import { useEffect } from "react"
 import { FcCancel } from "react-icons/fc"
+import { isEmpty } from "lodash"
 export default function AddCategory() {
   //meta title
-  document.title = "Add Category | Marbiz"
+  document.title = "Add Category | Trendsarthi"
   const [formData, setFormData] = useState({
-    listType: "Platform",
+    listType: "",
     label: "",
     value: "",
   })
   const [isButtonDisabled, setIsButtonDisabled] = useState(false)
   const [deleteStatus, setdeleteStatus] = useState(false)
   const [categoryList, setCategoryList] = useState([])
+  const [dataList, setDataList] = useState([])
   const handleChange = event => {
     const { name, value } = event.target
     setFormData({
       ...formData,
       [name]: value,
     })
+    getdata();
   }
-
   const handleSubmit = event => {
     event.preventDefault()
     if (!formData.label || !formData.value) {
       return
     }
-    createPublicList(formData).then(data => {
+    createMtSystemLists(formData).then(data => {
       setIsButtonDisabled(true)
       getdata()
     })
   }
   const deleteHander = id => {
-    deletePublicList(id).then(result => {
+    deleteMtSystemLists(id).then(result => {
       if (result.count) {
         setdeleteStatus(true)
         getdata()
@@ -58,13 +60,21 @@ export default function AddCategory() {
     })
   }
   function getdata() {
-    getPublicList(formData.listType).then(list => {
-      setCategoryList(list)
+    console.log(formData);
+    getSystemList(formData.listType).then(list => {
+      if (!isEmpty(list)) {
+        setDataList(list)
+      }
     })
   }
   useEffect(() => {
-    getdata()
-  }, [formData.listType])
+    getSystemList("category").then(list => {
+      console.log("system category list", list);
+      if (!isEmpty(list)) {
+        setCategoryList(list)
+      }
+    })
+  }, [])
   return (
     <React.Fragment>
       <div className="page-content">
@@ -87,11 +97,10 @@ export default function AddCategory() {
                           value={formData.category}
                           onChange={handleChange}
                         >
-                          <option>Platform</option>
-                          <option>Document</option>
-                          <option>occasion</option>
-                          <option>Category</option>
-                          <option>Content Type</option>
+                          <option >Select Category</option>
+                          {categoryList.map((item, index) =>
+                            <option key={index} value={item.value}>{item.label}</option>
+                          )}
                         </Input>
                       </div>
                     </Col>
@@ -149,7 +158,7 @@ export default function AddCategory() {
                     </tr>
                   </thead>
                   <tbody>
-                    {categoryList.map((item, index) => (
+                    {dataList?.map((item, index) => (
                       <tr key={index}>
                         <td>{index + 1}</td>
                         <td>{item.listType}</td>

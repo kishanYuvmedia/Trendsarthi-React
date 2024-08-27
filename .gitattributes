@@ -5,7 +5,8 @@
 /node_modules
 TS-frontend/node_modules
 TS-frontend/package-lock.*
-
+ts-website/node_modules
+ts-website/package-lock.*
 
 /.pnp
 .pnp.js

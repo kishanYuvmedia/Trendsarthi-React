@@ -83,6 +83,9 @@ export const getHistoryList = (periodicity, type, max, period) => {
 export const deleteUser = id => {
   return deleteById("TdUsers", id)
 }
+export const deleteMtSystemLists = id => {
+  return deleteById("TdSystemLists", id)
+}
 
 
 export const getCourse = () => {
@@ -103,11 +106,11 @@ export const getCourseVideos = () => {
 export const updateCourseVideos = data => {
   return upsertPatch("CourseVideos", data)
 }
-// ===================== MARBIZ API ==========================
+// ===================== Trendsarthi API ==========================
 
 export const getSystemList = type => {
   return new Promise((resolve, reject) => {
-    find("MtSystemLists", {
+    find("TdSystemLists", {
       where: { listType: type },
       order: "label asc",
     }).then(data => {
@@ -116,11 +119,14 @@ export const getSystemList = type => {
   })
 }
 export const createPublicList = data => {
-  return create("MtPublicLists", data)
+  return create("TdPublicLists", data)
+}
+export const createMtSystemLists = data => {
+  return create("TdSystemLists", data)
 }
 export const getPublicList = type => {
   return new Promise((resolve, reject) => {
-    find("MtPublicLists", {
+    find("TdPublicLists", {
       where: { listType: type },
       order: "label asc",
     }).then(data => {
@@ -133,7 +139,7 @@ export const createProfileListing = data => {
   return create("MtProfiles", data)
 }
 export const deletePublicList = id => {
-  return deleteById("MtPublicLists", id)
+  return deleteById("TdPublicLists", id)
 }
 export const deleteProfile = id => {
   return deleteById("MtProfiles", id)
@@ -172,4 +178,40 @@ export const getImagesList = id => {
 }
 export const deleteImages = id => {
   return deleteById("Images", id)
+}
+export const getStudyList = () => {
+  return new Promise((resolve, reject) => {
+    find("TsStudies", {
+      order: "createdAt asc",
+    }).then(data => {
+      resolve(data)
+    })
+  })
+}
+export const UpdateStudyList = data => {
+  return upsertPatch("TsStudies", data)
+}
+export const addStudyList = data => {
+  return create("TsStudies", data)
+}
+export const addTdCourse = data => {
+  return create("TdCourses", data)
+}
+export const deleteStudyList = id => {
+  return deleteById("TsStudies", id)
+}
+export const addTdUniverse = data => {
+  return create("TdUniverses", data)
+}
+export const deleteTdUniverses = id => {
+  return deleteById("TdUniverses", id)
+}
+export const getUniversesList = () => {
+  return new Promise((resolve, reject) => {
+    find("TdUniverses", {
+      order: "createdAt desc",
+    }).then(data => {
+      resolve(data)
+    })
+  })
 }

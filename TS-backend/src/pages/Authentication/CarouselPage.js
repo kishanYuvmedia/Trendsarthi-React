@@ -2,7 +2,7 @@ import React from "react"
 import { Carousel } from "react-responsive-carousel"
 import "react-responsive-carousel/lib/styles/carousel.min.css"
 import { Col } from "reactstrap"
-import background from "../../assets/image/influencer-marketing-job-concept.jpg"
+import background from "../../assets/image/png-login.png"
 import imageLogin from "../../assets/image/png-login.png"
 
 const CarouselPage = () => {

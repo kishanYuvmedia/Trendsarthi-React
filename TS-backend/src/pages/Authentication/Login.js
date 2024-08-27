@@ -23,7 +23,7 @@ import { useFormik } from "formik"
 // actions
 import { loginUser } from "../../store/actions"
 
-import logo from "assets/image/marbiz-logo.png"
+import logo from "assets/image/logo.png"
 import CarouselPage from "./CarouselPage"
 const Login = props => {
   //meta title
@@ -155,7 +155,7 @@ const Login = props => {
                     </div>
                     <div className="mt-4 mt-md-5 text-center">
                       <p className="mb-0">
-                        © {new Date().getFullYear()} www.margbiz.in. Crafted
+                        © {new Date().getFullYear()} www.trendsarthi.com. Crafted
                         with <i className="mdi mdi-heart text-danger"></i> by
                         Yuvmedia.in
                       </p>

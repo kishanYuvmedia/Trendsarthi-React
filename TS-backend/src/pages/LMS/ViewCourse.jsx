@@ -117,8 +117,6 @@ export default function ViewCourse() {
                             <div className="fw-bold text-capitalize">{course.title}</div>
                         ),
                         shortDetail: course.shortDetail,
-                        videoID: course.id,
-                        courseID: course.courseId,
                         updateAt: course.updateAt ? formatDate(course.updateAt) : '',
                         chapterStatus: (
                             <div className={course.chapterStatus === "A" ? "text-success fw-bold" : "text-danger fw-bold"}>
@@ -170,18 +168,6 @@ export default function ViewCourse() {
                         {
                             label: "Last Updated",
                             field: "updateAt",
-                            sort: "asc",
-                            width: 100,
-                        },
-                        {
-                            label: "video ID",
-                            field: "videoID",
-                            sort: "asc",
-                            width: 100,
-                        },
-                        {
-                            label: "Course ID",
-                            field: "courseID",
                             sort: "asc",
                             width: 100,
                         },

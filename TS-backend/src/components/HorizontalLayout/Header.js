@@ -16,10 +16,10 @@ import NotificationDropdown from "../CommonForBoth/TopbarDropdown/NotificationDr
 import ProfileMenu from "../CommonForBoth/TopbarDropdown/ProfileMenu"
 
 import megamenuImg from "../../assets/images/megamenu-img.png"
-import logo from "../../assets/image/marbiz-logo.png"
-import logoLight from "../../assets/image/marbiz-logo.png"
-import logoLightSvg from "../../assets/image/marbiz-logo.png"
-import logoDark from "../../assets/image/marbiz-logo.png"
+import logo from "../../assets/image/logo.png"
+import logoLight from "../../assets/image/logo.png"
+import logoLightSvg from "../../assets/image/logo.png"
+import logoDark from "../../assets/image/logo.png"
 
 // import images
 import github from "../../assets/images/brands/github.png"

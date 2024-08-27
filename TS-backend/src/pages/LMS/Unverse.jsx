@@ -3,9 +3,6 @@ import {
     Col,
     Row,
     Container,
-    Badge,
-    Input,
-    FormGroup,
     Button,
 } from "reactstrap"
 //Import Breadcrumb
@@ -13,21 +10,22 @@ import Breadcrumbs from "../../components/Common/Breadcrumb"
 import { CardView, ModelBox } from "../ui-components"
 import TableData from "pages/ui-components/table-data"
 import {
-    getStudyList,
-    deleteStudyList,
-    addStudyList
+    getUniversesList,
+    deleteTdUniverses,
+    getSystemList,
+    addTdUniverse
 } from "services/api/api-service"
-import { isEmpty, result } from "lodash"
+import { isEmpty } from "lodash"
 import Swal from "sweetalert2"
-import { Link } from "react-router-dom"
 
-export default function StudyMaterial() {
-    document.title = "Study Material | Trend Sarthi"
+export default function Unverse() {
+    document.title = "Universe | Trend Sarthi"
+    const [options, setOption] = useState([])
+    const [selectedOption, setSelectedOption] = useState(options[0]);
+    const [onSelect, setonSelect] = useState({});
     const [title, setTitle] = useState('');
-    const [subtitle, setSubtitle] = useState('');
     const [coverImage, setSelectedFile] = useState(null);
     const [coverImageView, setSelectedView] = useState(null);
-    const [pdfFile, setPdfFile] = useState(null);
     const [message, setErrorMessage] = useState("");
     const handleImageChange = (e) => {
         const file = e.target.files[0]
@@ -53,23 +51,6 @@ export default function StudyMaterial() {
             }
         }
     };
-
-    const handlePdfChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const allowedTypes = ["application/pdf"]; // Only allow PDF files
-            if (allowedTypes.includes(file.type)) {
-                setPdfFile(file);
-                // Create a FileReader to read the selected file
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-            } else {
-                setPdfFile(null);
-                setErrorMessage("Please select a valid PDF file.");
-                setSelectedView(null); // Clear the preview
-            }
-        }
-    };
     const [data, setData] = useState({})
     const [modelValue, modelSetValue] = useState(false)
     const [modelNewAdd, setModelNewAdd] = useState(false)
@@ -84,55 +65,40 @@ export default function StudyMaterial() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const coverImagePath = await handleUpload(coverImage);
-        const pdfPath = await handleUploadpdf(pdfFile);
-        console.log("PDF Path:", pdfPath);
         console.log("Cover Image Path:", coverImagePath);
-        // Check if both cover image and PDF file are uploaded successfully
-        if (!isEmpty(pdfPath) && !isEmpty(coverImagePath)) {
-            // Construct form data
-          
+        if (!isEmpty(coverImagePath)) {
             const formData = {
                 title: title,
-                shortline: subtitle,
-                type: 'PDF',
-                file: pdfPath.pdfUrl,
+                type: onSelect,
                 coverImage: coverImagePath.imageUrl,
             };
-    
-            console.log("Study Material Form Data:", formData);
-            // Call function to add study material using the form data
-            // Uncomment the below lines once you have defined the 'addStudyList' function
-            addStudyList(formData).then(result => {
+            console.log("Universe Form Data:", formData);
+            addTdUniverse(formData).then(result => {
                 console.log(result);
-                if(!isEmpty(result))
-                {
-                    alert("Data Upload successfully");
+                if (!isEmpty(result)) {
+                    //alert("Data Upload successfully");
+                    getdata();
                     setModelNewAdd(false);
                 }
             }).catch(error => {
-                console.error("Error adding study material:", error);
+                console.error("Error adding Universe:", error);
             });
         } else {
             console.error("PDF or cover image upload failed.");
         }
     };
-    
     const handleUpload = async (file) => {
         if (!file) {
             return null; // Return early if no file is provided
         }
-    
         const formDataImage = new FormData();
         formDataImage.append("image", file, "tradsarthi.jpg"); // You can set the filename here
-    
         try {
             const response = await fetch("https://api.trendsarthi.com/upload-image.php", {
                 method: "POST",
                 body: formDataImage,
             });
-    
             const data = await response.json();
-    
             if (data && data.success) {
                 Swal.fire("Your cover page updated successfully", "success");
                 console.log(data);
@@ -153,46 +119,8 @@ export default function StudyMaterial() {
             return null;
         }
     };
-    
-    const handleUploadpdf = async (file) => {
-        if (!file) {
-            return null; // Return early if no file is provided
-        }
-    
-        const formDataPdf = new FormData();
-        formDataPdf.append("file", file, "tradsarthi-study.pdf"); // You can set the filename here
-    
-        try {
-            const response = await fetch("https://api.trendsarthi.com/upload-pdf.php", {
-                method: "POST",
-                body: formDataPdf,
-            });
-    
-            const data = await response.json();
-    
-            if (data && data.success) {
-                Swal.fire("Your study material uploaded successfully", "success");
-                console.log(data);
-                return data;
-            } else {
-                Swal.fire("Data not uploaded. Please try again", "success");
-                console.log(data);
-                return null;
-            }
-        } catch (error) {
-            // Handle any errors
-            console.error(error);
-            Swal.fire({
-                icon: "error",
-                title: "Oops...",
-                text: "Something went wrong. Please retry uploading PDF file",
-            });
-            return null;
-        }
-    };
-    
     function getdata() {
-        getStudyList().then(result => {
+        getUniversesList().then(result => {
             if (!isEmpty(result)) {
                 console.log("Plans", result);
                 const dataList = []
@@ -209,23 +137,22 @@ export default function StudyMaterial() {
                                 />
                             </div>
                         ),
-                        shortline: plan.shortline,
                         type: plan.type,
                         action: (
-                           <>
-                            <Button
-                                className="btn btn-success"
-                                onClick={() => viewHandler(plan)}
-                            >
-                                View
-                            </Button>
-                            <Button
-                            className="btn btn-danger"
-                            onClick={() => deleteUser(plan.id)}
-                        >
-                            Delete
-                        </Button>
-                           </>
+                            <>
+                                <Button
+                                    className="btn btn-success"
+                                    onClick={() => viewHandler(plan)}
+                                >
+                                    View
+                                </Button>
+                                <Button
+                                    className="btn btn-danger"
+                                    onClick={() => deleteUser(plan.id)}
+                                >
+                                    Delete
+                                </Button>
+                            </>
                         ),
                     })
                 )
@@ -246,11 +173,6 @@ export default function StudyMaterial() {
                             label: "Title",
                             field: "title",
                             width: 100,
-                        },
-                        {
-                            label: "Short line",
-                            field: "shortline",
-                            width: 150,
                         },
                         {
                             label: "Action",
@@ -274,7 +196,7 @@ export default function StudyMaterial() {
             confirmButtonText: "Yes, delete it!",
         }).then(result => {
             if (result.isConfirmed) {
-                deleteStudyList(id).then(result => {
+                deleteTdUniverses(id).then(result => {
                     Swal.fire(
                         "Delete successfully",
                         "Influencer Profile Delete successfuly",
@@ -286,18 +208,25 @@ export default function StudyMaterial() {
         });
     };
     useEffect(() => {
-        getdata()
+        getSystemList("TypeUniverse").then(result => {
+            setOption(result);
+            getdata();
+        });
     }, [])
+    const handleSelect = (option) => {
+        setSelectedOption(option);
+        setonSelect(option);
+    };
     return (
         <React.Fragment>
             <div className="page-content">
                 <Container fluid={true}>
-                    <Breadcrumbs title="Study Material" breadcrumbItem="All Study Material" />
+                    <Breadcrumbs title="Universe" breadcrumbItem="All Universe" />
 
                     <Row>
                         <Col md={12}><Button className="btn btn-info float-end mb-2" onClick={() => setModelNewAdd(true)}>Add New</Button></Col>
                         <Col md={12}>
-                            <CardView title="Study Material">
+                            <CardView title="Universe">
                                 <TableData tabledata={data} />
                             </CardView>
                         </Col>
@@ -320,16 +249,8 @@ export default function StudyMaterial() {
                                 <td >{viewdata.title}</td>
                             </tr>
                             <tr>
-                                <th>Short line</th>
-                                <td >{viewdata.shortline}</td>
-                            </tr>
-                            <tr>
                                 <th>type</th>
                                 <td className="fw-bold text-capitalize">{viewdata.type}</td>
-                            </tr>
-                            <tr>
-                                <th>File</th>
-                                <td><a href={`${viewdata.file}`} download className="btn btn-info" target="_blank" rel="noreferrer">Download</a></td>
                             </tr>
                         </tbody>
                     </table>
@@ -345,7 +266,7 @@ export default function StudyMaterial() {
                 modelValue={modelNewAdd}
                 sizeValue={"lg"}
                 modelSetValue={setModelNewAdd}
-                titleLabel="Add Study Material"
+                titleLabel="Add Universe"
             >
                 <form onSubmit={handleSubmit} className="row">
                     <div className="col-md-6">
@@ -353,16 +274,16 @@ export default function StudyMaterial() {
                         <input type="text" value={title} className="form-control" onChange={(e) => setTitle(e.target.value)} />
                     </div>
                     <div className="col-md-6">
-                        <label>Subtitle:</label>
-                        <input type="text" value={subtitle} className="form-control" onChange={(e) => setSubtitle(e.target.value)} />
+                        <label>Type:</label>
+                        <select value={selectedOption} className="form-control" onChange={(e) => handleSelect(e.target.value)}>
+                            {options.map((option, index) => (
+                                <option key={index} value={option.label}>{option.label}</option>
+                            ))}
+                        </select>
                     </div>
                     <div className="col-md-6">
-                        <label>Cover Image:</label>
+                        <label>Portfolio Images :</label>
                         <input type="file" accept="image/*" className="form-control" onChange={handleImageChange} />
-                    </div>
-                    <div className="col-md-6">
-                        <label>PDF File:</label>
-                        <input type="file" accept=".pdf" className="form-control" onChange={handlePdfChange} />
                     </div>
                     <div className="col-md-6">
                         {coverImageView && (
