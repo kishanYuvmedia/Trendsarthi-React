@@ -29,7 +29,7 @@ const sampleData = [
     }
 ];
 
-const TableCard = ({ header, tableId,  }) => {
+const TableCard = ({ header, tableId,list }) => {
 
     useEffect(() => {
         // Initialize DataTable when the component mounts
@@ -49,8 +49,13 @@ const TableCard = ({ header, tableId,  }) => {
         searchInputs.forEach(input => {
             input.placeholder = 'Search...';
         });
-    }, [tableId]);
 
+    }, [tableId]);
+    const [dataList, setDataList] = useState([]);
+    useEffect(() => {
+        setDataList(list)
+        console.log("desktop", list);
+    }, [])
     return (
         <div>
             <Card
@@ -89,28 +94,27 @@ const TableCard = ({ header, tableId,  }) => {
                                 </tr>
                             </thead>
                             <tbody className="fs-5 fw-light text-white">
-                                {sampleData.map((item, index) => (
+                                {dataList.slice(0,10).map((item, index) => (
                                     <tr key={index}>
                                         <td className="text-white fs-6">
-                                            <img src={item.symbolSrc} className="me-2" alt={item.symbol} style={{ borderRadius: "50%" }} />
                                             <span>{item.symbol}</span>
                                         </td>
                                         <td className="text-center">
-                                            <div className={`badge rounded-pill fs-6 border-${item.breakoutStatus === 'positive' ? 'success' : 'danger'} border p-0 px-3`}>
+                                            <div className={`badge rounded-pill fs-6 border-${item.changesPercentage>0 ? 'success' : 'danger'} border p-0 px-3`}>
                                                 {item.breakoutText}
                                                 <img src={item.breakoutStatus === 'positive' ? positiveStatus : negativeStatus} width={25} alt={item.symbol} />
                                             </div>
                                         </td>
                                         <td className="text-center">
-                                            <div className={`badge rounded-pill w-100 p-2 fs-6`} style={{ backgroundColor: item.percentChange > 0 ? "#19C141" : "#F31C1C" }}>
-                                                {item.percentChange}
+                                            <div className={`badge rounded-pill w-100 p-2 fs-6`} style={{ backgroundColor: item.changesPercentage > 0 ? "#19C141" : "#F31C1C" }}>
+                                                {item.changesPercentage}
                                             </div>
                                         </td>
                                         <td className="text-white text-center fs-6">
-                                            {item.turnover}
+                                            {item.volume}
                                         </td>
                                         <td className="text-center">
-                                            <div className={`badge rounded-pill fs-6 border-${item.pcrStatus === 'positive' ? 'success' : 'danger'} border p-0 px-3`}>
+                                            <div className={`badge rounded-pill fs-6 border-${item.changesPercentage>0 ? 'success' : 'danger'} border p-0 px-3`}>
                                                 {item.pcrText}
                                                 <img src={item.pcrStatus === 'positive' ? positiveStatus : negativeStatus} width={25} alt={item.symbol} />
                                             </div>
@@ -126,4 +130,4 @@ const TableCard = ({ header, tableId,  }) => {
     );
 };
 
-export default TableCard ;
+export default TableCard;

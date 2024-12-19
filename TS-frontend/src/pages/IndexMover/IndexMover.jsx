@@ -1,28 +1,16 @@
 import PropTypes from "prop-types";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Card, CardBody, CardHeader } from "reactstrap";
 import { withTranslation } from "react-i18next";
-import {
-    getStrikePrice,
-    geIntradayDataLimit,
-    shortGraphList,
-    shortProductListDataList,
-    fnoranking,
-} from "services/api/api-service";
-import CardDrag from "pages/Dashboard/components/CardDrag";
+import { getSymbolList } from "services/api/api-service";
 import dragula from "dragula";
 import _, { isEmpty, result, set } from "lodash";
-import BarChart from "../AllCharts/barchart";
-import ProgressBar from "components/Common/ProgressBar";
-import BuildBarChart from "../AllCharts/buildBarChart";
-
 let bgvector = './images/vector2.png';
 
-
 const IndexMover = (props) => {
+    const [list, setlist] = useState([]);
     useEffect(() => {
         document.title = "Index Mover | Trendsarthi";
-
         dragula([
             document.getElementById("left"),
             document.getElementById("right"),
@@ -31,8 +19,19 @@ const IndexMover = (props) => {
             document.getElementById("left3"),
             document.getElementById("right3"),
         ]);
-
-
+        getSymbolList('v')
+            .then(result => {
+                console.log('getSymbolList result:', result); // Log the result
+                if (!isEmpty(result)) {
+                    console.log('Result is not empty:', result.symbolList?.Item); // Log the symbol list
+                    setlist(result.symbolList?.Item);
+                } else {
+                    console.log('Result is empty');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching symbol list:', error); // Log any errors
+            });
     }, []);
 
     return (
@@ -130,107 +129,33 @@ const IndexMover = (props) => {
                     </Row>
 
                     <Row>
-                        <Col md={2} xs={6} >
-                            <Card
-                                className="my-2 Drag border border-white"
-                                style={{
-                                    // border: '1px solid transparent',
-                                    borderRadius: '14px',
-                                    // boxShadow: '0 0 0 1px rgba(56, 62, 214, 0.5), 0 0 0 2px rgba(18, 18, 20, 0.5)',
-                                    padding: '10px',
-                                    backgroundColor: "#181a33"
-                                }}
-                            >
-                                <CardBody className='p-0 rounded-4  ' style={{ backgroundColor: "#181a33" }}>
-                                    <div >
-                                        <div className="text-center" >
-                                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXgiz41maa34mpQoVYhRyZ8wk8XOMZfHvIrA&s" alt="hdfc" className="rounded-pill bg-white p-2" width={75} />
+                        {list?.slice(0, 100).map(data =>
+                            <Col md={2} xs={6} >
+                                <Card
+                                    className="my-2 Drag border border-white"
+                                    style={{
+                                        // border: '1px solid transparent',
+                                        borderRadius: '14px',
+                                        // boxShadow: '0 0 0 1px rgba(56, 62, 214, 0.5), 0 0 0 2px rgba(18, 18, 20, 0.5)',
+                                        padding: '10px',
+                                        backgroundColor: "#181a33"
+                                    }}
+                                >
+                                    <CardBody className='p-0 rounded-4  ' style={{ backgroundColor: "#181a33" }}>
+                                        <div >
+                                            <div className="text-center" >
+                                                <img src="http://user.trendsarthi.com/scalping-favicon.png" alt="hdfc" className="rounded-pill bg-white p-2" width={75} />
+                                            </div>
+                                            <div className="p-3 pb-0 text-center">
+                                                <div className="fs-5 fw-bold text-white">{data.name}</div>
+                                                <div className="text-success">{data.symbol}</div>
+                                            </div>
                                         </div>
-                                        <div className="p-3 pb-0 text-center">
-                                            <div className="fs-5 fw-bold text-white">HDFCBANK</div>
-                                            <div className="text-success">Nift50</div>
-                                        </div>
-                                    </div>
-                                </CardBody>
+                                    </CardBody>
 
-                            </Card>
-                        </Col>
-                        <Col md={2} xs={6} >
-                            <Card
-                                className="my-2 Drag border border-white"
-                                style={{
-                                    // border: '1px solid transparent',
-                                    borderRadius: '14px',
-                                    // boxShadow: '0 0 0 1px rgba(56, 62, 214, 0.5), 0 0 0 2px rgba(18, 18, 20, 0.5)',
-                                    padding: '10px',
-                                    backgroundColor: "#181a33"
-                                }}
-                            >
-                                <CardBody className='p-0 rounded-4  ' style={{ backgroundColor: "#181a33" }}>
-                                    <div >
-                                        <div className="text-center" >
-                                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXgiz41maa34mpQoVYhRyZ8wk8XOMZfHvIrA&s" alt="hdfc" className="rounded-pill bg-white p-2" width={75} />
-                                        </div>
-                                        <div className="p-3 pb-0 text-center">
-                                            <div className="fs-5 fw-bold text-white">HDFCBANK</div>
-                                            <div className="text-success">Nift50</div>
-                                        </div>
-                                    </div>
-                                </CardBody>
-
-                            </Card>
-                        </Col>
-                        <Col md={2} xs={6} >
-                            <Card
-                                className="my-2 Drag border border-white"
-                                style={{
-                                    // border: '1px solid transparent',
-                                    borderRadius: '14px',
-                                    // boxShadow: '0 0 0 1px rgba(56, 62, 214, 0.5), 0 0 0 2px rgba(18, 18, 20, 0.5)',
-                                    padding: '10px',
-                                    backgroundColor: "#181a33"
-                                }}
-                            >
-                                <CardBody className='p-0 rounded-4  ' style={{ backgroundColor: "#181a33" }}>
-                                    <div >
-                                        <div className="text-center" >
-                                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXgiz41maa34mpQoVYhRyZ8wk8XOMZfHvIrA&s" alt="hdfc" className="rounded-pill bg-white p-2" width={75} />
-                                        </div>
-                                        <div className="p-3 pb-0 text-center">
-                                            <div className="fs-5 fw-bold text-white">HDFCBANK</div>
-                                            <div className="text-success">Nift50</div>
-                                        </div>
-                                    </div>
-                                </CardBody>
-
-                            </Card>
-                        </Col>
-                        <Col md={2} xs={6} >
-                            <Card
-                                className="my-2 Drag border border-white"
-                                style={{
-                                    // border: '1px solid transparent',
-                                    borderRadius: '14px',
-                                    // boxShadow: '0 0 0 1px rgba(56, 62, 214, 0.5), 0 0 0 2px rgba(18, 18, 20, 0.5)',
-                                    padding: '10px',
-                                    backgroundColor: "#181a33"
-                                }}
-                            >
-                                <CardBody className='p-0 rounded-4  ' style={{ backgroundColor: "#181a33" }}>
-                                    <div >
-                                        <div className="text-center" >
-                                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXgiz41maa34mpQoVYhRyZ8wk8XOMZfHvIrA&s" alt="hdfc" className="rounded-pill bg-white p-2" width={75} />
-                                        </div>
-                                        <div className="p-3 pb-0 text-center">
-                                            <div className="fs-5 fw-bold text-white">HDFCBANK</div>
-                                            <div className="text-success">Nift50</div>
-                                        </div>
-                                    </div>
-                                </CardBody>
-
-                            </Card>
-                        </Col>
-
+                                </Card>
+                            </Col>
+                        )}
                     </Row>
                 </Container>
             </div>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Flicking from "@egjs/react-flicking";
 import "@egjs/react-flicking/dist/flicking.css";
 import { Card, CardBody } from "reactstrap";
@@ -33,7 +33,12 @@ const cardData = [
     // Add more data objects as needed
 ];
 
-const CardSlider = ({ header }) => {
+const CardSlider = ({ header,list }) => {
+    const [dataList,setDataList]=useState([]);
+    useEffect(()=>{
+        setDataList(list)
+        console.log("dataList",list);
+    },[])
     return (
         <div>
             <div className='d-flex justify-content-between'>

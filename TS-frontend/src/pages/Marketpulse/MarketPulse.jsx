@@ -1,27 +1,16 @@
 import PropTypes from "prop-types";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Row, Col } from "reactstrap";
-import { withTranslation } from "react-i18next";
-import {
-    getStrikePrice,
-    geIntradayDataLimit,
-    shortGraphList,
-    shortProductListDataList,
-    fnoranking,
-} from "services/api/api-service";
-import CardDrag from "pages/Dashboard/components/CardDrag";
+import { useSSR, withTranslation } from "react-i18next";
 import dragula from "dragula";
 import _, { isEmpty, result, set } from "lodash";
-import BarChart from "../AllCharts/barchart";
-import ProgressBar from "components/Common/ProgressBar";
-import BuildBarChart from "../AllCharts/buildBarChart";
 import TableCard from "pages/Marketpulse/TableCard";
+import { symbolStock } from "services/api/api-service";
 import CardSlider from "./CardSlider";
-
 const MarketPulse = (props) => {
+    const [list, setlist] = useState([]);
     useEffect(() => {
         document.title = "Market Pulse | Trendsarthi";
-
         dragula([
             document.getElementById("left"),
             document.getElementById("right"),
@@ -51,11 +40,24 @@ const MarketPulse = (props) => {
                 colorTheme: "dark",
                 locale: "en",
             });
-
             document.getElementById("tradingview-widget").appendChild(script);
         }
+        fetch();
     }, []);
-
+    function fetch() {
+        symbolStock('NSE')
+            .then(result => {
+                if (!isEmpty(result)) {
+                    console.log('Result is not empty:', result.symbolStock?.Item); // Log the symbol list
+                    setlist(result.symbolStock?.Item);
+                } else {
+                    console.log('Result is empty');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching symbol list:', error); // Log any errors
+            });
+    }
     return (
         <React.Fragment>
             <div className="page-content">
@@ -72,35 +74,38 @@ const MarketPulse = (props) => {
                             <div className="fs-1 fw-bold text-gradient">Market Pulse</div>
                         </div>
                     </div>
-
-                    <Row>
-                        <Col md={12} className="hideOnDesktop mb-3">
-                            <CardSlider header={"HIGH POWERED STOCKS"} />
-                        </Col>
-                        <Col md={12} className="hideOnDesktop mb-3">
-                            <CardSlider header={"INTRADAY BOOST"} />
-                        </Col>
-                        <Col md={12} className="hideOnDesktop mb-3">
-                            <CardSlider header={"TOP LEVEL STOCKS"} />
-                        </Col>
-                        <Col md={12} className="hideOnDesktop mb-3">
-                            <CardSlider header={"LOW LEVEL STOCKS"} />
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col md={6} id="right" className="hideOnMobile">
-                            <TableCard header={"HIGH POW. STOCKS"} tableId={'pow1'} />
-                        </Col>
-                        <Col md={6} id="left" className="hideOnMobile">
-                            <TableCard header={"INTRADAY BOOST"} tableId={'pow2'} />
-                        </Col>
-                        <Col md={6} id="left1" className="hideOnMobile">
-                            <TableCard header={"TOP LEVEL STOCKS"} tableId={'pow3'} />
-                        </Col>
-                        <Col md={6} id="left3" className="hideOnMobile">
-                            <TableCard header={"LOW LEVEL STOCKS"} tableId={'pow4'} />
-                        </Col>
-                    </Row>
+                    {!isEmpty(list) &&
+                        <Row>
+                            <Col md={12} className="hideOnDesktop mb-3">
+                                <CardSlider list={list} type={'highPowerd'} header={"HIGH POWERED STOCKS"} />
+                            </Col>
+                            <Col md={12} className="hideOnDesktop mb-3">
+                                <CardSlider list={list} type={'highPowerd'} header={"INTRADAY BOOST"} />
+                            </Col>
+                            <Col md={12} className="hideOnDesktop mb-3">
+                                <CardSlider list={list} type={'highPowerd'} header={"TOP LEVEL STOCKS"} />
+                            </Col>
+                            <Col md={12} className="hideOnDesktop mb-3">
+                                <CardSlider list={list} type={'highPowerd'} header={"LOW LEVEL STOCKS"} />
+                            </Col>
+                        </Row>
+                    }
+                    {!isEmpty(list) &&
+                        <Row>
+                            <Col md={6} id="right" className="hideOnMobile">
+                                <TableCard list={list}  type={'highPowerd'} header={"HIGH POW. STOCKS"} tableId={'pow1'} />
+                            </Col>
+                            <Col md={6} id="left" className="hideOnMobile">
+                                <TableCard list={list}  type={'highPowerd'} header={"INTRADAY BOOST"} tableId={'pow2'} />
+                            </Col>
+                            <Col md={6} id="left1" className="hideOnMobile">
+                                <TableCard list={list}  type={'highPowerd'} header={"TOP LEVEL STOCKS"} tableId={'pow3'} />
+                            </Col>
+                            <Col md={6} id="left3" className="hideOnMobile">
+                                <TableCard list={list}  type={'highPowerd'} header={"LOW LEVEL STOCKS"} tableId={'pow4'} />
+                            </Col>
+                        </Row>
+                    }
                 </Container>
             </div>
         </React.Fragment>

@@ -20,6 +20,26 @@ export const getSystemList = type => {
     })
   })
 }
+export const getSymbolList = (type) => {
+  return axiosRequest(
+    "GET",
+    `${["TdDerivatives", "symbolList"].join("/")}`,
+    undefined,
+    undefined,
+    { type },
+    true
+  )
+}
+export const symbolStock = (type) => {
+  return axiosRequest(
+    "GET",
+    `${["TdDerivatives", "symbolStock"].join("/")}`,
+    undefined,
+    undefined,
+    { type },
+    true
+  )
+}
 export const getStrikePrice = type => {
   return axiosRequest(
     "GET",
@@ -261,7 +281,7 @@ export const getNiftyRankingTime = (time) => {
       `${["TdDerivatives", "getFnoRanking"].join("/")}`,
       undefined,
       undefined,
-      {time},
+      { time },
       true
     )
       .then(response => {

@@ -1,0 +1,43 @@
+{
+  "name": "TdNotification",
+  "base": "PersistedModel",
+  "strict": "validate",
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "id": {
+      "type": "string",
+      "id": true,
+      "defaultFn": "guid"
+    },
+    "tsUserId": {
+      "type": "string",
+      "default": null
+    },
+    "msgTitle": {
+      "type": "string"
+    },
+    "msgText": {
+      "type": "string"
+    },
+    "images": {
+      "type": "string"
+    },
+    "language": {
+      "type": "string"
+    },
+    "date": {
+      "type": "date"
+    },
+    "status": {
+      "type": "string",
+      "default": "U"
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {},
+  "mixins": {}
+}
