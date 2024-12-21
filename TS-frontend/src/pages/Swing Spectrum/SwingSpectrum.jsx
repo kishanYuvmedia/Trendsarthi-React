@@ -1,25 +1,15 @@
 import PropTypes from "prop-types";
-import React, { useEffect } from "react";
+import React, { useEffect,useState } from "react";
 import { Container, Row, Col } from "reactstrap";
 import { withTranslation } from "react-i18next";
-import {
-    getStrikePrice,
-    geIntradayDataLimit,
-    shortGraphList,
-    shortProductListDataList,
-    fnoranking,
-} from "services/api/api-service";
-import CardDrag from "pages/Dashboard/components/CardDrag";
 import dragula from "dragula";
 import _, { isEmpty, result, set } from "lodash";
-import BarChart from "../AllCharts/barchart";
-import ProgressBar from "components/Common/ProgressBar";
-import BuildBarChart from "../AllCharts/buildBarChart";
 import TableCard from "pages/Marketpulse/TableCard";
 import MomentumSpike from "pages/InsiderStrategy/MomentumSpike";
 import DailyScanner from "./DailyScanner";
-
+import { symbolStock } from "services/api/api-service";
 const SwingSpectrum = (props) => {
+    const [list, setlist] = useState([]);
     useEffect(() => {
         document.title = "Swing Spectrum | Trendsarthi";
 
@@ -55,7 +45,22 @@ const SwingSpectrum = (props) => {
 
             document.getElementById("tradingview-widget").appendChild(script);
         }
+        fetch();
     }, []);
+    function fetch() {
+        symbolStock('NSE')
+            .then(result => {
+                if (!isEmpty(result)) {
+                    console.log('Result is not empty:', result.symbolStock?.Item); // Log the symbol list
+                    setlist(result.symbolStock?.Item);
+                } else {
+                    console.log('Result is empty');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching symbol list:', error); // Log any errors
+            });
+    }
 
     return (
         <React.Fragment>
@@ -73,20 +78,22 @@ const SwingSpectrum = (props) => {
                             <div className="fs-1 fw-bold text-gradient">Swing Spectrum</div>
                         </div>
                     </div>
-                    <Row>
-                        <Col md={6} id="right">
-                            <TableCard header={"HIGH POW. STOCKS"} tableId={'pow1'} />
-                        </Col>
-                        <Col md={6} id="left">
-                            <TableCard header={"INTRADAY BOOST"} tableId={'pow2'} />
-                        </Col>
-                        <Col md={6} id="left1">
-                            <TableCard header={"TOP LEVEL STOCKS"} tableId={'pow3'} />
-                        </Col>
-                        <Col md={6} id="left3">
-                            <TableCard header={"LOW LEVEL STOCKS"} tableId={'pow4'} />
-                        </Col>
-                    </Row>
+                    {!isEmpty(list) &&
+                        <Row>
+                            <Col md={6} id="right" className="hideOnMobile">
+                                <TableCard list={list} type={'highPowerd'} header={"HIGH POW. STOCKS"} tableId={'pow1'} />
+                            </Col>
+                            <Col md={6} id="left" className="hideOnMobile">
+                                <TableCard list={list} type={'highPowerd'} header={"INTRADAY BOOST"} tableId={'pow2'} />
+                            </Col>
+                            <Col md={6} id="left1" className="hideOnMobile">
+                                <TableCard list={list} type={'highPowerd'} header={"TOP LEVEL STOCKS"} tableId={'pow3'} />
+                            </Col>
+                            <Col md={6} id="left3" className="hideOnMobile">
+                                <TableCard list={list} type={'highPowerd'} header={"LOW LEVEL STOCKS"} tableId={'pow4'} />
+                            </Col>
+                        </Row>
+                    }
                     <Row>
                         <Col md={12} >
                             <MomentumSpike header={"Weekly Watch"} />
@@ -94,7 +101,7 @@ const SwingSpectrum = (props) => {
                     </Row>
                     <Row>
                         <Col md={12} >
-                            <DailyScanner header={"Delivery Scanner"} tableId={'delivery'}/>
+                            <DailyScanner header={"Delivery Scanner"} tableId={'delivery'} />
                         </Col>
                     </Row>
                 </Container>

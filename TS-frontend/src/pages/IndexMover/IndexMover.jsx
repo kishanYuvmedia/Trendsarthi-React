@@ -142,7 +142,8 @@ const IndexMover = (props) => {
                                     }}
                                 >
                                     <CardBody className='p-0 rounded-4  ' style={{ backgroundColor: "#181a33" }}>
-                                        <div >
+                                        <div>
+                                            <a href={`https://www.tradingview.com/chart/A6jTpDHv/?symbol=${data.symbol.replace(".NS", "")}&interval=5`}>
                                             <div className="text-center" >
                                                 <img src="http://user.trendsarthi.com/scalping-favicon.png" alt="hdfc" className="rounded-pill bg-white p-2" width={75} />
                                             </div>
@@ -150,6 +151,7 @@ const IndexMover = (props) => {
                                                 <div className="fs-5 fw-bold text-white">{data.name}</div>
                                                 <div className="text-success">{data.symbol}</div>
                                             </div>
+                                            </a>
                                         </div>
                                     </CardBody>
 

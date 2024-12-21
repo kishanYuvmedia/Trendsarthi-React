@@ -40,6 +40,16 @@ export const symbolStock = (type) => {
     true
   )
 }
+export const getHistoryData = (type) => {
+  return axiosRequest(
+    "GET",
+    `${["TdDerivatives", "symbolStock"].join("/")}`,
+    undefined,
+    undefined,
+    { type },
+    true
+  )
+}
 export const getStrikePrice = type => {
   return axiosRequest(
     "GET",
