@@ -86,16 +86,19 @@ const InsiderStrategy = (props) => {
                     {!isEmpty(list) &&
                         <Row>
                             <Col md={6} id="right" className="hideOnMobile">
-                                <TableCard list={list}  type={'highPowerd'} header={"HIGH POW. STOCKS"} tableId={'pow1'} />
+                                <TableCard list={list}  type={'highPowerd'} header={"LOM SHORT TERM"} tableId={'pow1'} />
                             </Col>
                             <Col md={6} id="left" className="hideOnMobile">
-                                <TableCard list={list}  type={'highPowerd'} header={"INTRADAY BOOST"} tableId={'pow2'} />
+                                <TableCard list={list}  type={'highPowerd'} header={"LOM LONG TERM"} tableId={'pow2'} />
                             </Col>
                             <Col md={6} id="left1" className="hideOnMobile">
-                                <TableCard list={list}  type={'highPowerd'} header={"TOP LEVEL STOCKS"} tableId={'pow3'} />
+                                <TableCard list={list}  type={'highPowerd'} header={"CONTRACTION BO"} tableId={'pow3'} />
                             </Col>
                             <Col md={6} id="left3" className="hideOnMobile">
-                                <TableCard list={list}  type={'highPowerd'} header={"LOW LEVEL STOCKS"} tableId={'pow4'} />
+                                <TableCard list={list}  type={'highPowerd'} header={"DAY H/L REVERSAL"} tableId={'pow4'} />
+                            </Col>
+                            <Col md={6} id="left3" className="hideOnMobile">
+                                <TableCard list={list}  type={'highPowerd'} header={"2 DAY H/L BO"} tableId={'pow4'} />
                             </Col>
                         </Row>
                     }

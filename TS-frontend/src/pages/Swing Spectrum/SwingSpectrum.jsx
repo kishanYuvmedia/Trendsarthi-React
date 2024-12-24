@@ -81,16 +81,19 @@ const SwingSpectrum = (props) => {
                     {!isEmpty(list) &&
                         <Row>
                             <Col md={6} id="right" className="hideOnMobile">
-                                <TableCard list={list} type={'highPowerd'} header={"HIGH POW. STOCKS"} tableId={'pow1'} />
+                                <TableCard list={list} type={'highPowerd'} header={"10 DAY BO"} tableId={'pow1'} />
                             </Col>
                             <Col md={6} id="left" className="hideOnMobile">
-                                <TableCard list={list} type={'highPowerd'} header={"INTRADAY BOOST"} tableId={'pow2'} />
+                                <TableCard list={list} type={'highPowerd'} header={"50 DAY BO"} tableId={'pow2'} />
                             </Col>
                             <Col md={6} id="left1" className="hideOnMobile">
-                                <TableCard list={list} type={'highPowerd'} header={"TOP LEVEL STOCKS"} tableId={'pow3'} />
+                                <TableCard list={list} type={'highPowerd'} header={"REVERSAL RADAR"} tableId={'pow3'} />
                             </Col>
                             <Col md={6} id="left3" className="hideOnMobile">
-                                <TableCard list={list} type={'highPowerd'} header={"LOW LEVEL STOCKS"} tableId={'pow4'} />
+                                <TableCard list={list} type={'highPowerd'} header={"CHANNEL BO"} tableId={'pow4'} />
+                            </Col>
+                            <Col md={6} id="left3" className="hideOnMobile">
+                                <TableCard list={list} type={'highPowerd'} header={"NR7"} tableId={'pow4'} />
                             </Col>
                         </Row>
                     }
