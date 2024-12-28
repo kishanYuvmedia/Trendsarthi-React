@@ -6,7 +6,7 @@ const _ = require("lodash");
 const moment = require("moment-timezone");
 module.exports = function (TdDerivatives) {
   TdDerivatives.symbolList = (type, callback) => {
-    const currenturl = `${configt.stock.connector}/search?query=.NS&exchange=NSE&apikey=${configt.stock.key}`
+    const currenturl = `${configt.stock.ownConnection}/api/allSymbols`
     request(currenturl, function (error, response, body) {
       if (!error && response.statusCode == 200) {
         const jsonData = JSON.parse(body);
@@ -30,8 +30,8 @@ module.exports = function (TdDerivatives) {
       }
     });
   };
-  TdDerivatives.symbolStock = (type,callback) => {
-    const currenturl = `https://financialmodelingprep.com/api/v3/symbol/NSE?apikey=${configt.stock.key}`
+  TdDerivatives.optionSymbolStock = (type,callback) => {
+    const currenturl = `${configt.stock.ownConnection}/api/equity/options/${type}`
     request(currenturl, function (error, response, body) {
       if (!error && response.statusCode == 200) {
         const jsonData = JSON.parse(body);

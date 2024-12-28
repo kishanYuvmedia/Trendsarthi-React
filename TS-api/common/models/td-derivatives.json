@@ -40,7 +40,7 @@
         }
       ]
     },
-    "symbolStock": {
+    "optionSymbolStock": {
       "accepts": [
         {
           "arg": "type",
@@ -56,7 +56,7 @@
       "description": "return today stock",
       "http": [
         {
-          "path": "/symbolStock",
+          "path": "/optionSymbolStock",
           "verb": "get"
         }
       ]
