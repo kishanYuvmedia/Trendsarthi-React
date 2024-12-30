@@ -1,15 +1,13 @@
 import PropTypes from "prop-types";
-import React, { useEffect,useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Row, Col } from "reactstrap";
 import { withTranslation } from "react-i18next";
 import dragula from "dragula";
 import _, { isEmpty, result, set } from "lodash";
-import TableCard from "pages/Marketpulse/TableCard";
+import SectorList from "./SectorList";
 import MomentumSpike from "pages/InsiderStrategy/MomentumSpike";
 import SectorBarScope from "./SectorBarScope";
-import { symbolStock } from "services/api/api-service";
 const SectorScope = (props) => {
-     const [list, setlist] = useState([]);
     useEffect(() => {
         document.title = "Sector Scope | Trendsarthi";
 
@@ -21,22 +19,7 @@ const SectorScope = (props) => {
             document.getElementById("left3"),
             document.getElementById("right3"),
         ]);
-        fetch();
     }, []);
-    function fetch() {
-        symbolStock('NSE')
-            .then(result => {
-                if (!isEmpty(result)) {
-                    console.log('Result is not empty:', result.symbolStock?.Item); // Log the symbol list
-                    setlist(result.symbolStock?.Item);
-                } else {
-                    console.log('Result is empty');
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching symbol list:', error); // Log any errors
-            });
-    }
     return (
         <React.Fragment>
             <div className="page-content">
@@ -58,16 +41,16 @@ const SectorScope = (props) => {
                     {!isEmpty(list) &&
                         <Row>
                             <Col md={6} id="right" className="hideOnMobile">
-                                <TableCard list={list} type={'highPowerd'} header={"NIFTY 50"} tableId={'pow1'} />
+                                <SectorList type={'highPowerd'} header={"NIFTY 50"} tableId={'pow1'} />
                             </Col>
                             <Col md={6} id="left" className="hideOnMobile">
-                                <TableCard list={list} type={'highPowerd'} header={"BANK"} tableId={'pow2'} />
+                                <SectorList type={'highPowerd'} header={"BANK"} tableId={'pow2'} />
                             </Col>
                             <Col md={6} id="left1" className="hideOnMobile">
-                                <TableCard list={list} type={'highPowerd'} header={"AUTO"} tableId={'pow3'} />
+                                <SectorList type={'highPowerd'} header={"AUTO"} tableId={'pow3'} />
                             </Col>
                             <Col md={6} id="left3" className="hideOnMobile">
-                                <TableCard list={list} type={'highPowerd'} header={"FIN SERV"} tableId={'pow4'} />
+                                <SectorList type={'highPowerd'} header={"FIN SERV"} tableId={'pow4'} />
                             </Col>
                         </Row>
                     }

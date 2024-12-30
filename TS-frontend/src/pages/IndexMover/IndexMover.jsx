@@ -1,38 +1,61 @@
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
-import { Container, Row, Col, Card, CardBody, CardHeader } from "reactstrap";
+import axios from 'axios';
+import { Container, Row, Col, Card, CardBody } from "reactstrap";
 import { withTranslation } from "react-i18next";
-import { getSymbolList } from "services/api/api-service";
 import dragula from "dragula";
 import _, { isEmpty, result, set } from "lodash";
 let bgvector = './images/vector2.png';
-
+import Badge from 'react-bootstrap/Badge';
 const IndexMover = (props) => {
+    const [selectedValue, setSelectedValue] = useState('NIFTY 50');
     const [list, setlist] = useState([]);
+    const [mata, setMata] = useState(null); // Assuming mata is an object
+    const [advances, setAdvances] = useState(0);
+    const [declines, setdeclines] = useState(0);
+    const [percage, setpercage] = useState(0);
+    const [error, setError] = useState(null);
+
+    const fetchData = async () => {
+        try {
+            const url = `/api/equity-stockIndices?index=${selectedValue}`;
+            const headers = {
+                'Referer': `https://www.nseindia.com/market-data/live-equity-market?symbol=${selectedValue}`,
+                'sec-ch-ua': '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
+                'sec-ch-ua-mobile': '?0',
+                'sec-ch-ua-platform': '"Windows"',
+                'Sec-Fetch-Dest': 'empty',
+                'Sec-Fetch-Mode': 'cors',
+                'Sec-Fetch-Site': 'same-origin',
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+            };
+
+            const response = await axios.get(url, { headers });
+            setlist(response.data.data);
+            setMata(response.data.metadata);
+
+            const total = response.data.advance.advances + (response.data.advance.declines || 0) + (response.data.advance.unchanged || 0);
+            setAdvances(response.data.advance.advances);
+            setdeclines(total - response.data.advance.advances);
+            setpercage((response.data.advance.advances / total) * 100);
+
+        } catch (error) {
+            setError(`Failed to fetch data: ${error.message}`);
+            console.error('Error:', error);
+        }
+    };
+
     useEffect(() => {
-        document.title = "Index Mover | Trendsarthi";
-        dragula([
-            document.getElementById("left"),
-            document.getElementById("right"),
-            document.getElementById("left1"),
-            document.getElementById("right2"),
-            document.getElementById("left3"),
-            document.getElementById("right3"),
-        ]);
-        getSymbolList('v')
-            .then(result => {
-                console.log('getSymbolList result:', result); // Log the result
-                if (!isEmpty(result)) {
-                    console.log('Result is not empty:', result.symbolList?.Item); // Log the symbol list
-                    setlist(result.symbolList?.Item);
-                } else {
-                    console.log('Result is empty');
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching symbol list:', error); // Log any errors
-            });
-    }, []);
+        fetchData();
+    }, [selectedValue]);
+
+    if (error) {
+        return <div>Error: {error}</div>;
+    }
+
+    if (!list) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <React.Fragment>
@@ -46,21 +69,13 @@ const IndexMover = (props) => {
                                     <div className="fs-1 fw-bold text-white">Index Mover</div>
                                 </div>
                                 <div className="col-6 col-md-4 d-flex justify-content-end">
-                                    <div className="dropdown">
-                                        <button className="btn btn-black dropdown-toggle text-white" type="button" data-bs-toggle="dropdown" aria-expanded="false" style={{
-                                            border: '1px solid transparent',
-                                            borderRadius: '5px',
-                                            boxShadow: '0 0 0 1px rgba(56, 62, 214, 0.5), 0 0 0 2px rgba(18, 18, 20, 0.5)',
-                                            padding: '10px 20px',
-                                        }}>
-                                            Index: Nift50
-                                        </button>
-                                        <ul className="dropdown-menu">
-                                            <li><a className="dropdown-item" href="#">Nift50</a></li>
-                                            <li><a className="dropdown-item" href="#">Another action</a></li>
-                                            <li><a className="dropdown-item" href="#">Something else here</a></li>
-                                        </ul>
-                                    </div>
+                                    <select value={selectedValue}
+                                        onChange={handleChange} className="form-select form-select-sm" aria-label="Default select example">
+                                        <option selected value="NIFTY 50">NIFTY 50</option>
+                                        <option selected value="NIFTY BANK">BANKNIFTY</option>
+                                        <option selected value="FINNIFTY">FINNIFTY</option>
+                                        <option selected value="NIFTY 50">NIFTY 50</option>
+                                    </select>
                                 </div>
                             </div>
 
@@ -83,11 +98,10 @@ const IndexMover = (props) => {
                             >
                                 <CardBody className='d-flex justify-content-between rounded-4  '>
                                     <div className="pb-3">
-                                        <div className="fs-1 fw-bold text-gradient w-100">Nift50</div>
+                                        <div className="fs-1 fw-bold text-gradient w-100">{selectedValue}</div>
                                     </div>
                                     <div className="fs-3 text-white">
-                                        UP 132 pts <br />
-                                        +0.55%
+                                        UP {mata.change} pts <br />
                                     </div>
                                 </CardBody>
 
@@ -108,15 +122,15 @@ const IndexMover = (props) => {
                                     <div className="w-100">
                                         <div className="fw-bold mb-2 text-white">Gainers / Losers</div>
                                         <div className="progress">
-                                            <div className="progress-bar bg-success" role="progressbar" style={{ width: "64%" }} aria-valuenow="64" aria-valuemin="0" aria-valuemax="100"></div>
-                                            <div className="progress-bar bg-danger" role="progressbar" style={{ width: "36%" }} aria-valuenow="36" aria-valuemin="0" aria-valuemax="100"></div>
+                                            <div className="progress-bar bg-success" role="progressbar" style={{ width: `60%` }} aria-valuenow={advances} aria-valuemin="0" aria-valuemax={100}></div>
+                                            <div className="progress-bar bg-danger" role="progressbar" style={{ width: `40%` }} aria-valuenow={declines} aria-valuemin="0" aria-valuemax={100}></div>
                                         </div>
                                         <div className="d-flex justify-content-between mt-2 text-white">
                                             <div>
-                                                <i className='bx bxs-circle text-success'></i> Gainers: 32
+                                                <i className='bx bxs-circle text-success'></i> Gainers: {advances}
                                             </div>
                                             <div>
-                                                <i className='bx bxs-circle text-danger'></i> Losers: 18
+                                                <i className='bx bxs-circle text-danger'></i> Losers: {declines}
                                             </div>
                                         </div>
                                     </div>
@@ -127,38 +141,34 @@ const IndexMover = (props) => {
                         </Col>
 
                     </Row>
+                    <Card
+                        className="my-2 Drag "
+                        style={{
+                            border: '1px solid transparent',
+                            borderRadius: '14px',
+                            boxShadow: '0 0 0 1px rgba(56, 62, 214, 0.5), 0 0 0 2px rgba(18, 18, 20, 0.5)',
+                            padding: '10px',
+                            backgroundColor: "#181a33"
+                        }}
+                    >
+                        <CardBody className='d-flex justify-content-between rounded-4  ' style={{ backgroundColor: "#181a33" }}>
+                            <Row style={{ width: '100%' }}>
+                                <Col md={8}></Col>
+                                <Col md={4}>
+                                    <h4>{selectedValue} is down by {mata.change} pts</h4>
+                                    {list.slice(1, 10)
+                                        .sort((a, b) => b.priority - a.priority)  // Sorting by priority, assuming higher priority comes first
+                                        .map((item, index) => (
+                                            <p key={index} style={{ color: 'white', fontSize: '12px' }}>
+                                                {item.symbol} added <Badge bg={`${item.pChange > 0 ? 'success' : 'danger'}`}>{item.pChange}</Badge> pts
+                                            </p>
+                                        ))}
+                                </Col>
+                            </Row>
 
-                    <Row>
-                        {list?.slice(0, 100).map(data =>
-                            <Col md={2} xs={6} >
-                                <Card
-                                    className="my-2 Drag border border-white"
-                                    style={{
-                                        // border: '1px solid transparent',
-                                        borderRadius: '14px',
-                                        // boxShadow: '0 0 0 1px rgba(56, 62, 214, 0.5), 0 0 0 2px rgba(18, 18, 20, 0.5)',
-                                        padding: '10px',
-                                        backgroundColor: "#181a33"
-                                    }}
-                                >
-                                    <CardBody className='p-0 rounded-4  ' style={{ backgroundColor: "#181a33" }}>
-                                        <div>
-                                            <a href={`https://www.tradingview.com/chart/A6jTpDHv/?symbol=${data.symbol.replace(".NS", "")}&interval=5`}>
-                                            <div className="text-center" >
-                                                <img src="http://user.trendsarthi.com/scalping-favicon.png" alt="hdfc" className="rounded-pill bg-white p-2" width={75} />
-                                            </div>
-                                            <div className="p-3 pb-0 text-center">
-                                                <div className="fs-5 fw-bold text-white">{data.name}</div>
-                                                <div className="text-success">{data.symbol}</div>
-                                            </div>
-                                            </a>
-                                        </div>
-                                    </CardBody>
+                        </CardBody>
 
-                                </Card>
-                            </Col>
-                        )}
-                    </Row>
+                    </Card>
                 </Container>
             </div>
         </React.Fragment>

@@ -1,39 +1,45 @@
+import { listeners } from "npm";
 import React, { useState, useEffect } from "react";
 import { Card, CardHeader, CardBody } from "reactstrap";
-
 let negativeStatus = 'https://img.icons8.com/isometric/50/bearish.png';
 let positiveStatus = 'https://img.icons8.com/isometric/50/bullish.png';
+const SectorList = ({ header, tableId }) => {
+    const [list, setlist] = useState([]);
+    const [error, setError] = useState(null);
+    const [selectedValue, setSelectedValue] = useState('NIFTY 50');
+    const fetchData = async () => {
+        try {
+            const url = `/api/equity-stockIndices?index=${selectedValue}`;
+            const headers = {
+                'Referer': `https://www.nseindia.com/market-data/live-equity-market?symbol=${selectedValue}`,
+                'sec-ch-ua': '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
+                'sec-ch-ua-mobile': '?0',
+                'sec-ch-ua-platform': '"Windows"',
+                'Sec-Fetch-Dest': 'empty',
+                'Sec-Fetch-Mode': 'cors',
+                'Sec-Fetch-Site': 'same-origin',
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+            };
+            const response = await axios.get(url, { headers });
+            setlist(response.data.data);
 
-
-// Example usage with sample data
-
-const TableCard = ({ header, tableId, list }) => {
-
-    useEffect(() => {
-        // Initialize DataTable when the component mounts
-        const tableElement = document.querySelector(`#${tableId}`);
-        if ($.fn.DataTable.isDataTable(tableElement)) {
-            // Destroy the existing DataTable before reinitializing
-            $(tableElement).DataTable().destroy();
+        } catch (error) {
+            setError(`Failed to fetch data: ${error.message}`);
+            console.error('Error:', error);
         }
+    };
 
-        // Initialize DataTable with options to disable search and pagination
-        $(tableElement).DataTable({
-            searching: true,
-            paging: false,
-        });
-        // Add placeholder to the search input
-        const searchInputs = document.querySelectorAll('.dt-search input[type="search"]');
-        searchInputs.forEach(input => {
-            input.placeholder = 'Search...';
-        });
-
-    }, [tableId]);
-    const [dataList, setDataList] = useState([]);
     useEffect(() => {
-        setDataList(list)
-        console.log("desktop", list);
-    }, [])
+        fetchData();
+    }, [selectedValue]);
+
+    if (error) {
+        return <div>Error: {error}</div>;
+    }
+
+    if (!list) {
+        return <div>Loading...</div>;
+    }
     return (
         <div>
             <Card
@@ -72,29 +78,29 @@ const TableCard = ({ header, tableId, list }) => {
                                 </tr>
                             </thead>
                             <tbody className="fs-5 fw-light text-white">
-                                {dataList.slice(0, 10).map((item, index) => (
+                                {list.slice(1, 10).sort((a, b) => b.priority - a.priority).map((item, index) => (
                                     <tr key={index}>
                                         <td className="text-white fs-6">
-                                            <span>{item.symbol.replace(".NS", "")}</span>
+                                            <span>{item.symbol}</span>
                                         </td>
                                         <td className="text-center">
-                                            <div className={`badge rounded-pill fs-6 border-${item.changesPercentage > 0 ? 'success' : 'danger'} border p-0 px-3`}>
+                                            <div className={`badge rounded-pill fs-6 border-${item.pChange > 0 ? 'success' : 'danger'} border p-0 px-3`}>
                                                 {item.breakoutText}
-                                                <img src={item.changesPercentage > 0 ? positiveStatus : negativeStatus} width={25} alt={item.symbol} />
+                                                <img src={item.pChange > 0 ? positiveStatus : negativeStatus} width={25} alt={item.symbol} />
                                             </div>
                                         </td>
                                         <td className="text-center">
-                                            <div className={`badge rounded-pill w-100 p-2 fs-6`} style={{ backgroundColor: item.changesPercentage > 0 ? "#19C141" : "#F31C1C" }}>
-                                                {item.changesPercentage}
+                                            <div className={`badge rounded-pill w-100 p-2 fs-6`} style={{ backgroundColor: item.pChange > 0 ? "#19C141" : "#F31C1C" }}>
+                                                {item.pChange}
                                             </div>
                                         </td>
                                         <td className="text-white text-center fs-6">
-                                            {item.volume}
+                                            {item.lastPrice}
                                         </td>
                                         <td className="text-center">
-                                            <div className={`badge rounded-pill fs-6 border-${item.changesPercentage > 0 ? 'success' : 'danger'} border p-0 px-3`}>
-                                                {item.pcrText}
-                                                <img src={item.changesPercentage > 0 ? positiveStatus : negativeStatus} width={25} alt={item.symbol} />
+                                            <div className={`badge rounded-pill fs-6 border-${item.pChange > 0 ? 'success' : 'danger'} border p-0 px-3`}>
+                                                {item.lastPrice}
+                                                <img src={item.pChange > 0 ? positiveStatus : negativeStatus} width={25} alt={item.symbol} />
                                             </div>
                                         </td>
                                     </tr>
@@ -108,4 +114,4 @@ const TableCard = ({ header, tableId, list }) => {
     );
 };
 
-export default TableCard;
+export default SectorList;
