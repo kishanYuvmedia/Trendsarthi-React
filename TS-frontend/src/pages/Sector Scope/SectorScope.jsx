@@ -10,7 +10,6 @@ import SectorBarScope from "./SectorBarScope";
 const SectorScope = (props) => {
     useEffect(() => {
         document.title = "Sector Scope | Trendsarthi";
-
         dragula([
             document.getElementById("left"),
             document.getElementById("right"),
@@ -37,23 +36,24 @@ const SectorScope = (props) => {
                             <SectorBarScope header={"Sector Scope"} />
                         </Col>
                     </Row>
-
-                    {!isEmpty(list) &&
-                        <Row>
-                            <Col md={6} id="right" className="hideOnMobile">
-                                <SectorList type={'highPowerd'} header={"NIFTY 50"} tableId={'pow1'} />
-                            </Col>
-                            <Col md={6} id="left" className="hideOnMobile">
-                                <SectorList type={'highPowerd'} header={"BANK"} tableId={'pow2'} />
-                            </Col>
-                            <Col md={6} id="left1" className="hideOnMobile">
-                                <SectorList type={'highPowerd'} header={"AUTO"} tableId={'pow3'} />
-                            </Col>
-                            <Col md={6} id="left3" className="hideOnMobile">
-                                <SectorList type={'highPowerd'} header={"FIN SERV"} tableId={'pow4'} />
-                            </Col>
-                        </Row>
-                    }
+                    <Row>
+                        <Col md={6} id="right" className="hideOnMobile">
+                            <SectorList type={'highPowerd'} header={"NIFTY 50"} tableId={'pow1'} listType={'NIFTY BANK'} />
+                        </Col>
+                        <Col md={6} id="left" className="hideOnMobile">
+                            <SectorList type={'highPowerd'} header={"NIFTY MEDIA"} tableId={'pow2'} listType={'NIFTY MEDIA'} />
+                        </Col>
+                        <Col md={6} id="left1" className="hideOnMobile">
+                            <SectorList type={'highPowerd'} header={"NIFTY PHARMA"} tableId={'pow3'} listType={'NIFTY PHARMA'} />
+                        </Col>
+                        <Col md={6} id="left3" className="hideOnMobile">
+                            <SectorList type={'highPowerd'} header={"AUTO"} tableId={'pow4'} listType={'NIFTY AUTO'} />
+                        </Col>
+                        <Col md={6} id="left3" className="hideOnMobile">
+                            <SectorList type={'highPowerd'} header={"IT"} tableId={'pow4'} listType={'NIFTY IT'} />
+                        </Col>
+                       
+                    </Row>
                 </Container>
             </div>
         </React.Fragment>

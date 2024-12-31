@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react"
 import { Container, Row, Col, Card } from "reactstrap"
 import CardDrag from "./components/CardDrag"
 import _, { isEmpty } from "lodash"
-import StockChart from "./components/StockChart"
 import { getProductsList, getHistoryList } from "services/api/api-service"
 export default function IndicatorChart() {
   const [productList, setProductList] = useState([])
@@ -67,7 +66,7 @@ export default function IndicatorChart() {
                       </select>
                     </Col>
                   </Row>
-                  <StockChart dataList={data} />
+                  {/* <StockChart dataList={data} /> */}
                 </CardDrag>
               </Col>
             </Row>

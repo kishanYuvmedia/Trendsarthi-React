@@ -30,7 +30,7 @@ module.exports = function (TdDerivatives) {
       }
     });
   };
-  TdDerivatives.optionSymbolStock = (type,callback) => {
+  TdDerivatives.optionSymbolStock = (type, callback) => {
     const currenturl = `${configt.stock.ownConnection}/api/equity/options/${type}`
     request(currenturl, function (error, response, body) {
       if (!error && response.statusCode == 200) {
@@ -55,8 +55,8 @@ module.exports = function (TdDerivatives) {
       }
     });
   };
-  TdDerivatives.historyData = (symbol,time, callback) => {
-    const currenturl=`${configt.stock.connector}historical-chart/${time}/${symbol}?apikey=${configt.stock.key}`
+  TdDerivatives.historyData = (symbol, time, callback) => {
+    const currenturl = `${configt.stock.connector}historical-chart/${time}/${symbol}?apikey=${configt.stock.key}`
     request(currenturl, function (error, response, body) {
       if (!error && response.statusCode == 200) {
         const jsonData = JSON.parse(body);
@@ -69,7 +69,7 @@ module.exports = function (TdDerivatives) {
             historyData: {
               status: "1",
               message: "success",
-              symbol:symbol,
+              symbol: symbol,
               Item: jsonData,
             },
           });

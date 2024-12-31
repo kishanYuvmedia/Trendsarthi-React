@@ -3,24 +3,23 @@ import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import { Container, Row, Col, Card, CardBody } from "reactstrap";
 import { withTranslation } from "react-i18next";
-import dragula from "dragula";
 import _, { isEmpty, result, set } from "lodash";
 let bgvector = './images/vector2.png';
 import Badge from 'react-bootstrap/Badge';
 const IndexMover = (props) => {
     const [selectedValue, setSelectedValue] = useState('NIFTY 50');
-    const [list, setlist] = useState([]);
+    const [list, setList] = useState([]);
     const [mata, setMata] = useState(null); // Assuming mata is an object
     const [advances, setAdvances] = useState(0);
-    const [declines, setdeclines] = useState(0);
-    const [percage, setpercage] = useState(0);
+    const [declines, setDeclines] = useState(0);
+    const [percentage, setPercentage] = useState(0);
     const [error, setError] = useState(null);
 
-    const fetchData = async () => {
+    const fetchData = async (value) => {
         try {
-            const url = `/api/equity-stockIndices?index=${selectedValue}`;
+            const url = `/api/equity-stockIndices?index=${value}`;
             const headers = {
-                'Referer': `https://www.nseindia.com/market-data/live-equity-market?symbol=${selectedValue}`,
+                'Referer': `https://www.nseindia.com/market-data/live-equity-market?symbol=${value}`,
                 'sec-ch-ua': '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
                 'sec-ch-ua-mobile': '?0',
                 'sec-ch-ua-platform': '"Windows"',
@@ -29,15 +28,13 @@ const IndexMover = (props) => {
                 'Sec-Fetch-Site': 'same-origin',
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
             };
-
             const response = await axios.get(url, { headers });
-            setlist(response.data.data);
+            setList(response.data.data);
             setMata(response.data.metadata);
-
-            const total = response.data.advance.advances + (response.data.advance.declines || 0) + (response.data.advance.unchanged || 0);
-            setAdvances(response.data.advance.advances);
-            setdeclines(total - response.data.advance.advances);
-            setpercage((response.data.advance.advances / total) * 100);
+            let total = Number(response.data.advance.advances) + Number(response.data.advance.declines) + Number(response.data.advance.unchanged);
+            setAdvances(Number(response.data.advance.advances));
+            setDeclines(Number(total) - Number(response.data.advance.advances));
+            setPercentage((Number(response.data.advance.advances) / total) * 100);
 
         } catch (error) {
             setError(`Failed to fetch data: ${error.message}`);
@@ -46,14 +43,19 @@ const IndexMover = (props) => {
     };
 
     useEffect(() => {
-        fetchData();
+        fetchData(selectedValue);
     }, [selectedValue]);
+
+    const handleChange = (event) => {
+        console.log("data event", event.target.value);
+        setSelectedValue(event.target.value);
+    }
 
     if (error) {
         return <div>Error: {error}</div>;
     }
 
-    if (!list) {
+    if (list.length === 0) {
         return <div>Loading...</div>;
     }
 
@@ -72,9 +74,8 @@ const IndexMover = (props) => {
                                     <select value={selectedValue}
                                         onChange={handleChange} className="form-select form-select-sm" aria-label="Default select example">
                                         <option selected value="NIFTY 50">NIFTY 50</option>
-                                        <option selected value="NIFTY BANK">BANKNIFTY</option>
-                                        <option selected value="FINNIFTY">FINNIFTY</option>
-                                        <option selected value="NIFTY 50">NIFTY 50</option>
+                                        <option value="NIFTY%20BANK">BANKNIFTY</option>
+                                        <option value="NIFTY%20FINANCIAL%20SERVICES">FINNIFTY</option>
                                     </select>
                                 </div>
                             </div>
@@ -101,7 +102,7 @@ const IndexMover = (props) => {
                                         <div className="fs-1 fw-bold text-gradient w-100">{selectedValue}</div>
                                     </div>
                                     <div className="fs-3 text-white">
-                                        UP {mata.change} pts <br />
+                                        UP {Math.round(mata.change)} pts <br />
                                     </div>
                                 </CardBody>
 
@@ -155,8 +156,8 @@ const IndexMover = (props) => {
                             <Row style={{ width: '100%' }}>
                                 <Col md={8}></Col>
                                 <Col md={4}>
-                                    <h4>{selectedValue} is down by {mata.change} pts</h4>
-                                    {list.slice(1, 10)
+                                    <h4>{selectedValue} is down by {Math.round(mata.change)} pts</h4>
+                                    {list?.slice(1, 10)
                                         .sort((a, b) => b.priority - a.priority)  // Sorting by priority, assuming higher priority comes first
                                         .map((item, index) => (
                                             <p key={index} style={{ color: 'white', fontSize: '12px' }}>

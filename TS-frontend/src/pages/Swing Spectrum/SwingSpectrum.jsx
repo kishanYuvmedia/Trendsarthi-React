@@ -9,7 +9,6 @@ import MomentumSpike from "pages/InsiderStrategy/MomentumSpike";
 import DailyScanner from "./DailyScanner";
 import { symbolStock } from "services/api/api-service";
 const SwingSpectrum = (props) => {
-    const [list, setlist] = useState([]);
     useEffect(() => {
         document.title = "Swing Spectrum | Trendsarthi";
 
@@ -21,7 +20,6 @@ const SwingSpectrum = (props) => {
             document.getElementById("left3"),
             document.getElementById("right3"),
         ]);
-
         if (!document.getElementById("tradingview-script")) {
             const script = document.createElement("script");
             script.id = "tradingview-script";
@@ -45,23 +43,38 @@ const SwingSpectrum = (props) => {
 
             document.getElementById("tradingview-widget").appendChild(script);
         }
-        fetch();
     }, []);
-    function fetch() {
-        symbolStock('NSE')
-            .then(result => {
-                if (!isEmpty(result)) {
-                    console.log('Result is not empty:', result.symbolStock?.Item); // Log the symbol list
-                    setlist(result.symbolStock?.Item);
-                } else {
-                    console.log('Result is empty');
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching symbol list:', error); // Log any errors
-            });
-    }
+    const [list, setlist] = useState([]);
+    useEffect(() => {
+        document.title = "Insider Strategy | Trendsarthi";
+    }, []);
+    const [selectedValue, setSelectedValue] = useState('NIFTY 50');
+    const [error, setError] = useState(null);
+    const fetchData = async () => {
+        try {
+            const url = `/api/equity-stockIndices?index=${selectedValue}`;
+            const headers = {
+                'Referer': `https://www.nseindia.com/market-data/live-equity-market?symbol=${selectedValue}`,
+                'sec-ch-ua': '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
+                'sec-ch-ua-mobile': '?0',
+                'sec-ch-ua-platform': '"Windows"',
+                'Sec-Fetch-Dest': 'empty',
+                'Sec-Fetch-Mode': 'cors',
+                'Sec-Fetch-Site': 'same-origin',
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+            };
+            const response = await axios.get(url, { headers });
+            setlist(response.data.data);
+            console.log('Data:', response.data.data);
 
+        } catch (error) {
+            setError(`Failed to fetch data: ${error.message}`);
+            console.error('Error:', error);
+        }
+    };
+    useEffect(() => {
+        fetchData();
+    }, [selectedValue]);
     return (
         <React.Fragment>
             <div className="page-content">

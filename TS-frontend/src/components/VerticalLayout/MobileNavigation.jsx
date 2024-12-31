@@ -1,6 +1,4 @@
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChartLine, faHome, faEllipsis, faSquarePollVertical, faScrewdriverWrench } from '@fortawesome/free-solid-svg-icons';
 import { Nav, NavItem } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 const tabs = [

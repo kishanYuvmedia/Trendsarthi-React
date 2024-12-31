@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import { Card, CardHeader, CardBody } from "reactstrap"
-
+import axios from 'axios';
 let candles = './images/candle-sticks.png';
 
 export default function DailyScanner({ header, cssStyle, tableId }) {
@@ -26,7 +26,63 @@ export default function DailyScanner({ header, cssStyle, tableId }) {
             input.placeholder = 'Search...';
         });
     }, [tableId]);
+    useEffect(() => {
+        document.title = "Swing Spectrum | Trendsarthi";
+        if (!document.getElementById("tradingview-script")) {
+            const script = document.createElement("script");
+            script.id = "tradingview-script";
+            script.type = "text/javascript";
+            script.src = "https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js";
+            script.async = true;
+            script.innerHTML = JSON.stringify({
+                symbols: [
+                    { proName: "FOREXCOM:SPXUSD", title: "S&P 500 Index" },
+                    { proName: "FOREXCOM:NSXUSD", title: "US 100 Cash CFD" },
+                    { proName: "FX_IDC:EURUSD", title: "EUR to USD" },
+                    { proName: "BITSTAMP:BTCUSD", title: "Bitcoin" },
+                    { proName: "BITSTAMP:ETHUSD", title: "Ethereum" },
+                ],
+                isTransparent: false,
+                showSymbolLogo: true,
+                displayMode: "adaptive",
+                colorTheme: "dark",
+                locale: "en",
+            });
 
+            document.getElementById("tradingview-widget").appendChild(script);
+        }
+    }, []);
+    const [list, setlist] = useState([]);
+    useEffect(() => {
+        document.title = "Insider Strategy | Trendsarthi";
+    }, []);
+    const [selectedValue, setSelectedValue] = useState('NIFTY 50');
+    const [error, setError] = useState(null);
+    const fetchData = async () => {
+        try {
+            const url = `/api/equity-stockIndices?index=${selectedValue}`;
+            const headers = {
+                'Referer': `https://www.nseindia.com/market-data/live-equity-market?symbol=${selectedValue}`,
+                'sec-ch-ua': '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
+                'sec-ch-ua-mobile': '?0',
+                'sec-ch-ua-platform': '"Windows"',
+                'Sec-Fetch-Dest': 'empty',
+                'Sec-Fetch-Mode': 'cors',
+                'Sec-Fetch-Site': 'same-origin',
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+            };
+            const response = await axios.get(url, { headers });
+            setlist(response.data.data);
+            console.log('Data:', response.data.data);
+
+        } catch (error) {
+            setError(`Failed to fetch data: ${error.message}`);
+            console.error('Error:', error);
+        }
+    };
+    useEffect(() => {
+        fetchData();
+    }, []);
     return (
         <div>
             <Card
@@ -56,9 +112,10 @@ export default function DailyScanner({ header, cssStyle, tableId }) {
                         <table id={tableId} className="table ">
 
                             <thead>
-                                <tr >
+                                <tr>
                                     <th className="p-2 ps-3 text-white fw-light" style={{ borderRadius: "10px 0 0 10px" }}>Symbol</th>
                                     <th className="p-2 text-white fw-light text-center">Volume</th>
+                                    <th className="p-2 text-white fw-light text-center">Value</th>
                                     <th className="p-2 text-white fw-light text-center">Avg. Del %</th>
                                     <th className="text-center p-2 text-white fw-light text-center">Delivery (%)</th>
                                     <th className="p-2 text-white fw-light"></th>
@@ -67,39 +124,42 @@ export default function DailyScanner({ header, cssStyle, tableId }) {
                             </thead>
 
                             <tbody className="fs-5 fw-light text-white">
-                                <tr>
-                                    <td className="text-white">
-                                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXgiz41maa34mpQoVYhRyZ8wk8XOMZfHvIrA&s" className="me-2" alt="hdfc" style={{ borderRadius: "50%" }} width={20} />
-                                        <span>
-                                            HDFCBANK
-                                        </span>
+                                {list?.slice(1, 50).sort((a, b) => b.pChange - a.pChange).map((item, index) => (
+                                    <tr key={index}>
+                                        <td className="text-white">
+                                            <span>
+                                                {item.symbol}
+                                            </span>
+                                        </td>
+                                        <td className="text-white text-center">
+                                            {item.totalTradedVolume}
+                                        </td>
+                                        <td className="text-white text-center">
+                                            {item.totalTradedValue}
+                                        </td>
+                                        <td className="text-white text-center">
+                                            {item.perChange30d}
+                                        </td>
 
-                                    </td>
-                                    <td className="text-white text-center">
-                                        1150395
-                                    </td>
-                                    <td className="text-white text-center">
-                                        1113.41
-                                    </td>
+                                        <td >
+                                            <div className="text-white text-center" >
+                                                {item.pChange}
+                                            </div>
+                                        </td>
+                                        <td className="text-center w-25">
+                                            <div class="progress   ">
+                                                <div class="progress-bar " role="progressbar" aria-label="Animated striped example" aria-valuenow={item.perChange30d} aria-valuemin="0" aria-valuemax="10" style={{ width: `${item.perChange30d}%` }}></div>
+                                            </div>
+                                        </td>
+                                        <td className="text-white text-center">
+                                            <div>
+                                                <img src={candles} className="" alt={item.symbol} />
+                                                <i className='btn bx bxs-bookmark-plus fs-4 p-0' ></i>
+                                            </div>
+                                        </td>
+                                    </tr>
 
-                                    <td >
-                                        <div className="text-white text-center" >
-                                            1.3
-                                        </div>
-                                    </td>
-                                    <td className="text-center w-25">
-                                        <div class="progress   ">
-                                            <div class="progress-bar " role="progressbar" aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style={{ width: "75%" }}></div>
-                                        </div>
-                                    </td>
-                                    <td className="text-white text-center">
-                                        <div>
-                                            <img src={candles} className="" alt="hdfc" />
-
-                                            <i className='btn bx bxs-bookmark-plus fs-4 p-0' ></i>
-                                        </div>
-                                    </td>
-                                </tr>
+                                ))}
 
                             </tbody>
                         </table>

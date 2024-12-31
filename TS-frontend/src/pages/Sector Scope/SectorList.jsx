@@ -1,17 +1,16 @@
-import { listeners } from "npm";
 import React, { useState, useEffect } from "react";
+import axios from 'axios';
 import { Card, CardHeader, CardBody } from "reactstrap";
 let negativeStatus = 'https://img.icons8.com/isometric/50/bearish.png';
 let positiveStatus = 'https://img.icons8.com/isometric/50/bullish.png';
-const SectorList = ({ header, tableId }) => {
-    const [list, setlist] = useState([]);
+const SectorList = ({ header, tableId, listType }) => {
+    const [list, setList] = useState([]);
     const [error, setError] = useState(null);
-    const [selectedValue, setSelectedValue] = useState('NIFTY 50');
-    const fetchData = async () => {
+    const fetchData = async (Type) => {
         try {
-            const url = `/api/equity-stockIndices?index=${selectedValue}`;
+            const url = `/api/equity-stockIndices?index=${Type}`;
             const headers = {
-                'Referer': `https://www.nseindia.com/market-data/live-equity-market?symbol=${selectedValue}`,
+                'Referer': `https://www.nseindia.com/market-data/live-equity-market?symbol=${Type}`,
                 'sec-ch-ua': '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
                 'sec-ch-ua-mobile': '?0',
                 'sec-ch-ua-platform': '"Windows"',
@@ -21,7 +20,7 @@ const SectorList = ({ header, tableId }) => {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
             };
             const response = await axios.get(url, { headers });
-            setlist(response.data.data);
+            setList(response.data.data);
 
         } catch (error) {
             setError(`Failed to fetch data: ${error.message}`);
@@ -30,16 +29,14 @@ const SectorList = ({ header, tableId }) => {
     };
 
     useEffect(() => {
-        fetchData();
-    }, [selectedValue]);
-
-    if (error) {
-        return <div>Error: {error}</div>;
-    }
-
-    if (!list) {
+        fetchData(listType); // Initial fetch
+        const interval = setInterval(fetchData, 2000);
+        return () => clearInterval(interval); // Cleanup interval on component unmount
+    }, []);
+    if (list.length === 0) {
         return <div>Loading...</div>;
     }
+
     return (
         <div>
             <Card
@@ -78,7 +75,7 @@ const SectorList = ({ header, tableId }) => {
                                 </tr>
                             </thead>
                             <tbody className="fs-5 fw-light text-white">
-                                {list.slice(1, 10).sort((a, b) => b.priority - a.priority).map((item, index) => (
+                                {list?.slice(1, 10).sort((a, b) => b.priority - a.priority).map((item, index) => (
                                     <tr key={index}>
                                         <td className="text-white fs-6">
                                             <span>{item.symbol}</span>

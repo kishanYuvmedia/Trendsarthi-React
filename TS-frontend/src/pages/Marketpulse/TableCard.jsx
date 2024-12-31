@@ -72,32 +72,32 @@ const TableCard = ({ header, tableId, list }) => {
                                 </tr>
                             </thead>
                             <tbody className="fs-5 fw-light text-white">
-                                {dataList.slice(0, 10).map((item, index) => (
+                                {dataList?.slice(1, 10).map((item, index) => (
                                     <tr key={index}>
-                                        <td className="text-white fs-6">
-                                            <span>{item.symbol.replace(".NS", "")}</span>
-                                        </td>
-                                        <td className="text-center">
-                                            <div className={`badge rounded-pill fs-6 border-${item.changesPercentage > 0 ? 'success' : 'danger'} border p-0 px-3`}>
-                                                {item.breakoutText}
-                                                <img src={item.changesPercentage > 0 ? positiveStatus : negativeStatus} width={25} alt={item.symbol} />
-                                            </div>
-                                        </td>
-                                        <td className="text-center">
-                                            <div className={`badge rounded-pill w-100 p-2 fs-6`} style={{ backgroundColor: item.changesPercentage > 0 ? "#19C141" : "#F31C1C" }}>
-                                                {item.changesPercentage}
-                                            </div>
-                                        </td>
-                                        <td className="text-white text-center fs-6">
-                                            {item.volume}
-                                        </td>
-                                        <td className="text-center">
-                                            <div className={`badge rounded-pill fs-6 border-${item.changesPercentage > 0 ? 'success' : 'danger'} border p-0 px-3`}>
-                                                {item.pcrText}
-                                                <img src={item.changesPercentage > 0 ? positiveStatus : negativeStatus} width={25} alt={item.symbol} />
-                                            </div>
-                                        </td>
-                                    </tr>
+                                    <td className="text-white fs-6">
+                                        <span>{item.symbol}</span>
+                                    </td>
+                                    <td className="text-center">
+                                        <div className={`badge rounded-pill fs-6 border-${item.pChange > 0 ? 'success' : 'danger'} border p-0 px-3`}>
+                                            {item.breakoutText}
+                                            <img src={item.pChange > 0 ? positiveStatus : negativeStatus} width={25} alt={item.symbol} />
+                                        </div>
+                                    </td>
+                                    <td className="text-center">
+                                        <div className={`badge rounded-pill w-100 p-2 fs-6`} style={{ backgroundColor: item.pChange > 0 ? "#19C141" : "#F31C1C" }}>
+                                            {item.pChange}
+                                        </div>
+                                    </td>
+                                    <td className="text-white text-center fs-6">
+                                        {item.lastPrice}
+                                    </td>
+                                    <td className="text-center">
+                                        <div className={`badge rounded-pill fs-6 border-${item.pChange > 0 ? 'success' : 'danger'} border p-0 px-3`}>
+                                            {item.lastPrice}
+                                            <img src={item.pChange > 0 ? positiveStatus : negativeStatus} width={25} alt={item.symbol} />
+                                        </div>
+                                    </td>
+                                </tr>
                                 ))}
                             </tbody>
                         </table>
