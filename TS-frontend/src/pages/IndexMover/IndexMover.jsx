@@ -6,6 +6,7 @@ import { withTranslation } from "react-i18next";
 import _, { isEmpty, result, set } from "lodash";
 let bgvector = './images/vector2.png';
 import Badge from 'react-bootstrap/Badge';
+import { Chart } from "react-google-charts";
 const IndexMover = (props) => {
     const [selectedValue, setSelectedValue] = useState('NIFTY 50');
     const [list, setList] = useState([]);
@@ -14,7 +15,7 @@ const IndexMover = (props) => {
     const [declines, setDeclines] = useState(0);
     const [percentage, setPercentage] = useState(0);
     const [error, setError] = useState(null);
-
+    const [datalist, setDatalist] = useState([]);
     const fetchData = async (value) => {
         try {
             const url = `/api/equity-stockIndices?index=${value}`;
@@ -30,6 +31,12 @@ const IndexMover = (props) => {
             };
             const response = await axios.get(url, { headers });
             setList(response.data.data);
+            const outputData = [
+                ["symbol", "Price Change"], // Header row
+                ...response.data.data.slice(1,10).map(item => [item.symbol, item.pChange])
+            ];
+            console.log("outputData", outputData);
+            setDatalist(outputData);
             setMata(response.data.metadata);
             let total = Number(response.data.advance.advances) + Number(response.data.advance.declines) + Number(response.data.advance.unchanged);
             setAdvances(Number(response.data.advance.advances));
@@ -50,7 +57,10 @@ const IndexMover = (props) => {
         console.log("data event", event.target.value);
         setSelectedValue(event.target.value);
     }
-
+    const options = {
+        backgroundColor: "#f4f4f4", // Set your desired background color
+        legend: { position: "bottom" }, // Example customization for legend
+      };
     if (error) {
         return <div>Error: {error}</div>;
     }
@@ -154,7 +164,11 @@ const IndexMover = (props) => {
                     >
                         <CardBody className='d-flex justify-content-between rounded-4  ' style={{ backgroundColor: "#181a33" }}>
                             <Row style={{ width: '100%' }}>
-                                <Col md={8}></Col>
+                                <Col md={8}>
+                                    <Chart chartType="PieChart"  width="100%"
+  height="400px"
+  legendToggle data={datalist} />
+                                </Col>
                                 <Col md={4}>
                                     <h4>{selectedValue} is down by {Math.round(mata.change)} pts</h4>
                                     {list?.slice(1, 10)

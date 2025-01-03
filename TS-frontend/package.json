@@ -64,6 +64,7 @@
     "react-dropzone": "^14.2.3",
     "react-dual-listbox": "^5.0.2",
     "react-flatpickr": "^3.10.13",
+    "react-google-charts": "^5.2.1",
     "react-i18next": "^13.0.2",
     "react-icons": "^4.11.0",
     "react-image-lightbox": "^5.1.4",
