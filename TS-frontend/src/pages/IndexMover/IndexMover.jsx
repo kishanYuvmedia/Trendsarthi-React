@@ -33,7 +33,7 @@ const IndexMover = (props) => {
             setList(response.data.data);
             const outputData = [
                 ["symbol", "Price Change"], // Header row
-                ...response.data.data.slice(1,10).map(item => [item.symbol, item.pChange])
+                ...response.data.data.slice(1, 10).map(item => [item.symbol, item.pChange])
             ];
             console.log("outputData", outputData);
             setDatalist(outputData);
@@ -57,10 +57,6 @@ const IndexMover = (props) => {
         console.log("data event", event.target.value);
         setSelectedValue(event.target.value);
     }
-    const options = {
-        backgroundColor: "#f4f4f4", // Set your desired background color
-        legend: { position: "bottom" }, // Example customization for legend
-      };
     if (error) {
         return <div>Error: {error}</div>;
     }
@@ -165,9 +161,9 @@ const IndexMover = (props) => {
                         <CardBody className='d-flex justify-content-between rounded-4  ' style={{ backgroundColor: "#181a33" }}>
                             <Row style={{ width: '100%' }}>
                                 <Col md={8}>
-                                    <Chart chartType="PieChart"  width="100%"
-  height="400px"
-  legendToggle data={datalist} />
+                                    <Chart chartType="PieChart" width="100%"
+                                        height="400px"
+                                        legendToggle data={datalist} />
                                 </Col>
                                 <Col md={4}>
                                     <h4>{selectedValue} is down by {Math.round(mata.change)} pts</h4>

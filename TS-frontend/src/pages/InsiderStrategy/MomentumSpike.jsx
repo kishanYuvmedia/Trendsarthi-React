@@ -1,10 +1,31 @@
 import React, { useState, useEffect } from "react"
-import { Link } from "react-router-dom"
 import { Card, CardHeader, CardBody } from "reactstrap"
+import { Chart } from "react-google-charts";
+export const datas = [
+    [
+        "Symbol",
+        "Price Change",
+    ]
+];
 
-
-export default function MomentumSpike({ header, status, tableId }) {
-
+export const options = {
+    minColor: "#f00",
+    midColor: "#ddd",
+    maxColor: "#0d0",
+    headerHeight: 15,
+    fontColor: "black",
+    showScale: true,
+    generateTooltip: (_row, _size, value) => {
+        return (
+            '<div style="background:#fd9; padding:10px; border-style:solid"> ' +
+            value +
+            "</div>"
+        );
+    },
+};
+export default function MomentumSpike({ header, status, tableId, data }) {
+    const mergedData = datas.concat(data);
+    console.log(mergedData);
     useEffect(() => {
         // Initialize DataTable when the component mounts
         const tableElement = document.querySelector(`#${tableId}`);
@@ -12,14 +33,11 @@ export default function MomentumSpike({ header, status, tableId }) {
             // Destroy the existing DataTable before reinitializing
             $(tableElement).DataTable().destroy();
         }
-
-        // Initialize DataTable with options to disable search and pagination
         $(tableElement).DataTable({
             searching: false,   // Disable search
             paging: false,      // Disable pagination
         });
     }, [tableId]);
-
     return (
         <div>
             <Card
@@ -44,12 +62,17 @@ export default function MomentumSpike({ header, status, tableId }) {
                                 LIVE
                             </span>
                         </div>
-
                     </div>
                 </CardHeader>
                 <CardBody className="p-3 pt-0">
                     <div className="border p-3 rounded-4 bg-black">
-                        candle stick chart will come here
+                        <Chart
+                            chartType="TreeMap"
+                            width="100%"
+                            height="400px"
+                            data={mergedData}
+                            options={options}
+                        />
                     </div>
                 </CardBody>
             </Card>

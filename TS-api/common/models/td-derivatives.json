@@ -86,6 +86,27 @@
           "verb": "get"
         }
       ]
+    },
+    "sectorData": {
+      "accepts": [
+        {
+          "arg": "symbol",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "returns": {
+        "type": "object",
+        "arg": "response",
+        "root": true
+      },
+      "description": "",
+      "http": [
+        {
+          "path": "/sectorData",
+          "verb": "get"
+        }
+      ]
     }
   }
 }

@@ -10,6 +10,7 @@ import { getLocalData } from "../global-storage"
 import { retry } from "redux-saga/effects"
 import apiKit, { axiosRequest } from "./axios-base"
 import moment from "moment"
+import axios from 'axios';
 export const getSystemList = type => {
   return new Promise((resolve, reject) => {
     find("MtSystemLists", {
@@ -300,6 +301,28 @@ export const getNiftyRankingTime = (time) => {
       .catch(error => {
         reject(error) // Reject the promise with the error
       })
+  })
+}
+export const getSectorList = async (value) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const url = `https://www.nseindia.com//api/equity-stockIndices?index=${value}`;
+      const headers = {
+        'Referer': `https://www.nseindia.com/market-data/live-equity-market?symbol=${value}`,
+        'sec-ch-ua': '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
+        'sec-ch-ua-mobile': '?0',
+        'sec-ch-ua-platform': '"Windows"',
+        'Sec-Fetch-Dest': 'empty',
+        'Sec-Fetch-Mode': 'cors',
+        'Sec-Fetch-Site': 'same-origin',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+      };
+      const response = await axios.get(url, { headers });
+      resolve(response);
+    } catch (error) {
+      setError(`Failed to fetch data: ${error.message}`);
+      console.error('Error:', error);
+    }
   })
 }
 

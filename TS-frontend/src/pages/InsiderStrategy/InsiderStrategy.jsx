@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React, { useEffect,useState  } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Row, Col } from "reactstrap";
 import { withTranslation } from "react-i18next";
 import _, { isEmpty, result, set } from "lodash";
@@ -7,7 +7,8 @@ import TableCard from "pages/Marketpulse/TableCard";
 import MomentumSpike from "./MomentumSpike";
 import axios from 'axios';
 const InsiderStrategy = (props) => {
-   const [list, setlist] = useState([]);
+    const [list, setlist] = useState([]);
+    const [dataTime, setDataTime] = useState([]);
     useEffect(() => {
         document.title = "Insider Strategy | Trendsarthi";
     }, []);
@@ -28,22 +29,22 @@ const InsiderStrategy = (props) => {
             };
             const response = await axios.get(url, { headers });
             setlist(response.data.data);
-            console.log('Data:', response.data.data);
-
+            const dataTime1 = [
+                ...response.data.data.slice(1, 10).map(item => [item.symbol, item.pChange])
+            ];
+            //console.log('Data:', response.data.data);
+            setDataTime(dataTime1);
         } catch (error) {
             setError(`Failed to fetch data: ${error.message}`);
             console.error('Error:', error);
         }
     };
-
     useEffect(() => {
         fetchData();
     }, []);
-
     if (error) {
         return <div>Error: {error}</div>;
     }
-
     if (list.length === 0) {
         return <div>Loading...</div>;
     }
@@ -58,28 +59,32 @@ const InsiderStrategy = (props) => {
                     </div>
                     <Row>
                         <Col md={12}>
-                            <MomentumSpike header={"5 Min Momentum Spike"} />
+                            <MomentumSpike header={"5 Min Momentum Spike"} data={dataTime} />
                         </Col>
                         <Col md={12}>
-                            <MomentumSpike header={"10 Min Momentum Spike"} />
+                            <MomentumSpike header={"10 Min Momentum Spike"} data={dataTime} />
                         </Col>
                     </Row>
                     {!isEmpty(list) &&
                         <Row>
                             <Col md={6} id="right" className="hideOnMobile">
-                                <TableCard list={list.sort((a, b) => b.pChange - a.pChange)}  type={'highPowerd'} header={"LOM SHORT TERM"} tableId={'pow1'} />
+                                <TableCard list={list.sort((a, b) => b.pChange - a.pChange)} type={'highPowerd'} header={"LOM SHORT TERM"} tableId={'pow1'} />
                             </Col>
                             <Col md={6} id="left" className="hideOnMobile">
-                                <TableCard list={list.sort((a, b) => b.perChange365d - a.perChange365d)}  type={'highPowerd'} header={"LOM LONG TERM"} tableId={'pow2'} />
+                                <TableCard list={list.sort((a, b) => b.perChange365d - a.perChange365d)} type={'highPowerd'} header={"LOM LONG TERM"} tableId={'pow2'} />
                             </Col>
                             <Col md={6} id="left1" className="hideOnMobile">
-                                <TableCard list={list.sort((a, b) => b.change - a.change)}  type={'highPowerd'} header={"CONTRACTION BO"} tableId={'pow3'} />
+                                <TableCard list={list.sort((a, b) => b.totalTradedVolume
+                                    - a.totalTradedVolume
+                                )} type={'highPowerd'} header={"CONTRACTION BO"} tableId={'pow3'} />
                             </Col>
                             <Col md={6} id="left3" className="hideOnMobile">
-                                <TableCard list={list.sort((a, b) => b.nearWKH - a.nearWKH)}  type={'highPowerd'} header={"DAY H/L REVERSAL"} tableId={'pow4'} />
+                                <TableCard list={list.sort((a, b) => a.dayHigh
+                                    - b.dayHigh
+                                )} type={'highPowerd'} header={"DAY H/L REVERSAL"} tableId={'pow4'} />
                             </Col>
                             <Col md={6} id="left3" className="hideOnMobile">
-                                <TableCard list={list.sort((a, b) => b.perChange30d - a.perChange30d)}  type={'highPowerd'} header={"2 DAY H/L BO"} tableId={'pow5'} />
+                                <TableCard list={list.sort((a, b) => b.perChange30d - a.perChange30d)} type={'highPowerd'} header={"2 DAY H/L BO"} tableId={'pow5'} />
                             </Col>
                         </Row>
                     }
