@@ -1,3 +1,4 @@
+import axios from 'axios';
 export const calculateMFI = (data) => {
   const mfiData = [];
   for (let i = 14; i < data.length; i++) {
@@ -356,3 +357,54 @@ export const calculatePivotPoint = (data) => {
   return pivotPointData;
 }
 
+export const getSectorList = async () => {
+  const sectors = [
+    "NIFTY AUTO",
+    "NIFTY BANK",
+    "NIFTY ENERGY",
+    "NIFTY FINANCIAL SERVICES",
+    "NIFTY FINANCIAL SERVICES 25/50",
+    "NIFTY FMCG",
+    "NIFTY IT",
+    "NIFTY MEDIA",
+    "NIFTY METAL",
+    "NIFTY PHARMA",
+    "NIFTY PSU BANK",
+    "NIFTY REALTY",
+    "NIFTY PRIVATE BANK",
+    "NIFTY HEALTHCARE INDEX",
+    "NIFTY CONSUMER DURABLES",
+    "NIFTY OIL & GAS",
+    "NIFTY MIDSMALL HEALTHCARE",
+    "NIFTY FINANCIAL SERVICES EX-BANK",
+    "NIFTY MIDSMALL FINANCIAL SERVICES",
+    "NIFTY MIDSMALL IT & TELECOM",
+  ];
+  try {
+    const formattedData = [];
+    for (const sector of sectors) {
+      try {
+        // Await fetchWithRetry to get the actual data
+        const storedData = localStorage.getItem(sectors);
+        if (response) {
+          const sectorData = response.map(([symbol, priceChange]) => ({
+            symbol,
+            sector,
+            priceChange,
+          }));
+          formattedData.push(...sectorData);
+        } else {
+          console.warn(`No data found for sector: ${sector}`);
+        }
+      } catch (error) {
+        console.error(`Error fetching data for sector: ${sector}`, error.message);
+      }
+    }
+
+    console.log("Final formatted data:", formattedData);
+    return formattedData;
+  } catch (error) {
+    console.error("Error fetching sector data:", error.message);
+    throw new Error(`Failed to fetch sector data: ${error.message}`);
+  }
+};

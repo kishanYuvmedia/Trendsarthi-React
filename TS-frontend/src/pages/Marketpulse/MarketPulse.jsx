@@ -1,63 +1,64 @@
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
 import { Container, Row, Col } from "reactstrap";
-import { useSSR, withTranslation } from "react-i18next";
-import dragula from "dragula";
-import _, { isEmpty, result, set } from "lodash";
+import axios from 'axios';
+import { withTranslation } from "react-i18next";
+import _, { isEmpty } from "lodash";
 import TableCard from "pages/Marketpulse/TableCard";
-import { symbolStock } from "services/api/api-service";
 import CardSlider from "./CardSlider";
-const MarketPulse = (props) => {
-    const [list, setlist] = useState([]);
-    useEffect(() => {
-        document.title = "Market Pulse | Trendsarthi";
-        dragula([
-            document.getElementById("left"),
-            document.getElementById("right"),
-            document.getElementById("left1"),
-            document.getElementById("right2"),
-            document.getElementById("left3"),
-            document.getElementById("right3"),
-        ]);
+const MarketPulse = () => {
+    const [selectedValue, setSelectedValue] = useState('NIFTY 50');
+    const [list, setList] = useState([]);
+    const [error, setError] = useState(null);
+    const fetchData = async (value) => {
+        try {
+            const url = `/api/equity-stockIndices?index=${value}`;
+            const headers = {
+                Referer: `https://www.nseindia.com/market-data/live-equity-market?symbol=${value}`,
+                'sec-ch-ua': '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
+                'sec-ch-ua-mobile': '?0',
+                'sec-ch-ua-platform': '"Windows"',
+                'Sec-Fetch-Dest': 'empty',
+                'Sec-Fetch-Mode': 'cors',
+                'Sec-Fetch-Site': 'same-origin',
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+            };
 
-        if (!document.getElementById("tradingview-script")) {
-            const script = document.createElement("script");
-            script.id = "tradingview-script";
-            script.type = "text/javascript";
-            script.src = "https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js";
-            script.async = true;
-            script.innerHTML = JSON.stringify({
-                symbols: [
-                    { proName: "FOREXCOM:SPXUSD", title: "S&P 500 Index" },
-                    { proName: "FOREXCOM:NSXUSD", title: "US 100 Cash CFD" },
-                    { proName: "FX_IDC:EURUSD", title: "EUR to USD" },
-                    { proName: "BITSTAMP:BTCUSD", title: "Bitcoin" },
-                    { proName: "BITSTAMP:ETHUSD", title: "Ethereum" },
-                ],
-                isTransparent: false,
-                showSymbolLogo: true,
-                displayMode: "adaptive",
-                colorTheme: "dark",
-                locale: "en",
-            });
-            document.getElementById("tradingview-widget").appendChild(script);
+            const response = await axios.get(url, { headers });
+
+            // Check for successful response (status code 200)
+            if (response.status === 200) {
+                setList(response.data.data);
+                localStorage.setItem("marketPulseData", JSON.stringify(response.data.data));
+            } else {
+                // Handle non-200 status codes (e.g., 404, 500)
+                setError(`Failed to fetch data: Server responded with status ${response.status}`);
+            }
+
+        } catch (error) {
+            setError(`Failed to fetch data: ${error.message}`);
+            console.error('Error:', error);
         }
-        fetch();
-    }, []);
-    function fetch() {
-        symbolStock('NSE')
-            .then(result => {
-                if (!isEmpty(result)) {
-                    console.log('Result is not empty:', result.symbolStock?.Item); // Log the symbol list
-                    setlist(result.symbolStock?.Item);
-                } else {
-                    console.log('Result is empty');
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching symbol list:', error); // Log any errors
-            });
+    };
+
+    if (error) {
+        return <div>Error: {error}</div>;
     }
+    if (list.length === 0) {
+        return <div>Loading...</div>;
+    }
+    const loadFromLocalStorage = () => {
+        const storedData = localStorage.getItem("marketPulseData");
+        if (storedData) {
+            setList(JSON.parse(storedData));
+            setLoading(false);
+        } else {
+            fetchData("NIFTY 50");
+        }
+    };
+    useEffect(() => {
+        loadFromLocalStorage();
+    }, []);
     return (
         <React.Fragment>
             <div className="page-content">
@@ -93,16 +94,23 @@ const MarketPulse = (props) => {
                     {!isEmpty(list) &&
                         <Row>
                             <Col md={6} id="right" className="hideOnMobile">
-                                <TableCard list={list}  type={'highPowerd'} header={"HIGH POW. STOCKS"} tableId={'pow1'} />
+                                <TableCard list={list.sort((a, b) => b.pChange - a.pChange)} type={'highPowerd'} header={"LOM SHORT TERM"} tableId={'pow1'} />
                             </Col>
                             <Col md={6} id="left" className="hideOnMobile">
-                                <TableCard list={list}  type={'highPowerd'} header={"INTRADAY BOOST"} tableId={'pow2'} />
+                                <TableCard list={list.sort((a, b) => b.perChange365d - a.perChange365d)} type={'highPowerd'} header={"LOM LONG TERM"} tableId={'pow2'} />
                             </Col>
                             <Col md={6} id="left1" className="hideOnMobile">
-                                <TableCard list={list}  type={'highPowerd'} header={"TOP LEVEL STOCKS"} tableId={'pow3'} />
+                                <TableCard list={list.sort((a, b) => b.totalTradedVolume
+                                    - a.totalTradedVolume
+                                )} type={'highPowerd'} header={"CONTRACTION BO"} tableId={'pow3'} />
                             </Col>
                             <Col md={6} id="left3" className="hideOnMobile">
-                                <TableCard list={list}  type={'highPowerd'} header={"LOW LEVEL STOCKS"} tableId={'pow4'} />
+                                <TableCard list={list.sort((a, b) => a.dayHigh
+                                    - b.dayHigh
+                                )} type={'highPowerd'} header={"DAY H/L REVERSAL"} tableId={'pow4'} />
+                            </Col>
+                            <Col md={6} id="left3" className="hideOnMobile">
+                                <TableCard list={list.sort((a, b) => b.perChange30d - a.perChange30d)} type={'highPowerd'} header={"2 DAY H/L BO"} tableId={'pow5'} />
                             </Col>
                         </Row>
                     }
@@ -111,7 +119,6 @@ const MarketPulse = (props) => {
         </React.Fragment>
     );
 };
-
 MarketPulse.propTypes = {
     t: PropTypes.any,
     chartsData: PropTypes.any,

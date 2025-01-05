@@ -25,6 +25,7 @@ const SectorList = ({ header, tableId, listType }) => {
       };
       const response = await axios.get(url, { headers });
       setList(response.data.data);
+      localStorage.setItem(listType, JSON.stringify(response.data.data));
       setError(null); // Clear errors on successful fetch
     } catch (error) {
       setError(`Failed to fetch data: ${error.message}`);
@@ -33,20 +34,24 @@ const SectorList = ({ header, tableId, listType }) => {
       setLoading(false); // Always stop the loading state
     }
   };
-
+  const loadFromLocalStorage = () => {
+    const storedData = localStorage.getItem(listType);
+    if (storedData) {
+      setList(JSON.parse(storedData));
+      setLoading(false);
+    } else {
+      fetchData(listType);
+    }
+  };
   useEffect(() => {
-    fetchData(listType);
+    loadFromLocalStorage();
   }, []);
-
   if (loading) {
     return <div>Loading...</div>;
   }
-
-  if (error) {
-    return <div className="text-danger">{error}</div>;
-  }
   return (
     <div>
+      {list.length>0 && (
       <Card
         className="my-2 Drag"
         style={{
@@ -163,6 +168,7 @@ const SectorList = ({ header, tableId, listType }) => {
           </div>
         </CardBody>
       </Card>
+      )}
     </div>
   );
 };

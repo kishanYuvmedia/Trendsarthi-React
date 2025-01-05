@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import { Card, CardHeader, CardBody } from "reactstrap"
-import axios from 'axios';
 let candles = './images/candle-sticks.png';
-
-export default function DailyScanner({ header, cssStyle, tableId }) {
-
+export default function DailyScanner({ header, cssStyle, tableId, list }) {
     useEffect(() => {
         // Initialize DataTable when the component mounts
         const tableElement = document.querySelector(`#${tableId}`);
@@ -26,63 +23,6 @@ export default function DailyScanner({ header, cssStyle, tableId }) {
             input.placeholder = 'Search...';
         });
     }, [tableId]);
-    useEffect(() => {
-        document.title = "Swing Spectrum | Trendsarthi";
-        if (!document.getElementById("tradingview-script")) {
-            const script = document.createElement("script");
-            script.id = "tradingview-script";
-            script.type = "text/javascript";
-            script.src = "https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js";
-            script.async = true;
-            script.innerHTML = JSON.stringify({
-                symbols: [
-                    { proName: "FOREXCOM:SPXUSD", title: "S&P 500 Index" },
-                    { proName: "FOREXCOM:NSXUSD", title: "US 100 Cash CFD" },
-                    { proName: "FX_IDC:EURUSD", title: "EUR to USD" },
-                    { proName: "BITSTAMP:BTCUSD", title: "Bitcoin" },
-                    { proName: "BITSTAMP:ETHUSD", title: "Ethereum" },
-                ],
-                isTransparent: false,
-                showSymbolLogo: true,
-                displayMode: "adaptive",
-                colorTheme: "dark",
-                locale: "en",
-            });
-
-            document.getElementById("tradingview-widget").appendChild(script);
-        }
-    }, []);
-    const [list, setlist] = useState([]);
-    useEffect(() => {
-        document.title = "Insider Strategy | Trendsarthi";
-    }, []);
-    const [selectedValue, setSelectedValue] = useState('NIFTY 50');
-    const [error, setError] = useState(null);
-    const fetchData = async () => {
-        try {
-            const url = `/api/equity-stockIndices?index=${selectedValue}`;
-            const headers = {
-                'Referer': `https://www.nseindia.com/market-data/live-equity-market?symbol=${selectedValue}`,
-                'sec-ch-ua': '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
-                'sec-ch-ua-mobile': '?0',
-                'sec-ch-ua-platform': '"Windows"',
-                'Sec-Fetch-Dest': 'empty',
-                'Sec-Fetch-Mode': 'cors',
-                'Sec-Fetch-Site': 'same-origin',
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
-            };
-            const response = await axios.get(url, { headers });
-            setlist(response.data.data);
-            console.log('Data:', response.data.data);
-
-        } catch (error) {
-            setError(`Failed to fetch data: ${error.message}`);
-            console.error('Error:', error);
-        }
-    };
-    useEffect(() => {
-        fetchData();
-    }, []);
     return (
         <div>
             <Card
@@ -110,14 +50,13 @@ export default function DailyScanner({ header, cssStyle, tableId }) {
                 <CardBody className="p-2 pt-0 position-relative">
                     <div className="border p-2 rounded-4 table-responsive" style={{ backgroundColor: "#292B42" }}>
                         <table id={tableId} className="table ">
-
                             <thead>
                                 <tr>
                                     <th className="p-2 ps-3 text-white fw-light" style={{ borderRadius: "10px 0 0 10px" }}>Symbol</th>
                                     <th className="p-2 text-white fw-light text-center">Volume</th>
                                     <th className="p-2 text-white fw-light text-center">Value</th>
                                     <th className="p-2 text-white fw-light text-center">Avg. Del %</th>
-                                    <th className="text-center p-2 text-white fw-light text-center">Delivery (%)</th>
+                                    <th className="text-center p-2 text-white fw-light text-center">Price (%)</th>
                                     <th className="p-2 text-white fw-light"></th>
                                     <th className="p-2 text-white fw-light text-center" style={{ borderRadius: "0px 10px 10px 0" }}>Bookmark</th>
                                 </tr>
@@ -148,7 +87,7 @@ export default function DailyScanner({ header, cssStyle, tableId }) {
                                         </td>
                                         <td className="text-center w-25">
                                             <div class="progress   ">
-                                                <div class="progress-bar " role="progressbar" aria-label="Animated striped example" aria-valuenow={item.perChange30d} aria-valuemin="0" aria-valuemax="10" style={{ width: `${item.perChange30d}%` }}></div>
+                                                <div class="progress-bar " role="progressbar" aria-label="Animated striped example" aria-valuenow={item.pChange} aria-valuemin="0" aria-valuemax="10" style={{ width: `${item.pChange}%` }}></div>
                                             </div>
                                         </td>
                                         <td className="text-white text-center">

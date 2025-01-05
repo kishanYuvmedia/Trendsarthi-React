@@ -7,6 +7,10 @@ import TableCard from "pages/Marketpulse/TableCard";
 import MomentumSpike from "./MomentumSpike";
 import axios from 'axios';
 const InsiderStrategy = (props) => {
+    const [mergedData, setMergedData] = useState([
+        ["Symbol", "Parent", "Price Change"],
+        ["All Stocks", null, 0],
+    ]);
     const [list, setlist] = useState([]);
     const [dataTime, setDataTime] = useState([]);
     useEffect(() => {
@@ -34,6 +38,12 @@ const InsiderStrategy = (props) => {
             ];
             //console.log('Data:', response.data.data);
             setDataTime(dataTime1);
+            const formattedData = dataTime1.slice(1).map(([symbol, priceChange]) => [
+                symbol,
+                "All Stocks",
+                priceChange,
+            ]);
+            setMergedData((prevData) => [...prevData, ...formattedData]);
         } catch (error) {
             setError(`Failed to fetch data: ${error.message}`);
             console.error('Error:', error);
@@ -59,10 +69,10 @@ const InsiderStrategy = (props) => {
                     </div>
                     <Row>
                         <Col md={12}>
-                            <MomentumSpike header={"5 Min Momentum Spike"} data={dataTime} />
+                            <MomentumSpike header={"5 Min Momentum Spike"} data={mergedData} />
                         </Col>
                         <Col md={12}>
-                            <MomentumSpike header={"10 Min Momentum Spike"} data={dataTime} />
+                            <MomentumSpike header={"10 Min Momentum Spike"} data={mergedData} />
                         </Col>
                     </Row>
                     {!isEmpty(list) &&

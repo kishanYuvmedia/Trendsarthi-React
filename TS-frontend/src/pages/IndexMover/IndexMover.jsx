@@ -7,7 +7,7 @@ import _, { isEmpty, result, set } from "lodash";
 let bgvector = './images/vector2.png';
 import Badge from 'react-bootstrap/Badge';
 import { Chart } from "react-google-charts";
-const IndexMover = (props) => {
+const IndexMover = () => {
     const [selectedValue, setSelectedValue] = useState('NIFTY 50');
     const [list, setList] = useState([]);
     const [mata, setMata] = useState(null); // Assuming mata is an object
@@ -17,10 +17,11 @@ const IndexMover = (props) => {
     const [error, setError] = useState(null);
     const [datalist, setDatalist] = useState([]);
     const fetchData = async (value) => {
+        console.log("data value", value);
         try {
             const url = `/api/equity-stockIndices?index=${value}`;
             const headers = {
-                'Referer': `https://www.nseindia.com/market-data/live-equity-market?symbol=${value}`,
+                Referer: `https://www.nseindia.com/market-data/live-equity-market?symbol=${value}`,
                 'sec-ch-ua': '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
                 'sec-ch-ua-mobile': '?0',
                 'sec-ch-ua-platform': '"Windows"',
@@ -29,33 +30,53 @@ const IndexMover = (props) => {
                 'Sec-Fetch-Site': 'same-origin',
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
             };
+
             const response = await axios.get(url, { headers });
-            setList(response.data.data);
-            const outputData = [
-                ["symbol", "Price Change"], // Header row
-                ...response.data.data.slice(1, 10).map(item => [item.symbol, item.pChange])
-            ];
-            console.log("outputData", outputData);
-            setDatalist(outputData);
-            setMata(response.data.metadata);
-            let total = Number(response.data.advance.advances) + Number(response.data.advance.declines) + Number(response.data.advance.unchanged);
-            setAdvances(Number(response.data.advance.advances));
-            setDeclines(Number(total) - Number(response.data.advance.advances));
-            setPercentage((Number(response.data.advance.advances) / total) * 100);
+
+            // Check for successful response (status code 200)
+            if (response.status === 200) {
+                setList(response.data.data);
+
+                // Handle potential data structure variations
+                const outputData = [
+                    ["symbol", "Price Change"], // Header row
+                    ...response.data.data.slice(1, 10).map(item => [item.symbol, item.pChange || 0])
+                ];
+
+                setDatalist(outputData);
+                setMata(response.data.metadata || {});
+
+                // Handle potential data structure variations for advance/decline data
+                const advanceData = response.data.advance || {};
+                const total =
+                    Number(advanceData.advances || 0) +
+                    Number(advanceData.declines || 0) +
+                    Number(advanceData.unchanged || 0);
+
+                setAdvances(Number(advanceData.advances || 0));
+                setDeclines(Number(total) - Number(advanceData.advances || 0));
+
+                // Calculate percentage with default value if advanceData.advances is 0 or undefined
+                const advancesCount = Number(advanceData.advances || 0);
+                setPercentage(advancesCount === 0 ? 0 : (advancesCount / total) * 100);
+
+            } else {
+                // Handle non-200 status codes (e.g., 404, 500)
+                setError(`Failed to fetch data: Server responded with status ${response.status}`);
+            }
 
         } catch (error) {
             setError(`Failed to fetch data: ${error.message}`);
             console.error('Error:', error);
         }
     };
-
     useEffect(() => {
         fetchData(selectedValue);
-    }, [selectedValue]);
-
+    }, []);
     const handleChange = (event) => {
         console.log("data event", event.target.value);
         setSelectedValue(event.target.value);
+        fetchData(event.target.value);
     }
     if (error) {
         return <div>Error: {error}</div>;
@@ -67,6 +88,7 @@ const IndexMover = (props) => {
 
     return (
         <React.Fragment>
+
             <div className="page-content">
                 <Container fluid>
 
@@ -80,8 +102,8 @@ const IndexMover = (props) => {
                                     <select value={selectedValue}
                                         onChange={handleChange} className="form-select form-select-sm" aria-label="Default select example">
                                         <option selected value="NIFTY 50">NIFTY 50</option>
-                                        <option value="NIFTY%20BANK">BANKNIFTY</option>
-                                        <option value="NIFTY%20FINANCIAL%20SERVICES">FINNIFTY</option>
+                                        <option value="NIFTY BANK">BANKNIFTY</option>
+                                        <option value="NIFTY FINANCIAL SERVICES">FINNIFTY</option>
                                     </select>
                                 </div>
                             </div>
@@ -108,7 +130,7 @@ const IndexMover = (props) => {
                                         <div className="fs-1 fw-bold text-gradient w-100">{selectedValue}</div>
                                     </div>
                                     <div className="fs-3 text-white">
-                                        UP {Math.round(mata.change)} pts <br />
+                                        UP {Math.round(mata?.change)} pts <br />
                                     </div>
                                 </CardBody>
 
@@ -161,9 +183,10 @@ const IndexMover = (props) => {
                         <CardBody className='d-flex justify-content-between rounded-4  ' style={{ backgroundColor: "#181a33" }}>
                             <Row style={{ width: '100%' }}>
                                 <Col md={8}>
-                                    <Chart chartType="PieChart" width="100%"
+                                    {datalist.length > 0 && <Chart chartType="PieChart" width="100%"
                                         height="400px"
-                                        legendToggle data={datalist} />
+                                        legendToggle data={datalist} />}
+
                                 </Col>
                                 <Col md={4}>
                                     <h4>{selectedValue} is down by {Math.round(mata.change)} pts</h4>

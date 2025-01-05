@@ -8,11 +8,67 @@ import _, { isEmpty, result, set } from "lodash";
 import SectorList from "./SectorList";
 import MomentumSpike from "pages/InsiderStrategy/MomentumSpike";
 import SectorBarScope from "./SectorBarScope";
+
 const SectorScope = (props) => {
-    const [data, setData] = useState({});
-    const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [dataTime, setDataTime] = useState([]);
+    const [mergedData, setMergedData] = useState([
+        ["Symbol", "Parent", "Price Change"],
+        ["All Stocks", null, 0],
+    ]);
+
+    const getSectorList = async () => {
+        const sectors = [
+            "NIFTY AUTO",
+            "NIFTY BANK",
+            "NIFTY ENERGY",
+            "NIFTY FINANCIAL SERVICES",
+            "NIFTY FINANCIAL SERVICES 25/50",
+            "NIFTY FMCG",
+            "NIFTY IT",
+            "NIFTY MEDIA",
+            "NIFTY METAL",
+            "NIFTY PHARMA",
+            "NIFTY PSU BANK",
+            "NIFTY REALTY",
+            "NIFTY PRIVATE BANK",
+            "NIFTY HEALTHCARE INDEX",
+            "NIFTY CONSUMER DURABLES",
+            "NIFTY OIL & GAS",
+            "NIFTY MIDSMALL HEALTHCARE",
+            "NIFTY FINANCIAL SERVICES EX-BANK",
+            "NIFTY MIDSMALL FINANCIAL SERVICES",
+            "NIFTY MIDSMALL IT & TELECOM",
+        ];
+        try {
+            const allData = [["Symbol", "Parent", "Price Change"], ["All Stocks", null, 0]];
+
+            for (const sector of sectors) {
+                try {
+                    const response = JSON.parse(localStorage.getItem(`${sector}`));
+                    if (response && response.data && response.data.data) {
+                        const sectorData = response.data.data.slice(1, 10).map(item => [
+                            item.symbol,
+                            sector,
+                            item.pChange,
+                        ]);
+                        allData.push(allData, ...sectorData);
+                    } else {
+                        console.warn(`No data found for sector: ${sector}`);
+                    }
+                } catch (error) {
+                    console.error(`Error fetching data for sector: ${sector}`, error.message);
+                }
+            }
+
+            setMergedData(allData); // Update the state once with all the data
+            console.log("Merged Data:", allData);
+        } catch (error) {
+            console.error("Error fetching sector data:", error.message);
+            throw new Error(`Failed to fetch sector data: ${error.message}`);
+        }
+    };
     useEffect(() => {
+        getSectorList();
         document.title = "Sector Scope | Trendsarthi";
         dragula([
             document.getElementById("left"),
@@ -23,72 +79,6 @@ const SectorScope = (props) => {
             document.getElementById("right3"),
         ]);
     }, []);
-
-    const fetchData = async () => {
-        const listType = ['NIFTY BANK', 'NIFTY MEDIA', 'NIFTY PHARMA', 'NIFTY AUTO', 'NIFTY IT'];
-        try {
-            const headers = {
-                'sec-ch-ua': '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
-                'sec-ch-ua-mobile': '?0',
-                'sec-ch-ua-platform': '"Windows"',
-                'Sec-Fetch-Dest': 'empty',
-                'Sec-Fetch-Mode': 'cors',
-                'Sec-Fetch-Site': 'same-origin',
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
-            };
-            // Fetch all data in parallel
-            const results = await Promise.allSettled(
-                listType.map(async (type) => {
-                    const url = `/api/equity-stockIndices?index=${type}`;
-                    const customHeaders = {
-                        Referer: `https://www.nseindia.com/market-data/live-equity-market?symbol=${type}`,
-                        ...headers,  // Spread operator to merge headers
-                    };
-                    console.log("URL:", customHeaders);
-                    return axios.get(url, { headers: customHeaders })
-                        .then((response) => ({ type, data: response.data.data }))
-                        .catch((error) => ({ type, data: null, error: error.message }));
-                })
-            );
-
-            // Format results into an object
-            const formattedData = results.reduce((acc, result) => {
-                if (result.status === "fulfilled" && result.value.data) {
-                    acc[result.value.type] = result.value.data;
-                } else if (result.status === "rejected" || result.value.error) {
-                    const failedType = result.status === "rejected" ? result.reason.config.url.split("=").pop() : result.value.type;
-                    acc[failedType] = { error: result.value?.error || "Unknown error" };
-                }
-                return acc;
-            }, {});
-
-            console.log("Formatted Data:", formattedData);
-
-            // Update state
-            setError(null); // Clear any previous errors on successful fetch
-            setData(formattedData); // Store the formatted data in state
-
-        } catch (overallError) {
-            console.error("Overall fetch error:", overallError);
-            setError(`Failed to fetch data: ${overallError.message}`);
-        } finally {
-            setLoading(false); // Ensure loading state is always cleared
-        }
-    };
-
-
-    useEffect(() => {
-        fetchData();
-    }, []);
-
-    if (loading) {
-        return <div>Loading...</div>;
-    }
-
-    if (error) {
-        return <div className="text-danger">{error}</div>;
-    }
-
     return (
         <React.Fragment>
             <div className="page-content">
@@ -100,10 +90,10 @@ const SectorScope = (props) => {
                     </div>
                     <Row>
                         <Col md={12}>
-                            <MomentumSpike />
+                            <MomentumSpike header={"Sector Scope"} data={mergedData} />
                         </Col>
                         <Col md={12}>
-                            <SectorBarScope header={"Sector Scope"} />
+                            <SectorBarScope header={"Sector Scope"} data={mergedData} />
                         </Col>
                     </Row>
                     <Row>
@@ -121,6 +111,15 @@ const SectorScope = (props) => {
                         </Col>
                         <Col md={6} id="left3" className="hideOnMobile">
                             <SectorList type={'highPowerd'} header={"IT"} tableId={'pow4'} listType={'NIFTY IT'} />
+                        </Col>
+                        <Col md={6} id="left3" className="hideOnMobile">
+                            <SectorList type={'highPowerd'} header={"NIFTY FMCG"} tableId={'pow4'} listType={'NIFTY FMCG'} />
+                        </Col>
+                        <Col md={6} id="left3" className="hideOnMobile">
+                            <SectorList type={'highPowerd'} header={"NIFTY PRIVATE BANK"} tableId={'pow4'} listType={'NIFTY PRIVATE BANK'} />
+                        </Col>
+                        <Col md={6} id="left3" className="hideOnMobile">
+                            <SectorList type={'highPowerd'} header={"NIFTY PSE"} tableId={'pow4'} listType={'NIFTY PSE'} />
                         </Col>
                     </Row>
                 </Container>

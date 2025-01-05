@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { Card, CardHeader, CardBody } from "reactstrap"
 import { Chart } from "react-google-charts";
-export const datas = [
-    [
-        "Symbol",
-        "Price Change",
-    ]
-];
 
 export const options = {
     minColor: "#f00",
@@ -24,9 +18,8 @@ export const options = {
     },
 };
 export default function MomentumSpike({ header, status, tableId, data }) {
-    const mergedData = datas.concat(data);
-    console.log(mergedData);
     useEffect(() => {
+      
         // Initialize DataTable when the component mounts
         const tableElement = document.querySelector(`#${tableId}`);
         if ($.fn.DataTable.isDataTable(tableElement)) {
@@ -70,7 +63,7 @@ export default function MomentumSpike({ header, status, tableId, data }) {
                             chartType="TreeMap"
                             width="100%"
                             height="400px"
-                            data={mergedData}
+                            data={data}
                             options={options}
                         />
                     </div>
