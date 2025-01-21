@@ -117,12 +117,10 @@ const index = () => {
     <React.Fragment>
       <div className="page-content">
         <Container fluid>
-          {/* Render Breadcrumb */}
           <Breadcrumbs
             title="Derivative"
             breadcrumbItem="Derivative Dashboard"
           />
-
           <Row>
             <Col md={7}>
               {!_.isEmpty(dataCall) && (

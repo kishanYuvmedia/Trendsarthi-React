@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { Card, CardHeader, CardBody } from "reactstrap"
 import { Chart } from "react-google-charts";
-
 export const options = {
     minColor: "#f00",
     midColor: "#ddd",
@@ -10,7 +9,7 @@ export const options = {
     fontColor: "black",
     showScale: true,
 };
-export default function MomentumSpike({ header, status, tableId, data }) {
+export default function MomentumSpikeMulti({ header, status, tableId, data }) {
     console.log('data', data)
     useEffect(() => {
         // Initialize DataTable when the component mounts
@@ -51,14 +50,19 @@ export default function MomentumSpike({ header, status, tableId, data }) {
                     </div>
                 </CardHeader>
                 <CardBody className="p-3 pt-0">
-                    <div className="border p-3 rounded-4 bg-black">
-                        <Chart
-                            chartType="TreeMap"
-                            width="100%"
-                            height="400px"
-                            data={data}
-                            options={options}
-                        />
+                    <div className="border p-3 rounded-4 bg-black row">
+                        {data.map(item =>
+                            <div className="col-md-4" key={item.type}>
+                            <Chart
+                                chartType="TreeMap"
+                                width="100%"
+                                height="400px"
+                                data={item.data}
+                                options={options}
+                                
+                            />
+                        </div>
+                        )}
                     </div>
                 </CardBody>
             </Card>

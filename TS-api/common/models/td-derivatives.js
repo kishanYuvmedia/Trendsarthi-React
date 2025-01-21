@@ -1,5 +1,6 @@
 "use strict";
 const request = require("request");
+const FyersAPI = require("fyers-api-v3").fyersModel
 const configt = require("../../server/config.json");
 const app = require("../../server/server");
 const axios = require('axios');
@@ -117,6 +118,43 @@ module.exports = function (TdDerivatives) {
         gzip: true,
       });
 
+      // Parse and handle response
+      const jsonData = JSON.parse(response);
+      if (_.isEmpty(jsonData)) {
+        callback(null, {
+          historyData: { status: "0", message: "Data not found", value: 0 },
+        });
+      } else {
+        callback(null, {
+          historyData: {
+            status: "1",
+            message: "success",
+            symbol: symbol,
+            Item: jsonData,
+          },
+        });
+      }
+    } catch (error) {
+      callback(null, {
+        historyData: { status: "0", message: `Failed to fetch data: ${error.message}`, value: 0 },
+      });
+      console.error("Error:", error);
+    }
+  };
+  TdDerivatives.sectorData = async (symbol, callback) => {
+    try {
+      fyers.setAppId("WYB2V40P9M-100")
+      fyers.setRedirectUrl("https://url.xyz")
+      fyers.setAccessToken("eyjb....")
+      var inp={
+        "symbol":["NSE:SBIN-EQ","NSE:TCS-EQ"],
+        "ohlcv_flag":1
+      }
+      fyers.getOptionChain({"symbol":"NSE:SBIN-EQ","strikecount":1,"timestamp": ""}).then((response)=>{
+          console.log(response.data)
+      }).catch((err)=>{
+          console.log(err)
+      })
       // Parse and handle response
       const jsonData = JSON.parse(response);
       if (_.isEmpty(jsonData)) {

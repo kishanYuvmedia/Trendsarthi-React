@@ -6,16 +6,11 @@ import { withTranslation } from "react-i18next";
 import dragula from "dragula";
 import _, { isEmpty, result, set } from "lodash";
 import SectorList from "./SectorList";
-import MomentumSpike from "pages/InsiderStrategy/MomentumSpike";
 import SectorBarScope from "./SectorBarScope";
-
+import MomentumSpikeMulti from "pages/InsiderStrategy/MomentumSpikemulti";
 const SectorScope = (props) => {
-    const [dataTime, setDataTime] = useState([]);
-    const [mergedData, setMergedData] = useState([
-        ["Symbol", "Parent", "Price Change"],
-        ["All Stocks", null, 0],
-    ]);
-
+    const [mergedData, setMergedData] = useState([]);
+    const [mergedDataAll, setMergedDataAll] = useState([]);
     const getSectorList = async () => {
         const sectors = [
             "NIFTY AUTO",
@@ -30,7 +25,6 @@ const SectorScope = (props) => {
             "NIFTY PHARMA",
             "NIFTY PSU BANK",
             "NIFTY REALTY",
-            "NIFTY PRIVATE BANK",
             "NIFTY HEALTHCARE INDEX",
             "NIFTY CONSUMER DURABLES",
             "NIFTY OIL & GAS",
@@ -40,18 +34,31 @@ const SectorScope = (props) => {
             "NIFTY MIDSMALL IT & TELECOM",
         ];
         try {
-            const allData = [["Symbol", "Parent", "Price Change"], ["All Stocks", null, 0]];
-
+            const allData = [
+                ["Element", "Sectors", { role: "style" }],
+            ];
+            const allDatalist = [];
             for (const sector of sectors) {
                 try {
-                    const response = JSON.parse(localStorage.getItem(`${sector}`));
-                    if (response && response.data && response.data.data) {
-                        const sectorData = response.data.data.slice(1, 10).map(item => [
+                    const response = JSON.parse(localStorage.getItem(`${sector}`) || []);
+                    if (response.length > 0) {
+                        const sectorData = response.slice(0, 1).sort((a, b) => b.pChange - a.pChange).map(item => [
                             item.symbol,
-                            sector,
+                            item.pChange,
+                            '#1ED095',
+                        ]);
+                        const sectorDataList = response.slice(1, 20).sort((a, b) => b.pChange - a.pChange).map(item => [
+                            item.symbol,
+                            sector.replace("NIFTY ", ""),
                             item.pChange,
                         ]);
-                        allData.push(allData, ...sectorData);
+                        allData.push(...sectorData);
+                        allDatalist.push(
+                            {
+                                type: sector.replace("NIFTY ", ""),
+                                data: [["Symbol", "Parent", "Price"], [sector.replace("NIFTY ", ""), null, 0], ...sectorDataList]
+                            }
+                        );
                     } else {
                         console.warn(`No data found for sector: ${sector}`);
                     }
@@ -59,8 +66,8 @@ const SectorScope = (props) => {
                     console.error(`Error fetching data for sector: ${sector}`, error.message);
                 }
             }
-
             setMergedData(allData); // Update the state once with all the data
+            setMergedDataAll(allDatalist);
             console.log("Merged Data:", allData);
         } catch (error) {
             console.error("Error fetching sector data:", error.message);
@@ -90,7 +97,8 @@ const SectorScope = (props) => {
                     </div>
                     <Row>
                         <Col md={12}>
-                            <MomentumSpike header={"Sector Scope"} data={mergedData} />
+                            {/* <MomentumSpike header={"Sector Scope"} data={mergedData} /> */}
+                            <MomentumSpikeMulti header={"Sector Scope"} data={mergedDataAll} />
                         </Col>
                         <Col md={12}>
                             <SectorBarScope header={"Sector Scope"} data={mergedData} />

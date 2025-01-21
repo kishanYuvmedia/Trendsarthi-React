@@ -16,6 +16,7 @@ const IndexMover = () => {
     const [percentage, setPercentage] = useState(0);
     const [error, setError] = useState(null);
     const [datalist, setDatalist] = useState([]);
+    const [loading, setLoading] = useState(true);
     const fetchData = async (value) => {
         console.log("data value", value);
         try {
@@ -30,22 +31,18 @@ const IndexMover = () => {
                 'Sec-Fetch-Site': 'same-origin',
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
             };
-
             const response = await axios.get(url, { headers });
-
             // Check for successful response (status code 200)
             if (response.status === 200) {
                 setList(response.data.data);
-
                 // Handle potential data structure variations
                 const outputData = [
                     ["symbol", "Price Change"], // Header row
                     ...response.data.data.slice(1, 10).map(item => [item.symbol, item.pChange || 0])
                 ];
-
                 setDatalist(outputData);
+                console.log("data outputData", outputData);
                 setMata(response.data.metadata || {});
-
                 // Handle potential data structure variations for advance/decline data
                 const advanceData = response.data.advance || {};
                 const total =
@@ -55,11 +52,9 @@ const IndexMover = () => {
 
                 setAdvances(Number(advanceData.advances || 0));
                 setDeclines(Number(total) - Number(advanceData.advances || 0));
-
                 // Calculate percentage with default value if advanceData.advances is 0 or undefined
                 const advancesCount = Number(advanceData.advances || 0);
                 setPercentage(advancesCount === 0 ? 0 : (advancesCount / total) * 100);
-
             } else {
                 // Handle non-200 status codes (e.g., 404, 500)
                 setError(`Failed to fetch data: Server responded with status ${response.status}`);
@@ -88,17 +83,15 @@ const IndexMover = () => {
 
     return (
         <React.Fragment>
-
-            <div className="page-content">
+            {/* <div className="page-content">
                 <Container fluid>
-
                     <div className="card mb-0">
                         <div className="card-body px-0 pt-0">
                             <div className="row d-flex justify-content-end">
-                                <div className="col-6 col-md-8 pb-3">
+                                <div className="col-9 col-md-9 pb-3">
                                     <div className="fs-1 fw-bold text-white">Index Mover</div>
                                 </div>
-                                <div className="col-6 col-md-4 d-flex justify-content-end">
+                                <div className="col-3 col-md-3 d-flex justify-content-end">
                                     <select value={selectedValue}
                                         onChange={handleChange} className="form-select form-select-sm" aria-label="Default select example">
                                         <option selected value="NIFTY 50">NIFTY 50</option>
@@ -127,10 +120,10 @@ const IndexMover = () => {
                             >
                                 <CardBody className='d-flex justify-content-between rounded-4  '>
                                     <div className="pb-3">
-                                        <div className="fs-1 fw-bold text-gradient w-100">{selectedValue}</div>
+                                        <div className="fs-1 fw-bold text-gradient w-100">{selectedValue || 0}</div>
                                     </div>
                                     <div className="fs-3 text-white">
-                                        UP {Math.round(mata?.change)} pts <br />
+                                        UP {Math.round(mata?.change || 0)} pts <br />
                                     </div>
                                 </CardBody>
 
@@ -156,10 +149,10 @@ const IndexMover = () => {
                                         </div>
                                         <div className="d-flex justify-content-between mt-2 text-white">
                                             <div>
-                                                <i className='bx bxs-circle text-success'></i> Gainers: {advances}
+                                                <i className='bx bxs-circle text-success'></i> Gainers: {advances || 0}
                                             </div>
                                             <div>
-                                                <i className='bx bxs-circle text-danger'></i> Losers: {declines}
+                                                <i className='bx bxs-circle text-danger'></i> Losers: {declines || 0}
                                             </div>
                                         </div>
                                     </div>
@@ -183,10 +176,8 @@ const IndexMover = () => {
                         <CardBody className='d-flex justify-content-between rounded-4  ' style={{ backgroundColor: "#181a33" }}>
                             <Row style={{ width: '100%' }}>
                                 <Col md={8}>
-                                    {datalist.length > 0 && <Chart chartType="PieChart" width="100%"
-                                        height="400px"
-                                        legendToggle data={datalist} />}
-
+                                    {datalist?.length > 0 &&
+                                        <Chart chartType="PieChart" width="100%" height="400px" data={datalist} key={JSON.stringify(datalist)} />}
                                 </Col>
                                 <Col md={4}>
                                     <h4>{selectedValue} is down by {Math.round(mata.change)} pts</h4>
@@ -204,7 +195,8 @@ const IndexMover = () => {
 
                     </Card>
                 </Container>
-            </div>
+            </div> */}
+            <FyersIntegration />
         </React.Fragment>
     );
 };
