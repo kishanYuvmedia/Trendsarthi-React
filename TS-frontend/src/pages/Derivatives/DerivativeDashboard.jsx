@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Container, Row, Col,Progress } from "reactstrap"
+import { Container, Row, Col, Progress, Card } from "reactstrap"
 import Settings from "./DashboardComponents/FilterTabs"
 import Apaexlinecolumn from "./DashboardComponents/apaexlinecolumn"
 import OptionChainTableContainer from "../../components/Common/derivativesComponent/OptionChainTableContainer"
@@ -122,48 +122,83 @@ const index = () => {
             breadcrumbItem="Derivative Dashboard"
           />
           <Row>
-            <Col md={7}>
-              {!_.isEmpty(dataCall) && (
-                <Apaexlinecolumn
-                  dataCallValue={dataCall}
-                  dataPutValue={dataPut}
-                  categoryValue={category}
-                  titleName={"Intraday data chart"}
-                  horizontal={true}
-                  dataColors='["#ed0c00","#8afff3"]'
-                />
-              )}
-            </Col>
-            <Col md={5}>
+          <Col md={8}>
             
-              {totalcal != 0 && (
-                <Settings
-                  expdatelist={expdatelist}
-                  totalcal={totalcal}
-                  totalput={totalput}
-                  putPers={putPers}
-                  callPers={callPers}
-                  settype={settype}
-                />
-              )}
+                {totalcal != 0 && (
+                  <Settings
+                    expdatelist={expdatelist}
+                    totalcal={totalcal}
+                    totalput={totalput}
+                    putPers={putPers}
+                    callPers={callPers}
+                    settype={settype}
+                  />
+                )}
             </Col>
             <Col md={4} id="right">
-              <CardDrag header={`${type} Progress Chart`}>
-              {typeList.map(item => (
+              <Card
+                className="my-2 Drag "
+                style={{
+                  border: '1px solid transparent',
+                  borderRadius: '14px',
+                  boxShadow: '0 0 0 1px rgba(56, 62, 214, 0.5), 0 0 0 2px rgba(18, 18, 20, 0.5)',
+                  padding: '10px',
+                  backgroundColor: "#181a33"
+                }}
+              >
+                <p className="text-gradient" style={{ fontSize: 20 }}>{`${type} Progress Chart`}</p>
+                <div className="d-flex justify-content-center">
+                {typeList.map(item => (
                   <button
                     type="button"
-                    className={`btn btn-sm m-1 ${
-                      optionType === item ? "btn-warning" : " btn-info"
-                    }`}
+                    className={`btn btn-sm m-1 ${optionType === item ? "btn-warning" : " btn-info"
+                      }`}
                     onClick={e => setOptionType(item)}
                   >
                     {item}
                   </button>
                 ))}
+                </div>
                 <ProgressBar type={optionType} />
-              </CardDrag>
+              </Card>
             </Col>
-            <Col md={8}>
+            <Col md={12}>
+              <Card
+                className="my-2 Drag "
+                style={{
+                  border: '1px solid transparent',
+                  borderRadius: '14px',
+                  boxShadow: '0 0 0 1px rgba(56, 62, 214, 0.5), 0 0 0 2px rgba(18, 18, 20, 0.5)',
+                  padding: '10px',
+                  backgroundColor: "#181a33"
+                }}
+              >
+                <p className="text-gradient" style={{ fontSize: 20 }}>Intraday data chart</p>
+                {!_.isEmpty(dataCall) && (
+                  <Apaexlinecolumn
+                    dataCallValue={dataCall}
+                    dataPutValue={dataPut}
+                    categoryValue={category}
+                    titleName={"Intraday data chart"}
+                    horizontal={true}
+                    dataColors='["#ed0c00","#8afff3"]'
+                  />
+                )}
+              </Card>
+            </Col>
+            
+            <Col md={12}>
+            <Card
+                className="my-2 Drag "
+                style={{
+                  border: '1px solid transparent',
+                  borderRadius: '14px',
+                  boxShadow: '0 0 0 1px rgba(56, 62, 214, 0.5), 0 0 0 2px rgba(18, 18, 20, 0.5)',
+                  padding: '10px',
+                  backgroundColor: "#181a33"
+                }}
+              >
+                <p className="text-gradient" style={{ fontSize: 20 }}>Call/Put</p>
               <OptionChainTableContainer
                 columns={columnsNiftyOption}
                 data={list}
@@ -179,6 +214,7 @@ const index = () => {
                 pagination="justify-content-center pagination pagination-rounded"
                 PCRstatus={false}
               />
+              </Card>
             </Col>
           </Row>
         </Container>

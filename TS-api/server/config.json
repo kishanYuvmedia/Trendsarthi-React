@@ -26,7 +26,6 @@
     "name": "stock",
     "connector": "https://financialmodelingprep.com/api/v3/",
     "provider": "globelapi",
-    "key": "rwmKtFPB9A089d6JQqE6YWpod3n2LTPs",
-    "ownConnection":"http://localhost:4000/"
+    "key": "d017b486-b42b-4be7-aad7-48aa748970eb"
   }
 }

@@ -1,6 +1,6 @@
 import PropTypes from "prop-types"
 import React, { useRef, useEffect, useState } from "react"
-import { Container, Row, Col, Card } from "reactstrap"
+import { Container, Row, Col, Card, CardBody, CardHeader } from "reactstrap"
 import { withTranslation } from "react-i18next"
 import {
   getStrikePrice,
@@ -219,27 +219,65 @@ const Dashboard = props => {
 
           <Row>
             <Col md={6} id="right">
-              <CardDrag header={"Option Movment Chart"}>
-                <BarChart ProductName={ProductName} Productdata={ProductData} />
-              </CardDrag>
+              <Card
+                className="my-2 Drag "
+                style={{
+                  border: '1px solid transparent',
+                  borderRadius: '14px',
+                  boxShadow: '0 0 0 1px rgba(56, 62, 214, 0.5), 0 0 0 2px rgba(18, 18, 20, 0.5)',
+                  padding: '10px',
+                  backgroundColor: "#181a33"
+                }}
+              >
+                <p className="text-gradient" style={{ fontSize: 20 }}>Option Movment Chart</p>
+
+                <CardBody>
+
+                  <BarChart ProductName={ProductName} Productdata={ProductData} />
+                </CardBody>
+              </Card>
             </Col>
             <Col md={6} id="left">
-              <CardDrag header={"Progress Chart"}>
-                {typeList.map(item => (
-                  <button
-                    type="button"
-                    className={`btn btn-sm m-1 ${optionType === item ? "btn-warning" : " btn-info"
-                      }`}
-                    onClick={e => setOptionType(item)}
-                  >
-                    {item}
-                  </button>
-                ))}
+              <Card
+                className="my-2 Drag "
+                style={{
+                  border: '1px solid transparent',
+                  borderRadius: '14px',
+                  boxShadow: '0 0 0 1px rgba(56, 62, 214, 0.5), 0 0 0 2px rgba(18, 18, 20, 0.5)',
+                  padding: '10px',
+                  backgroundColor: "#181a33"
+                }}
+              >
+                <p className="text-gradient" style={{ fontSize: 20 }}>Progress Chart</p>
+                <div className="d-flex justify-content-center">
+                  {typeList.map(item => (
+                    <button
+                      type="button"
+                      className={`btn btn-sm m-1 ${optionType === item ? "btn-warning" : " btn-info"
+                        }`}
+                      onClick={e => setOptionType(item)}
+                    >
+                      {item}
+                    </button>
+                  ))}
+                </div>
                 <ProgressBar type={optionType} />
-              </CardDrag>
+              </Card>
             </Col>
             <Col md={12} id="left">
-              <CardDrag header={"Movment Chart"}>
+
+              <Card
+                className="my-2 Drag "
+                style={{
+                  border: '1px solid transparent',
+                  borderRadius: '14px',
+                  boxShadow: '0 0 0 1px rgba(56, 62, 214, 0.5), 0 0 0 2px rgba(18, 18, 20, 0.5)',
+                  padding: '10px',
+                  backgroundColor: "#181a33"
+                }}
+              >
+                <p className="text-gradient" style={{ fontSize: 20 }}>Movment Chart</p>
+                <div className="d-flex justify-content-center">
                 {fetureIO.map(item => (
                   <button
                     type="button"
@@ -250,6 +288,7 @@ const Dashboard = props => {
                     {item}
                   </button>
                 ))}
+                </div>
                 <BuildBarChart
                   dataLabel={LabelName}
                   dataIOPrice={ioData}
@@ -258,7 +297,7 @@ const Dashboard = props => {
                   horizontal={true}
                   dataColors='["#643c9d","#cfbfe3"]'
                 />
-              </CardDrag>
+              </Card>
             </Col>
           </Row>
         </Container>

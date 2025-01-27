@@ -39,7 +39,7 @@ const BarChart = ({ dataColors, height, totalcal, totalput }) => {
     },
   }
 
-  return <Bar width={751} height={height} data={data} options={options} />
+  return <Bar width={750} height={height} data={data} options={options} />
 }
 
 export default BarChart

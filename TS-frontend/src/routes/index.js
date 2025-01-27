@@ -28,7 +28,7 @@ const authProtectedRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
   { path: "/Indicator-chart", component: <IndicatorChart /> },
   // derivatives
-  { path: "/DerivativeDashboard", component: <DerivativeDashboard /> },
+  { path: "/DerivativeDashboard", component: <OptionClock /> },
   { path: "/NiftyOptionChain", component: <OptionChain type="NIFTY" /> },
   { path: "/BankNiftyOptionChain", component: <OptionChain type="BANKNIFTY" />, },
   { path: "/FinNiftyOptionChain", component: <OptionChain type="FINNIFTY" /> },
@@ -44,7 +44,7 @@ const authProtectedRoutes = [
   { path: "/indexmover", component: <IndexMover /> },
   { path: "/insiderstrategy", component: <InsiderStrategy /> },
   { path: "/sectorscope", component: <SectorScope /> },
-  { path: "/optionclock", component: <OptionClock /> },
+  { path: "/optionclock", component: <DerivativeDashboard /> },
   { path: "/swingspectrum", component: <Swingspectrum /> },
 ]
 const publicRoutes = [
