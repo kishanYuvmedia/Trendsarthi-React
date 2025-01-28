@@ -2,62 +2,49 @@ import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
 import { Container, Row, Col } from "reactstrap";
 import { withTranslation } from "react-i18next";
-import _, { isEmpty, result, set } from "lodash";
+import _, { isEmpty } from "lodash";
 import TableCard from "pages/Marketpulse/TableCard";
 import MomentumSpike from "./MomentumSpike";
-import axios from 'axios';
+import { shortProductListDataList } from "services/api/api-service"
 const InsiderStrategy = (props) => {
-    const [mergedData, setMergedData] = useState([
-        ["Symbol", "Parent", "Price Change"],
-        ["All Stocks", null, 0],
-    ]);
-    const [list, setlist] = useState([]);
-    const [dataTime, setDataTime] = useState([]);
+    let [data, setData] = useState([]);
     useEffect(() => {
         document.title = "Insider Strategy | Trendsarthi";
     }, []);
-    const [selectedValue, setSelectedValue] = useState('NIFTY 50');
-    const [error, setError] = useState(null);
-    const fetchData = async () => {
-        try {
-            const url = `/api/equity-stockIndices?index=${selectedValue}`;
-            const headers = {
-                'Referer': `https://www.nseindia.com/market-data/live-equity-market?symbol=${selectedValue}`,
-                'sec-ch-ua': '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
-                'sec-ch-ua-mobile': '?0',
-                'sec-ch-ua-platform': '"Windows"',
-                'Sec-Fetch-Dest': 'empty',
-                'Sec-Fetch-Mode': 'cors',
-                'Sec-Fetch-Site': 'same-origin',
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
-            };
-            const response = await axios.get(url, { headers });
-            setlist(response.data.data);
-            const dataTime1 = [
-                ...response.data.data.slice(1, 10).map(item => [item.symbol, item.pChange])
-            ];
-            //console.log('Data:', response.data.data);
-            setDataTime(dataTime1);
-            const formattedData = dataTime1.slice(1).map(([symbol, priceChange]) => [
-                symbol,
-                "All Stocks",
-                priceChange,
-            ]);
-            setMergedData((prevData) => [...prevData, ...formattedData]);
-        } catch (error) {
-            setError(`Failed to fetch data: ${error.message}`);
-            console.error('Error:', error);
-        }
-    };
+    let [mergedData, setMergedData] = useState([
+        ["Symbol", "Parent", "Price Change"],
+        ["All Stocks", null, 0],
+    ]);
     useEffect(() => {
-        fetchData();
-    }, []);
-    if (error) {
-        return <div>Error: {error}</div>;
-    }
-    if (list.length === 0) {
-        return <div>Loading...</div>;
-    }
+        shortProductListDataList().then(result => {
+            if (result && result.length > 0) {
+                console.log("Result:", result);
+                setData(result);
+                if (result && result.length > 0) {
+                    console.log("Processing result in chunks...");
+                    const allFormattedData = []; // Array to store formatted data
+                    result.forEach((chunk) => {
+                        const formattedChunk = chunk.map(([INSTRUMENTIDENTIFIER, PRICECHANGE]) => [
+                            typeof INSTRUMENTIDENTIFIER === "string" ? INSTRUMENTIDENTIFIER.slice(0, -2) : INSTRUMENTIDENTIFIER,
+                            "All Stocks",
+                            PRICECHANGE,
+                        ]);
+
+                        allFormattedData.push(...formattedChunk); // Append to the final result
+                    });
+
+                    setData(result.flat()); // Flatten original result for `setData`
+                    setMergedData((prevData) => [...prevData, ...allFormattedData]);
+
+                    console.log("Formatted Data:", allFormattedData);
+                }
+                console.log("final data", formattedData);
+                setMergedData((prevData) => [...prevData, ...formattedData]);
+            }
+        })
+
+    }, [])
+
     return (
         <React.Fragment>
             <div className="page-content">
@@ -75,26 +62,27 @@ const InsiderStrategy = (props) => {
                             <MomentumSpike header={"10 Min Momentum Spike"} data={mergedData} />
                         </Col>
                     </Row>
-                    {!isEmpty(list) &&
+                    {!isEmpty(data) &&
                         <Row>
                             <Col md={6} id="right" className="hideOnMobile">
-                                <TableCard list={list.sort((a, b) => b.pChange - a.pChange)} type={'highPowerd'} header={"LOM SHORT TERM"} tableId={'pow1'} />
+                                <TableCard list={data.sort((a, b) => b.PRICECHANGE - a.PRICECHANGE)} type={'highPowerd'} header={"LOM SHORT TERM"} tableId={'pow1'} />
                             </Col>
                             <Col md={6} id="left" className="hideOnMobile">
-                                <TableCard list={list.sort((a, b) => b.perChange365d - a.perChange365d)} type={'highPowerd'} header={"LOM LONG TERM"} tableId={'pow2'} />
+                                <TableCard list={data.sort((a, b) => b.PRICECHANGEPERCENTAGE
+                                    - a.PRICECHANGEPERCENTAGE
+                                )} type={'highPowerd'} header={"LOM LONG TERM"} tableId={'pow2'} />
                             </Col>
                             <Col md={6} id="left1" className="hideOnMobile">
-                                <TableCard list={list.sort((a, b) => b.totalTradedVolume
-                                    - a.totalTradedVolume
+                                <TableCard list={data.sort((a, b) => b.VALUE
+                                    - a.VALUE
                                 )} type={'highPowerd'} header={"CONTRACTION BO"} tableId={'pow3'} />
                             </Col>
                             <Col md={6} id="left3" className="hideOnMobile">
-                                <TableCard list={list.sort((a, b) => a.dayHigh
-                                    - b.dayHigh
+                                <TableCard list={data.sort((a, b) => a.BUYQTY - b.BUYQTY
                                 )} type={'highPowerd'} header={"DAY H/L REVERSAL"} tableId={'pow4'} />
                             </Col>
                             <Col md={6} id="left3" className="hideOnMobile">
-                                <TableCard list={list.sort((a, b) => b.perChange30d - a.perChange30d)} type={'highPowerd'} header={"2 DAY H/L BO"} tableId={'pow5'} />
+                                <TableCard list={data.sort((a, b) => b.TOTALQTYTRADED - a.TOTALQTYTRADED)} type={'highPowerd'} header={"2 DAY H/L BO"} tableId={'pow5'} />
                             </Col>
                         </Row>
                     }

@@ -5,72 +5,17 @@ import { withTranslation } from "react-i18next";
 import axios from 'axios';
 import _, { isEmpty, result, set } from "lodash";
 import TableCard from "pages/Marketpulse/TableCard";
-import MomentumSpike from "pages/InsiderStrategy/MomentumSpike";
-import DailyScanner from "./DailyScanner";
+import { shortProductListDataList } from "services/api/api-service"
 const SwingSpectrum = (props) => {
-    const [list, setlist] = useState([]);
+    const [data, setData] = useState([]);
     useEffect(() => {
-        document.title = "Swing Spectrum | Trendsarthi";
-        if (!document.getElementById("tradingview-script")) {
-            const script = document.createElement("script");
-            script.id = "tradingview-script";
-            script.type = "text/javascript";
-            script.src = "https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js";
-            script.async = true;
-            script.innerHTML = JSON.stringify({
-                symbols: [
-                    { proName: "FOREXCOM:SPXUSD", title: "S&P 500 Index" },
-                    { proName: "FOREXCOM:NSXUSD", title: "US 100 Cash CFD" },
-                    { proName: "FX_IDC:EURUSD", title: "EUR to USD" },
-                    { proName: "BITSTAMP:BTCUSD", title: "Bitcoin" },
-                    { proName: "BITSTAMP:ETHUSD", title: "Ethereum" },
-                ],
-                isTransparent: false,
-                showSymbolLogo: true,
-                displayMode: "adaptive",
-                colorTheme: "dark",
-                locale: "en",
-            });
-
-            document.getElementById("tradingview-widget").appendChild(script);
-        }
-    }, []);
-
-    const [selectedValue, setSelectedValue] = useState('NIFTY 50');
-    const [error, setError] = useState(null);
-    const fetchData = async () => {
-        try {
-            const url = `/api/equity-stockIndices?index=${selectedValue}`;
-            const headers = {
-                Referer: `https://www.nseindia.com/market-data/live-equity-market?symbol=${selectedValue}`,
-                'sec-ch-ua': '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
-                'sec-ch-ua-mobile': '?0',
-                'sec-ch-ua-platform': '"Windows"',
-                'Sec-Fetch-Dest': 'empty',
-                'Sec-Fetch-Mode': 'cors',
-                'Sec-Fetch-Site': 'same-origin',
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
-            };
-            const response = await axios.get(url, { headers });
-            setlist(response.data.data);
-            localStorage.setItem("marketPulseData", JSON.stringify(data));
-        } catch (error) {
-            setError(`Failed to fetch data: ${error.message}`);
-            console.error('Error:', error);
-        }
-    };
-    const loadFromLocalStorage = () => {
-        const storedData = localStorage.getItem("marketPulseData");
-        if (storedData) {
-            setlist(JSON.parse(storedData));
-        } else {
-            fetchData("NIFTY 50");
-        }
-    };
-
-    useEffect(() => {
-        loadFromLocalStorage();
-    }, []);
+        shortProductListDataList().then(result => {
+            if (!isEmpty(result)) {
+                console.log("result", result)
+                setData(result);
+            }
+        })
+    }, [])
     return (
         <React.Fragment>
             <div className="page-content">
@@ -87,25 +32,25 @@ const SwingSpectrum = (props) => {
                             <div className="fs-1 fw-bold text-gradient">Swing Spectrum</div>
                         </div>
                     </div>
-                    {!isEmpty(list) &&
+                    {!isEmpty(data) &&
                         <Row>
                             <Col md={6} id="right" className="hideOnMobile">
-                                <TableCard list={list.sort((a, b) => b.pChange - a.pChange)} type={'highPowerd'} header={"10 DAY BO"} tableId={'pow1'} />
+                                <TableCard list={data.sort((a, b) => b.PRICECHANGE - a.PRICECHANGE)} type={'highPowerd'} header={"10 DAY BO"} tableId={'pow1'} />
                             </Col>
                             <Col md={6} id="left" className="hideOnMobile">
-                                <TableCard list={list.sort((a, b) => a.perChange30d
-                                    - b.perChange30d
+                                <TableCard list={data.sort((a, b) => a.PRICECHANGE
+                                    - b.PRICECHANGE
                                 )} type={'highPowerd'} header={"50 DAY BO"} tableId={'pow2'} />
                             </Col>
                             <Col md={6} id="left1" className="hideOnMobile">
-                                <TableCard list={list.sort((a, b) => b.pChange - a.pChange)} type={'highPowerd'} header={"REVERSAL RADAR"} tableId={'pow3'} />
+                                <TableCard list={data.sort((a, b) => b.PRICECHANGE - a.PRICECHANGE)} type={'highPowerd'} header={"REVERSAL RADAR"} tableId={'pow3'} />
                             </Col>
                             <Col md={6} id="left3" className="hideOnMobile">
-                                <TableCard list={list.sort((a, b) => b.pChange - a.pChange)} type={'highPowerd'} header={"CHANNEL BO"} tableId={'pow4'} />
+                                <TableCard list={data.sort((a, b) => b.PRICECHANGE - a.PRICECHANGE)} type={'highPowerd'} header={"CHANNEL BO"} tableId={'pow4'} />
                             </Col>
                             <Col md={6} id="left3" className="hideOnMobile">
-                                <TableCard list={list.sort((a, b) => b.totalTradedVolume
-                                    - a.totalTradedVolume
+                                <TableCard list={data.sort((a, b) => b.PRICECHANGE
+                                    - a.PRICECHANGE
                                 )} type={'highPowerd'} header={"NR7"} tableId={'pow4'} />
                             </Col>
                         </Row>
@@ -117,7 +62,7 @@ const SwingSpectrum = (props) => {
                     </Row>
                     <Row>
                         <Col md={12} >
-                            <DailyScanner list={list} header={"Delivery Scanner"} tableId={'delivery'} />
+                            {/* <DailyScanner list={list} header={"Delivery Scanner"} tableId={'delivery'} /> */}
                         </Col>
                     </Row>
                 </Container>

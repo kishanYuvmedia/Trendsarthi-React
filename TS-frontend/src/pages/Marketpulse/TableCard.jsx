@@ -11,17 +11,17 @@ const TableCard = ({ header, tableId, list }) => {
 
     useEffect(() => {
         // Initialize DataTable when the component mounts
-        const tableElement = document.querySelector(`#${tableId}`);
-        if ($.fn.DataTable.isDataTable(tableElement)) {
-            // Destroy the existing DataTable before reinitializing
-            $(tableElement).DataTable().destroy();
-        }
+        // const tableElement = document.querySelector(`#${tableId}`);
+        // if ($.fn.DataTable.isDataTable(tableElement)) {
+        //     // Destroy the existing DataTable before reinitializing
+        //     $(tableElement).DataTable().destroy();
+        // }
 
-        // Initialize DataTable with options to disable search and pagination
-        $(tableElement).DataTable({
-            searching: true,
-            paging: false,
-        });
+        // // Initialize DataTable with options to disable search and pagination
+        // $(tableElement).DataTable({
+        //     searching: true,
+        //     paging: false,
+        // });
         // Add placeholder to the search input
         const searchInputs = document.querySelectorAll('.dt-search input[type="search"]');
         searchInputs.forEach(input => {
@@ -75,26 +75,26 @@ const TableCard = ({ header, tableId, list }) => {
                                 {dataList?.slice(1, 10).map((item, index) => (
                                     <tr key={index}>
                                     <td className="text-white fs-6">
-                                        <span>{item.symbol}</span>
+                                        <span>{item.INSTRUMENTIDENTIFIER}</span>
                                     </td>
                                     <td className="text-center">
-                                        <div className={`badge rounded-pill fs-6 border-${item.pChange > 0 ? 'success' : 'danger'} border p-0 px-3`}>
+                                        <div className={`badge rounded-pill fs-6 border-${item.PRICECHANGE > 0 ? 'success' : 'danger'} border p-0 px-3`}>
                                             {item.breakoutText}
-                                            <img src={item.pChange > 0 ? positiveStatus : negativeStatus} width={25} alt={item.symbol} />
+                                            <img src={item.PRICECHANGE > 0 ? positiveStatus : negativeStatus} width={25} alt={item.INSTRUMENTIDENTIFIER} />
                                         </div>
                                     </td>
                                     <td className="text-center">
-                                        <div className={`badge rounded-pill w-100 p-2 fs-6`} style={{ backgroundColor: item.pChange > 0 ? "#19C141" : "#F31C1C" }}>
-                                            {item.pChange}
+                                        <div className={`badge rounded-pill w-100 p-2 fs-6`} style={{ backgroundColor: item.PRICECHANGE > 0 ? "#19C141" : "#F31C1C" }}>
+                                            {item.PRICECHANGE}
                                         </div>
                                     </td>
                                     <td className="text-white text-center fs-6">
-                                        {item.lastPrice}
+                                        {item.LASTTRADEPRICE}
                                     </td>
                                     <td className="text-center">
-                                        <div className={`badge rounded-pill fs-6 border-${item.pChange > 0 ? 'success' : 'danger'} border p-0 px-3`}>
-                                            {item.lastPrice}
-                                            <img src={item.pChange > 0 ? positiveStatus : negativeStatus} width={25} alt={item.symbol} />
+                                        <div className={`badge rounded-pill fs-6 border-${item.PRICECHANGE > 0 ? 'success' : 'danger'} border p-0 px-3`}>
+                                            {item.LASTTRADEPRICE}
+                                            <img src={item.PRICECHANGE > 0 ? positiveStatus : negativeStatus} width={25} alt={item.INSTRUMENTIDENTIFIER} />
                                         </div>
                                     </td>
                                 </tr>
