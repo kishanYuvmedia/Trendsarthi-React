@@ -1089,4 +1089,51 @@ module.exports = function (TdDerivatives) {
       });
     }
   };
+  TdDerivatives.getTreeGraphOptionChain = (callback) => {
+    getIntradayData.getProductList((err, type) => {
+      if (err) {
+        reject(err);
+      } else {
+        if (!_.isEmpty(type)) {
+          processProductGroups(type)
+            .then((result) => {
+              callback(null, result);
+            })
+            .catch((error) => {
+              console.error(error); // Handle errors here
+            });
+        }
+      }
+    });
+    function processProductGroups(type) {
+      return new Promise((resolve, reject) => {
+        const promises = [];
+        for (let i = 16; i < type.PRODUCTS.length; i += 25) {
+          let value =
+            25 < type.PRODUCTS.length - i ? 25 : type.PRODUCTS.length - i;
+          const group = type.PRODUCTS.slice(i, i + value);
+          const result = group.map((symbol) => `${symbol}-I`).join("+");
+          const promise = new Promise((innerResolve, innerReject) => {
+            getIntradayData.GetMultiOptionChain(result, (err, response) => {
+              if (err) {
+                innerReject(err);
+              } else {
+                innerResolve(response);
+              }
+            });
+          });
+
+          promises.push(promise);
+        }
+        // Wait for all promises to resolve
+        Promise.all(promises)
+          .then((groupedArrays) => {
+            // Flatten the array of arrays into a single array
+            const allResponses = groupedArrays.flat();
+            resolve(allResponses);
+          })
+          .catch(reject);
+      });
+    }
+  };
 };
