@@ -17,32 +17,23 @@ const InsiderStrategy = (props) => {
     ]);
     useEffect(() => {
         shortProductListDataList().then(result => {
-            if (result && result.length > 0) {
+            if (result?.length > 0) {
                 console.log("Result:", result);
-                setData(result);
-                if (result && result.length > 0) {
-                    console.log("Processing result in chunks...");
-                    const allFormattedData = []; // Array to store formatted data
-                    result.forEach((chunk) => {
-                        const formattedChunk = chunk.map(([INSTRUMENTIDENTIFIER, PRICECHANGE]) => [
-                            typeof INSTRUMENTIDENTIFIER === "string" ? INSTRUMENTIDENTIFIER.slice(0, -2) : INSTRUMENTIDENTIFIER,
-                            "All Stocks",
-                            PRICECHANGE,
-                        ]);
-
-                        allFormattedData.push(...formattedChunk); // Append to the final result
-                    });
-
-                    setData(result.flat()); // Flatten original result for `setData`
-                    setMergedData((prevData) => [...prevData, ...allFormattedData]);
-
-                    console.log("Formatted Data:", allFormattedData);
-                }
-                console.log("final data", formattedData);
+                setData(result.flat()); // Flatten the original result for `setData`
+                console.log("Processing result in chunks...", result);
+                const formattedData = result
+                    .sort((a, b) => b.PRICECHANGE - a.PRICECHANGE)
+                    .slice(0, 15)
+                    .map(({ INSTRUMENTIDENTIFIER, PRICECHANGE }) => [
+                        INSTRUMENTIDENTIFIER.slice(0, -2),
+                        "All Stocks",
+                        PRICECHANGE,
+                    ]);
+                console.log("Formatted Data:", formattedData);
+            
                 setMergedData((prevData) => [...prevData, ...formattedData]);
             }
         })
-
     }, [])
 
     return (

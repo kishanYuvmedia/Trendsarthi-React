@@ -2,8 +2,7 @@ import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
 import { Container, Row, Col } from "reactstrap";
 import { withTranslation } from "react-i18next";
-import axios from 'axios';
-import _, { isEmpty, result, set } from "lodash";
+import _, { isEmpty, } from "lodash";
 import TableCard from "pages/Marketpulse/TableCard";
 import { shortProductListDataList } from "services/api/api-service"
 const SwingSpectrum = (props) => {

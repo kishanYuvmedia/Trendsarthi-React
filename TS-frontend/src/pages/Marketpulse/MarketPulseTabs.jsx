@@ -5,37 +5,12 @@ import { withTranslation } from "react-i18next";
 import dragula from "dragula";
 import TableCard from "pages/Marketpulse/TableCard";
 import { NavLink } from "react-router-dom";
-
-// Example usage with sample data
-const sampleData = [
-    {
-        symbol: "HDFCBANK",
-        symbolSrc: "https://s3-symbol-logo.tradingview.com/crypto/XTVCETH.svg",
-        breakoutText: "5 Days High",
-        breakoutStatus: "positive",
-        percentChange: 1.3,
-        turnover: 1113.41,
-        pcrText: "Bullish",
-        pcrStatus: "positive"
-    },
-    {
-        symbol: "IDEA",
-        symbolSrc: "https://s3-symbol-logo.tradingview.com/crypto/XTVCETH.svg",
-        breakoutText: "5 Days Low",
-        breakoutStatus: "negative",
-        percentChange: -0.89,
-        turnover: 1120,
-        pcrText: "Bearish",
-        pcrStatus: "negative"
-    }
-];
-
+import { shortProductListDataList } from "services/api/api-service"
+import _, { isEmpty } from "lodash";
 const MarketPulseTabs = (props) => {
     const [activeTab, setActiveTab] = useState('1');
-
     useEffect(() => {
         document.title = "Market Pulse Tabs | Trendsarthi";
-
         dragula([
             document.getElementById("left"),
             document.getElementById("right"),
@@ -51,7 +26,15 @@ const MarketPulseTabs = (props) => {
             setActiveTab(tab);
         }
     };
-
+   const [data, setData] = useState([]);
+    useEffect(() => {
+        shortProductListDataList().then(result => {
+            if (!isEmpty(result)) {
+                console.log("result MarketPulseTabs", result)
+                setData(result);
+            }
+        })
+    }, [])
     return (
         <React.Fragment>
             <div className="page-content">
@@ -101,28 +84,28 @@ const MarketPulseTabs = (props) => {
                                 <TabPane tabId="1">
                                     <Row>
                                         <Col sm="12" className="p-0">
-                                            <TableCard header={"HIGH POW. STOCKS"} tableId={'pow1'} data={sampleData} />
+                                        <TableCard list={data.sort((a, b) => b.PRICECHANGE - a.PRICECHANGE)} type={'highPowerd'} header={"LOM SHORT TERM"} tableId={'pow1'} />
                                         </Col>
                                     </Row>
                                 </TabPane>
                                 <TabPane tabId="2">
                                     <Row>
                                         <Col sm="12" className="p-0">
-                                            <TableCard header={"INTRADAY BOOST"} tableId={'pow2'} data={sampleData} />
+                                        <TableCard list={data.sort((a, b) => b.PRICECHANGEPERCENTAGE- a.PRICECHANGEPERCENTAGE )} type={'highPowerd'} header={"LOM LONG TERM"} tableId={'pow2'} />
                                         </Col>
                                     </Row>
                                 </TabPane>
                                 <TabPane tabId="3">
                                     <Row>
                                         <Col sm="12" className="p-0">
-                                            <TableCard header={"TOP LEVEL STOCKS"} tableId={'pow3'} data={sampleData} />
+                                        <TableCard list={data.sort((a, b) => b.AVERAGETRADEDPRICE - a.AVERAGETRADEDPRICE )} type={'highPowerd'} header={"CONTRACTION BO"} tableId={'pow3'} />
                                         </Col>
                                     </Row>
                                 </TabPane>
                                 <TabPane tabId="4">
                                     <Row>
                                         <Col sm="12" className="p-0">
-                                            <TableCard header={"LOW LEVEL STOCKS"} tableId={'pow4'} data={sampleData} />
+                                        <TableCard list={data.sort((a, b) => a.OPENINTERESTCHANGE - b.OPENINTERESTCHANGE)} type={'highPowerd'} header={"DAY H/L REVERSAL"} tableId={'pow4'} />
                                         </Col>
                                     </Row>
                                 </TabPane>

@@ -5,40 +5,12 @@ import { Card, CardBody } from "reactstrap";
 import { Link } from 'react-router-dom';
 let candles = './images/candle-sticks.png';
 
-const cardData = [
-    {
-        stockSymbol: "https://s3-symbol-logo.tradingview.com/crypto/XTVCETH.svg",
-        stockName: "HDFCBANK",
-        toValue: "402.75",
-        percentageChange: "4.28%",
-        changeIcon: "bx bxs-up-arrow",
-        changeColor: "text-success"
-    },
-    {
-        stockSymbol: "https://s3-symbol-logo.tradingview.com/crypto/XTVCETH.svg",
-        stockName: "HDFCBANK",
-        toValue: "402.75",
-        percentageChange: "4.28%",
-        changeIcon: "bx bxs-up-arrow",
-        changeColor: "text-success"
-    },
-    {
-        stockSymbol: "https://s3-symbol-logo.tradingview.com/crypto/XTVCETH.svg",
-        stockName: "HDFCBANK",
-        toValue: "402.75",
-        percentageChange: "4.28%",
-        changeIcon: "bx bxs-up-arrow",
-        changeColor: "text-success"
-    },
-    // Add more data objects as needed
-];
-
-const CardSlider = ({ header,list }) => {
-    const [dataList,setDataList]=useState([]);
-    useEffect(()=>{
+const CardSlider = ({ header, list }) => {
+    const [dataList, setDataList] = useState([]);
+    useEffect(() => {
         setDataList(list)
-        console.log("dataList",list);
-    },[])
+        console.log("dataList", list);
+    }, [])
     return (
         <div>
             <div className='d-flex justify-content-between'>
@@ -63,7 +35,7 @@ const CardSlider = ({ header,list }) => {
                     console.log(e);
                 }}
             >
-                {cardData.map((data, index) => (
+                {dataList?.slice(1, 10).map((data, index) => (
                     <div className="panel" key={index}>
                         <Card
                             className="m-2"
@@ -77,7 +49,7 @@ const CardSlider = ({ header,list }) => {
                             <CardBody className="p-2 pt-0 position-relative">
                                 <div className='d-flex justify-content-between'>
                                     <div>
-                                        <img src={data.stockSymbol} className="me-2" alt="symbol" width={25} style={{ borderRadius: "50%" }} />
+                                        {data.INSTRUMENTIDENTIFIER }
                                     </div>
                                     <div>
                                         <img src={candles} className="" alt="candles" />
@@ -85,16 +57,18 @@ const CardSlider = ({ header,list }) => {
                                     </div>
                                 </div>
                                 <div className="fw-bold text-white">
-                                    {data.stockName}
+                                    {data.INSTRUMENTIDENTIFIER
+                                    }
                                 </div>
                                 <div>
                                     T.O.
                                     <div className="text-white fw-bold fs-5">
-                                        {data.toValue}
+                                        {data.VALUE}
                                     </div>
                                     <div className={data.changeColor}>
                                         <i className={data.changeIcon}></i>
-                                        {data.percentageChange}
+                                        {data.PRICECHANGEPERCENTAGE
+                                        }
                                     </div>
                                 </div>
                             </CardBody>
