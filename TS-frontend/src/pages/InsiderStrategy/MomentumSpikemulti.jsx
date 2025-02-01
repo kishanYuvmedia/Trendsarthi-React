@@ -51,18 +51,15 @@ export default function MomentumSpikeMulti({ header, status, tableId, data }) {
                 </CardHeader>
                 <CardBody className="p-3 pt-0">
                     <div className="border p-3 rounded-4 bg-black row">
-                        {data.map(item =>
-                            <div className="col-md-4" key={item.type}>
+                        <div className="col-md-4">
                             <Chart
                                 chartType="TreeMap"
                                 width="100%"
                                 height="400px"
-                                data={item.data}
+                                data={data}
                                 options={options}
-                                
                             />
                         </div>
-                        )}
                     </div>
                 </CardBody>
             </Card>

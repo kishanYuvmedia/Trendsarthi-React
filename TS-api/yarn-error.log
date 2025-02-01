@@ -1,0 +1,77 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Users\ten\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js list --json
+
+PATH: 
+  C:\Python312\Scripts\;C:\Python312\;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files (x86)\Intel\iCLS Client\;C:\Program Files\Java\jdk-17\bin;C:\Program Files\Intel\iCLS Client\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\ProgramData\chocolatey\bin;D:\xampp\php;C:\ProgramData\ComposerSetup\bin;C:\Program Files\Microsoft SQL Server\150\Tools\Binn\;C:\Users\ten\AppData\Local\Android\Sdk\platform-tools;C:\Program Files\Git\cmd;C:\Program Files\nodejs\;C:\Program Files\PuTTY\;C:\Users\ten\AppData\Local\Microsoft\WindowsApps;C:\Users\ten\AppData\Roaming\Composer\vendor\bin;C:\Program Files\Java\jdk-17;C:\Users\ten\AppData\Local\Android\Sdk\platform-tools;C:\Users\ten\AppData\Local\Programs\Microsoft VS Code\bin;C:\xampp\php;;C:\Users\ten\AppData\Local\Programs\Ollama;C:\Users\ten\AppData\Roaming\npm
+
+Yarn version: 
+  1.22.19
+
+Node version: 
+  22.12.0
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: getaddrinfo ENOTFOUND registry.yarnpkg.com
+      at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:120:26)
+
+npm manifest: 
+  {
+    "name": "tradsathi-api",
+    "version": "1.0.0",
+    "main": "server/server.js",
+    "engines": {
+      "node": ">=6"
+    },
+    "scripts": {
+      "lint": "eslint .",
+      "start": "node .",
+      "posttest": "npm run lint"
+    },
+    "dependencies": {
+      "@loopback/cron": "^0.11.3",
+      "aws-sdk": "^2.868.0",
+      "axios": "^1.7.9",
+      "compression": "^1.0.3",
+      "cors": "^2.5.2",
+      "firebase-admin": "^11.0.0",
+      "fyers-api-v3": "^1.3.3",
+      "helmet": "^3.10.0",
+      "lodash": "^4.17.21",
+      "loopback": "^3.28.0",
+      "loopback-boot": "^2.6.5",
+      "loopback-component-explorer": "^6.2.0",
+      "loopback-component-storage": "^3.7.0",
+      "loopback-connector-mongodb": "^4.2.0",
+      "loopback-connector-rest": "^3.7.0",
+      "moment": "^2.29.4",
+      "moment-timezone": "^0.5.32",
+      "morgan": "^1.10.0",
+      "node-cron": "^3.0.2",
+      "request": "^2.88.2",
+      "request-promise-native": "^1.0.9",
+      "sequelize": "^6.35.2",
+      "serve-favicon": "^2.0.1",
+      "strong-error-handler": "^3.0.0",
+      "tough-cookie": "^5.0.0",
+      "util.promisify": "^1.1.2"
+    },
+    "devDependencies": {
+      "eslint": "^3.17.1",
+      "eslint-config-loopback": "^8.0.0"
+    },
+    "repository": {
+      "type": "",
+      "url": ""
+    },
+    "license": "UNLICENSED",
+    "description": "tradsathi Api"
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  

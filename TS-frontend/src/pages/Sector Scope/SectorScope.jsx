@@ -8,83 +8,72 @@ import _, { isEmpty, result, set } from "lodash";
 import SectorList from "./SectorList";
 import SectorBarScope from "./SectorBarScope";
 import MomentumSpikeMulti from "pages/InsiderStrategy/MomentumSpikemulti";
+import { shortProductListDataList } from "services/api/api-service";
+import { sector } from "../dataType/sector";
 const SectorScope = (props) => {
-    const [mergedData, setMergedData] = useState([]);
-    const [mergedDataAll, setMergedDataAll] = useState([]);
-    const getSectorList = async () => {
-        const sectors = [
-            "NIFTY AUTO",
-            "NIFTY BANK",
-            "NIFTY ENERGY",
-            "NIFTY FINANCIAL SERVICES",
-            "NIFTY FINANCIAL SERVICES 25/50",
-            "NIFTY FMCG",
-            "NIFTY IT",
-            "NIFTY MEDIA",
-            "NIFTY METAL",
-            "NIFTY PHARMA",
-            "NIFTY PSU BANK",
-            "NIFTY REALTY",
-            "NIFTY HEALTHCARE INDEX",
-            "NIFTY CONSUMER DURABLES",
-            "NIFTY OIL & GAS",
-            "NIFTY MIDSMALL HEALTHCARE",
-            "NIFTY FINANCIAL SERVICES EX-BANK",
-            "NIFTY MIDSMALL FINANCIAL SERVICES",
-            "NIFTY MIDSMALL IT & TELECOM",
-        ];
-        try {
-            const allData = [
-                ["Element", "Sectors", { role: "style" }],
-            ];
-            const allDatalist = [];
-            for (const sector of sectors) {
-                try {
-                    const response = JSON.parse(localStorage.getItem(`${sector}`) || []);
-                    if (response.length > 0) {
-                        const sectorData = response.slice(0, 1).sort((a, b) => b.pChange - a.pChange).map(item => [
-                            item.symbol,
-                            item.pChange,
-                            '#1ED095',
-                        ]);
-                        const sectorDataList = response.slice(1, 20).sort((a, b) => b.pChange - a.pChange).map(item => [
-                            item.symbol,
-                            sector.replace("NIFTY ", ""),
-                            item.pChange,
-                        ]);
-                        allData.push(...sectorData);
-                        allDatalist.push(
-                            {
-                                type: sector.replace("NIFTY ", ""),
-                                data: [["Symbol", "Parent", "Price"], [sector.replace("NIFTY ", ""), null, 0], ...sectorDataList]
-                            }
-                        );
-                    } else {
-                        console.warn(`No data found for sector: ${sector}`);
-                    }
-                } catch (error) {
-                    console.error(`Error fetching data for sector: ${sector}`, error.message);
-                }
-            }
-            setMergedData(allData); // Update the state once with all the data
-            setMergedDataAll(allDatalist);
-            console.log("Merged Data:", allData);
-        } catch (error) {
-            console.error("Error fetching sector data:", error.message);
-            throw new Error(`Failed to fetch sector data: ${error.message}`);
-        }
-    };
+    const [sectorData, setSectorData] = useState([]);
+    let [mergedData, setMergedData] = useState([
+        ["Symbol", "Parent", "Price"],
+        ['ALL', null, 0],
+        ['Financial Services', 'ALL', 0],
+        ['Pharmaceuticals', 'ALL', 0],
+        ['Consumer Goods', 'ALL', 0],
+        ['Automotive', 'ALL', 0],
+        ['Construction & Infrastructure', 'ALL', 0],
+        ['Energy', 'ALL', 0],
+        ['Metals & Mining', 'ALL', 0],
+        ['Telecommunications', 'ALL', 0],
+        ['Airlines', 'ALL', 0],
+        ['Media & Entertainment', 'ALL', 0],
+        ['Technology', 'ALL', 0],
+        ['Logistics', 'ALL', 0],
+        ['Chemicals & Fertilizers', 'ALL', 0],
+        ['Engineering', 'ALL', 0],
+        ['Textiles', 'ALL', 0],
+        ['Sugar', 'ALL', 0],
+        ['Hotels & Tourism', 'ALL', 0],
+        ['Other', 'ALL', 0],
+        ['Information Technology', 'ALL', 0],
+    ]);
     useEffect(() => {
-        getSectorList();
+        const symbolToSector = {};
+        sector.forEach(stock => {
+            symbolToSector[stock.symbol] = stock.sector;
+        });
         document.title = "Sector Scope | Trendsarthi";
-        dragula([
-            document.getElementById("left"),
-            document.getElementById("right"),
-            document.getElementById("left1"),
-            document.getElementById("right2"),
-            document.getElementById("left3"),
-            document.getElementById("right3"),
-        ]);
+        shortProductListDataList().then(result => {
+            const enrichedData = [];
+            let filteredData = [];
+            if (!isEmpty(result)) {
+                sector.forEach(stock => {
+                    filteredData = result.filter(item => `${stock.symbol}-I` === item.INSTRUMENTIDENTIFIER);
+                    // Check if filteredData is not empty before adding to enrichedData
+                    if (filteredData.length > 0) {  // Or if (filteredData[0]) if you only expect one match.
+                        enrichedData.push({ ...filteredData[0], sector: stock.sector });
+                    } else {
+                        console.warn(`No match found for symbol: ${stock.symbol}`); // Optional warning
+                        // or enrichedData.push({ symbol: stock.symbol, sector: stock.sector, not_found: true }); // Add a flag
+                    }
+                });
+                setSectorData(enrichedData);
+                const formattedData = enrichedData
+                    .sort((a, b) => b.PRICECHANGE - a.PRICECHANGE)
+                    .map(({ INSTRUMENTIDENTIFIER, PRICECHANGE, sector }) => {
+                        const symbol = INSTRUMENTIDENTIFIER.slice(0, -2); // Extract symbol
+                        const priceChange = Number(PRICECHANGE); // Convert to number (handle potential errors)
+                        if (isNaN(priceChange)) {
+                            console.warn(`Invalid PRICECHANGE value for ${symbol}: ${PRICECHANGE}. Using 0.`);
+                            return null; // Or return a default value: [symbol, sector, 0]
+                        }
+                        return [symbol, sector, priceChange]; // Return the correctly formatted row
+                    })
+                    .filter(row => row !== null); // Remove any rows with invalid PRICECHANGE
+
+                setMergedData(prevData => {
+                    return [...prevData, ...formattedData];
+                });
+            }
+        })
     }, []);
     return (
         <React.Fragment>
@@ -97,37 +86,30 @@ const SectorScope = (props) => {
                     </div>
                     <Row>
                         <Col md={12}>
-                            {/* <MomentumSpike header={"Sector Scope"} data={mergedData} /> */}
-                            <MomentumSpikeMulti header={"Sector Scope"} data={mergedDataAll} />
+                            <MomentumSpikeMulti header={"Sector Scope"} data={mergedData} />
                         </Col>
                         <Col md={12}>
-                            <SectorBarScope header={"Sector Scope"} data={mergedData} />
+                            <SectorBarScope header={"Sector Scope"} data={[]} />
                         </Col>
                     </Row>
                     <Row>
                         <Col md={6} id="right" className="hideOnMobile">
-                            <SectorList type={'highPowerd'} header={"NIFTY 50"} tableId={'pow1'} listType={'NIFTY BANK'} />
+                            <SectorList type={'highPowerd'} header={"Financial Services"} tableId={'pow1'} lists={sectorData.filter(item => item.sector === 'Financial Services')} />
                         </Col>
-                        <Col md={6} id="left" className="hideOnMobile">
-                            <SectorList type={'highPowerd'} header={"NIFTY MEDIA"} tableId={'pow2'} listType={'NIFTY MEDIA'} />
+                        <Col md={6} id="right" className="hideOnMobile">
+                            <SectorList type={'highPowerd'} header={"Pharmaceuticals"} tableId={'pow1'} lists={sectorData.filter(item => item.sector === 'Pharmaceuticals')} />
                         </Col>
-                        <Col md={6} id="left1" className="hideOnMobile">
-                            <SectorList type={'highPowerd'} header={"NIFTY PHARMA"} tableId={'pow3'} listType={'NIFTY PHARMA'} />
+                        <Col md={6} id="right" className="hideOnMobile">
+                            <SectorList type={'highPowerd'} header={"Automotive"} tableId={'pow1'} lists={sectorData.filter(item => item.sector === 'Automotive')} />
                         </Col>
-                        <Col md={6} id="left3" className="hideOnMobile">
-                            <SectorList type={'highPowerd'} header={"AUTO"} tableId={'pow4'} listType={'NIFTY AUTO'} />
+                        <Col md={6} id="right" className="hideOnMobile">
+                            <SectorList type={'highPowerd'} header={"Information Technology"} tableId={'pow1'} lists={sectorData.filter(item => item.sector === 'Information Technology')} />
                         </Col>
-                        <Col md={6} id="left3" className="hideOnMobile">
-                            <SectorList type={'highPowerd'} header={"IT"} tableId={'pow4'} listType={'NIFTY IT'} />
+                        <Col md={6} id="right" className="hideOnMobile">
+                            <SectorList type={'highPowerd'} header={"Energy"} tableId={'pow1'} lists={sectorData.filter(item => item.sector === 'Energy')} />
                         </Col>
-                        <Col md={6} id="left3" className="hideOnMobile">
-                            <SectorList type={'highPowerd'} header={"NIFTY FMCG"} tableId={'pow4'} listType={'NIFTY FMCG'} />
-                        </Col>
-                        <Col md={6} id="left3" className="hideOnMobile">
-                            <SectorList type={'highPowerd'} header={"NIFTY PRIVATE BANK"} tableId={'pow4'} listType={'NIFTY PRIVATE BANK'} />
-                        </Col>
-                        <Col md={6} id="left3" className="hideOnMobile">
-                            <SectorList type={'highPowerd'} header={"NIFTY PSE"} tableId={'pow4'} listType={'NIFTY PSE'} />
+                        <Col md={6} id="right" className="hideOnMobile">
+                            <SectorList type={'highPowerd'} header={"Technology"} tableId={'pow1'} lists={sectorData.filter(item => item.sector === 'Technology')} />
                         </Col>
                     </Row>
                 </Container>

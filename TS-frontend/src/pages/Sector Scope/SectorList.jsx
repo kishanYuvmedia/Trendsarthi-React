@@ -1,57 +1,12 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { Card, CardHeader, CardBody } from "reactstrap";
-
 let negativeStatus = "https://img.icons8.com/isometric/50/bearish.png";
 let positiveStatus = "https://img.icons8.com/isometric/50/bullish.png";
 
-const SectorList = ({ header, tableId, listType }) => {
-  const [list, setList] = useState([]);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  const fetchData = async (Type) => {
-    try {
-      const url = `/api/equity-stockIndices?index=${Type}`;
-      const headers = {
-        Referer: `https://www.nseindia.com/market-data/live-equity-market?symbol=${Type}`,
-        "sec-ch-ua": '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
-        "sec-ch-ua-mobile": "?0",
-        "sec-ch-ua-platform": '"Windows"',
-        "Sec-Fetch-Dest": "empty",
-        "Sec-Fetch-Mode": "cors",
-        "Sec-Fetch-Site": "same-origin",
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
-      };
-      const response = await axios.get(url, { headers });
-      setList(response.data.data);
-      localStorage.setItem(listType, JSON.stringify(response.data.data));
-      setError(null); // Clear errors on successful fetch
-    } catch (error) {
-      setError(`Failed to fetch data: ${error.message}`);
-      console.error("Error:", error);
-    } finally {
-      setLoading(false); // Always stop the loading state
-    }
-  };
-  const loadFromLocalStorage = () => {
-    const storedData = localStorage.getItem(listType);
-    if (storedData) {
-      setList(JSON.parse(storedData));
-      setLoading(false);
-    } else {
-      fetchData(listType);
-    }
-  };
-  useEffect(() => {
-    loadFromLocalStorage();
-  }, []);
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+const SectorList = ({ header, tableId, lists }) => {
   return (
     <div>
-      {list.length > 0 && (
+      {lists.length > 0 && (
         <Card
           className="my-2 Drag"
           style={{
@@ -86,7 +41,7 @@ const SectorList = ({ header, tableId, listType }) => {
               className="border p-2 rounded-4 table-responsive"
               style={{ backgroundColor: "#292B42" }}
             >
-              <table id={tableId} className="table table-sm">
+              <table id={tableId} className="table table-sm table-scroll">
                 <thead>
                   <tr>
                     <th
@@ -113,24 +68,25 @@ const SectorList = ({ header, tableId, listType }) => {
                   </tr>
                 </thead>
                 <tbody className="fs-5 fw-light text-white">
-                  {list
-                    ?.slice(1, 10)
-                    .sort((a, b) => b.priority - a.priority)
+                  {lists
+                    ?.slice(1, 30)
+                    .sort((a, b) => b.PRICECHANGE - a.PRICECHANGE)
                     .map((item, index) => (
                       <tr key={index}>
                         <td className="text-white fs-6">
-                          <span>{item.symbol}</span>
+                          <span>{item.INSTRUMENTIDENTIFIER.slice(0, -2)
+                          }</span>
                         </td>
                         <td className="text-center">
                           <div
-                            className={`badge rounded-pill fs-6 border-${item.pChange > 0 ? "success" : "danger"
+                            className={`badge rounded-pill fs-6 border-${item.PRICECHANGE > 0 ? "success" : "danger"
                               } border p-0 px-3`}
                           >
-                            {item.breakoutText}
+                            {item.PRICECHANGE}
                             <img
-                              src={item.pChange > 0 ? positiveStatus : negativeStatus}
+                              src={item.PRICECHANGE > 0 ? positiveStatus : negativeStatus}
                               width={25}
-                              alt={item.symbol}
+                              alt={item.INSTRUMENTIDENTIFIER.slice(0, -2)}
                             />
                           </div>
                         </td>
@@ -139,25 +95,26 @@ const SectorList = ({ header, tableId, listType }) => {
                             className={`badge rounded-pill w-100 p-2 fs-6`}
                             style={{
                               backgroundColor:
-                                item.pChange > 0 ? "#19C141" : "#F31C1C",
+                                item.PRICECHANGE > 0 ? "#19C141" : "#F31C1C",
                             }}
                           >
-                            {item.pChange}
+                            {item.PRICECHANGE}
                           </div>
                         </td>
                         <td className="text-white text-center fs-6">
-                          {item.lastPrice}
+                          {item.LASTTRADEPRICE
+                          }
                         </td>
                         <td className="text-center">
                           <div
-                            className={`badge rounded-pill fs-6 border-${item.pChange > 0 ? "success" : "danger"
+                            className={`badge rounded-pill fs-6 border-${item.PRICECHANGE > 0 ? "success" : "danger"
                               } border p-0 px-3`}
                           >
-                            {item.lastPrice}
+                            {item.LASTTRADEPRICE }
                             <img
-                              src={item.pChange > 0 ? positiveStatus : negativeStatus}
+                              src={item.PRICECHANGE > 0 ? positiveStatus : negativeStatus}
                               width={25}
-                              alt={item.symbol}
+                              alt={item.INSTRUMENTIDENTIFIER}
                             />
                           </div>
                         </td>

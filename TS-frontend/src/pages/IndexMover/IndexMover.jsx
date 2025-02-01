@@ -1,6 +1,5 @@
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
-import axios from 'axios';
 import { Container, Row, Col, Card, CardBody } from "reactstrap";
 import { withTranslation } from "react-i18next";
 import _, { isEmpty, result, set } from "lodash";
@@ -9,12 +8,49 @@ let bgvector = './images/vector2.png';
 import Badge from 'react-bootstrap/Badge';
 import { Chart } from "react-google-charts";
 import { t } from "i18next";
-import { shortProductListDataList } from "services/api/api-service"
+import { shortProductListDataList } from "services/api/api-service";
+import {
+    getStrikePrice,
+  } from "../../services/api/api-service"
 const IndexMover = () => {
     const [typeList] = useState(["NIFTY", "BANKNIFTY", "FINNIFTY", "MIDCPNIFTY"])
     const [selectedValue, setSelectedValue] = useState("NIFTY");
     const [data, setData] = useState([]);
     const [dataList, setDataList] = useState([]);
+    const options = {
+        backgroundColor: "#181a33", // Dark background
+        pieHole: 0.4,
+        chartArea: {
+            backgroundColor: "#181a33", // Dark chart area
+        },
+        legend: {
+            textStyle: { color: "white" }, // Legend text color
+        },
+        hAxis: {
+            textStyle: { color: "white" }, // X-axis labels color
+        },
+        vAxis: {
+            textStyle: { color: "white" }, // Y-axis labels color
+        },
+        titleTextStyle: {
+            color: "white", // Title text color
+        },
+    };
+    const [pts,setPts]=useState(0);
+    const [priceChg,setpriceChg]=useState(0);
+    const fetchData = async () => {
+        try {
+            const resultStrike = await getStrikePrice(selectedValue)
+            console.log("resultStrike", resultStrike)
+            let closePrice = resultStrike.StrikePrice.Item.CLOSE
+            let openPrice = resultStrike.StrikePrice.Item.OPEN
+            console.log("priceCloseopten", Number(closePrice)-Number(openPrice));
+            setPts(closePrice-openPrice);
+            setpriceChg(resultStrike.StrikePrice.Item.PRICECHANGEPERCENTAGE)
+        } catch (err) {
+            console.error("Error fetching data:", err)
+        }
+    }
     useEffect(() => {
         shortProductListDataList().then(result => {
             if (!isEmpty(result)) {
@@ -22,14 +58,15 @@ const IndexMover = () => {
                 setDataList(result);
                 const outputData = [
                     ["symbol", "Price Change"], // Header row
-                    ...result.sort((a, b) => b.PRICECHANGE - a.PRICECHANGE).slice(1, 10).map(item => [item.INSTRUMENTIDENTIFIER, item.PRICECHANGEPERCENTAGE|| 0])
+                    ...result.sort((a, b) => b.PRICECHANGE - a.PRICECHANGE).slice(1, 10).map(item => [item.INSTRUMENTIDENTIFIER, item.PRICECHANGEPERCENTAGE || 0])
                 ];
                 console.log("outputData", outputData);
                 setData(outputData);
+                fetchData();
             }
         })
-    }, [])
-    //console.log("hello", nifty);
+        
+    }, [selectedValue])
     const handleChange = (event) => {
         setSelectedValue(event.target.value);
     }
@@ -64,7 +101,7 @@ const IndexMover = () => {
                                     border: '1px solid transparent',
                                     borderRadius: '14px',
                                     boxShadow: '0 0 0 1px rgba(56, 62, 214, 0.5), 0 0 0 2px rgba(18, 18, 20, 0.5)',
-                                    padding: '10px',
+                                    padding: '8px',
                                     backgroundColor: "#181a33",
                                     backgroundImage: `url(${bgvector})`,
                                     backgroundPosition: "bottom -1px right -1px",
@@ -73,10 +110,11 @@ const IndexMover = () => {
                             >
                                 <CardBody className='d-flex justify-content-between rounded-4  '>
                                     <div className="pb-3">
-                                        <div className="fs-1 fw-bold text-gradient w-100">{0}</div>
+                                        <div className="fs-1 fw-bold text-gradient w-100">{selectedValue}</div>
+                                        <div className="fs-1 fw-bold text-gradient w-100">{priceChg}</div>
                                     </div>
                                     <div className="fs-3 text-white">
-                                        UP 0pts <br />
+                                        UP {pts.toFixed(2)}pts <br />
                                     </div>
                                 </CardBody>
 
@@ -90,6 +128,8 @@ const IndexMover = () => {
                                     borderRadius: '14px',
                                     boxShadow: '0 0 0 1px rgba(56, 62, 214, 0.5), 0 0 0 2px rgba(18, 18, 20, 0.5)',
                                     padding: '10px',
+                                    paddingTop:'30px',
+                                    paddingBottom:'30px',
                                     backgroundColor: "#181a33"
                                 }}
                             >
@@ -130,14 +170,14 @@ const IndexMover = () => {
                             <Row style={{ width: '100%' }}>
                                 <Col md={8}>
                                     {data?.length > 0 &&
-                                        <Chart chartType="PieChart" width="100%" height="400px" data={data} key={JSON.stringify(data)} />}
+                                        <Chart chartType="PieChart" width="100%" height="400px" options={options} data={data} key={JSON.stringify(data)} />}
                                 </Col>
                                 <Col md={4}>
-                                    {/* <h4>{selectedValue} is down by {Math.round(mata.change)} pts</h4> */}
+                                    <h4>{selectedValue} is down by {priceChg} pts</h4>
                                     {dataList?.sort((a, b) => b.PRICECHANGE - a.PRICECHANGE).slice(1, 10)  // Sorting by priority, assuming higher priority comes first
                                         .map((item, index) => (
                                             <p key={index} style={{ color: 'white', fontSize: '15px' }}>
-                                                {item.INSTRUMENTIDENTIFIER.slice(0,-1)} added <Badge bg={`${item.PRICECHANGE > 0 ? 'success' : 'danger'}`}>{item.PRICECHANGE}</Badge> pts
+                                                {item.INSTRUMENTIDENTIFIER.slice(0, -1)} added <Badge bg={`${item.PRICECHANGE > 0 ? 'success' : 'danger'}`}>{item.PRICECHANGE}</Badge> pts
                                             </p>
                                         ))}
                                 </Col>
