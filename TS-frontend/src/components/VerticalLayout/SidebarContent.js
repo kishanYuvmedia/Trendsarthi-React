@@ -4,12 +4,10 @@ import PropTypes from "prop-types"
 
 // //Import Scrollbar
 import SimpleBar from "simplebar-react"
-
 // MetisMenu
 import MetisMenu from "metismenujs"
 import withRouter from "components/Common/withRouter"
 import { Link } from "react-router-dom"
-
 //i18n
 import { withTranslation } from "react-i18next"
 
@@ -217,7 +215,7 @@ const SidebarContent = props => {
             <hr />
 
 
-            <li>
+            {/* <li>
               <Link to="/#" className="has-arrow">
                 <i className="bx bx-store"></i>
                 <span>{props.t("Derivatives")}</span>
@@ -262,7 +260,7 @@ const SidebarContent = props => {
                 <i className="bx bx-file"></i>
                 <span>{props.t("Delivery Average Scanner")}</span>
               </Link>
-            </li>
+            </li> */}
 
           </ul>
         </div>

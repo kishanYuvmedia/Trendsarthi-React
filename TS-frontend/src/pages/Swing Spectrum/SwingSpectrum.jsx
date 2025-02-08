@@ -28,13 +28,13 @@ const SwingSpectrum = (props) => {
                     </div>
                     <div className="card mb-0">
                         <div className="card-body px-0">
-                            <div className="fs-1 fw-bold text-gradient">Swing Spectrum</div>
+                            <div className="fs-1 fw-bold text-gradient"> Swing Radar</div>
                         </div>
                     </div>
                     {!isEmpty(data) &&
                         <Row>
                             <Col md={6} id="right" className="hideOnMobile">
-                                <TableCard list={data.sort((a, b) => b.PRICECHANGE - a.PRICECHANGE)} type={'highPowerd'} header={"10 DAY BO"} tableId={'pow1'} />
+                                <TableCard list={data.sort((a, b) => b.PRICECHANGE - a.PRICECHANGE)} type={'highPowerd'} header={"10 Day BO Rally"} tableId={'pow1'} />
                             </Col>
                             <Col md={6} id="left" className="hideOnMobile">
                                 <TableCard list={data.sort((a, b) => a.PRICECHANGE
@@ -42,15 +42,15 @@ const SwingSpectrum = (props) => {
                                 )} type={'highPowerd'} header={"50 DAY BO"} tableId={'pow2'} />
                             </Col>
                             <Col md={6} id="left1" className="hideOnMobile">
-                                <TableCard list={data.sort((a, b) => b.PRICECHANGE - a.PRICECHANGE)} type={'highPowerd'} header={"REVERSAL RADAR"} tableId={'pow3'} />
+                                <TableCard list={data.sort((a, b) => b.PRICECHANGE - a.PRICECHANGE)} type={'highPowerd'} header={"50 Day BO Rally"} tableId={'pow3'} />
                             </Col>
                             <Col md={6} id="left3" className="hideOnMobile">
-                                <TableCard list={data.sort((a, b) => b.PRICECHANGE - a.PRICECHANGE)} type={'highPowerd'} header={"CHANNEL BO"} tableId={'pow4'} />
+                                <TableCard list={data.sort((a, b) => b.PRICECHANGE - a.PRICECHANGE)} type={'highPowerd'} header={"Range Breakout"} tableId={'pow4'} />
                             </Col>
                             <Col md={6} id="left3" className="hideOnMobile">
                                 <TableCard list={data.sort((a, b) => b.PRICECHANGE
                                     - a.PRICECHANGE
-                                )} type={'highPowerd'} header={"NR7"} tableId={'pow4'} />
+                                )} type={'highPowerd'} header={"Squeeze 7"} tableId={'pow4'} />
                             </Col>
                         </Row>
                     }

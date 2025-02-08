@@ -295,7 +295,7 @@ const Dashboard = props => {
                   dataIOPriceChange={ioDataPrice}
                   titleName={"Product OI/Price Movment Chart"}
                   horizontal={true}
-                  dataColors='["#643c9d","#cfbfe3"]'
+                  dataColors={typeOIpriceFilter=='Long Buildup'?'["#32f07e", "#f0f0f0"]':typeOIpriceFilter=='Short Buildup'?'["#ff6363", "#f0f0f0"]':typeOIpriceFilter=='Long Unwinding'?'["#0581f5", "#f0f0f0"]':'["#c0ff9c", "#f0f0f0"]'}
                 />
               </Card>
             </Col>

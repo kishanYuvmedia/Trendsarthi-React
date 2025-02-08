@@ -61,21 +61,21 @@ const TableCard = ({ header, tableId, list }) => {
                 </CardHeader>
                 <CardBody className="p-0 position-relative">
                     <div className="border p-2 rounded-4 table-responsive" style={{ backgroundColor: "#292B42" }}>
-                        <table id={tableId} className="table table-sm">
+                        <table id={tableId} className="table table-sm table-scroll">
                             <thead>
                                 <tr>
                                     <th className="fw-bold p-2 ps-3 text-white fw-light" style={{ borderRadius: "10px 0 0 10px" }}>Symbol</th>
-                                    <th className="fw-bold p-2 text-white fw-light text-center w-25">P.R. Breakout</th>
-                                    <th className="fw-bold text-center p-2 text-white fw-light">%</th>
-                                    <th className="fw-bold text-center p-2 text-white fw-light">T.O.</th>
-                                    <th className="fw-bold p-2 text-white fw-light text-center w-25" style={{ borderRadius: "0px 10px 10px 0" }}>PCR</th>
+                                    <th className="fw-bold p-2 text-white fw-light text-center w-25">Price</th>
+                                    <th className="fw-bold text-center p-2 text-white fw-light">change</th>
+                                    <th className="fw-bold text-center p-2 text-white fw-light">AI Signal</th>
+                                    <th className="fw-bold p-2 text-white fw-light text-center w-25" style={{ borderRadius: "0px 10px 10px 0" }}>Sentiment</th>
                                 </tr>
                             </thead>
                             <tbody className="fs-5 fw-light text-white">
-                                {dataList?.slice(1, 10).map((item, index) => (
+                                {dataList?.map((item, index) => (
                                     <tr key={index}>
                                     <td className="text-white fs-6">
-                                        <span>{item.INSTRUMENTIDENTIFIER}</span>
+                                        <span>{item.INSTRUMENTIDENTIFIER.slice(0,-2)}</span>
                                     </td>
                                     <td className="text-center">
                                         <div className={`badge rounded-pill fs-6 border-${item.PRICECHANGE > 0 ? 'success' : 'danger'} border p-0 px-3`}>

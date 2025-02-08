@@ -9,20 +9,17 @@ export const options = {
     fontColor: "black",
     showScale: true,
 };
-export default function MomentumSpikeMulti({ header, status, tableId, data }) {
-    console.log('data', data)
+export default function MomentumSpikeMulti({ header, data }) {
+    //console.log("MomentumSpikeMulti", data);
+    const [mergedData, setMergedData] = useState([]);
     useEffect(() => {
-        // Initialize DataTable when the component mounts
-        const tableElement = document.querySelector(`#${tableId}`);
-        if ($.fn.DataTable.isDataTable(tableElement)) {
-            // Destroy the existing DataTable before reinitializing
-            $(tableElement).DataTable().destroy();
+        if (data && data.length > 0) {
+            setMergedData(data);
         }
-        $(tableElement).DataTable({
-            searching: false,   // Disable search
-            paging: false,      // Disable pagination
-        });
-    }, [tableId]);
+    }, [data]); // Add `data` as a dependency  
+    useEffect(() => {
+        console.log("Merged Data State:", mergedData);
+    }, [mergedData]);  
     return (
         <div>
             <Card
@@ -50,17 +47,25 @@ export default function MomentumSpikeMulti({ header, status, tableId, data }) {
                     </div>
                 </CardHeader>
                 <CardBody className="p-3 pt-0">
-                    <div className="border p-3 rounded-4 bg-black row">
-                        <div className="col-md-4">
-                            <Chart
-                                chartType="TreeMap"
-                                width="100%"
-                                height="400px"
-                                data={data}
-                                options={options}
-                            />
+                    {mergedData?.length > 0 && (
+                        <div className="border p-1 rounded-4 bg-black d-flex flex-wrap">
+                            {mergedData.map((item, index) => (
+                                <div key={index} style={{ width: '25%' }}>
+                                    {item?.data?.length > 0 ? ( // Check if `item.data` is valid
+                                        <Chart
+                                            chartType="TreeMap"
+                                            width={'100%'}
+                                            height={'250px'}
+                                            data={item.data}
+                                            options={options}
+                                        />
+                                    ) : (
+                                        <p>No Data Available</p>
+                                    )}
+                                </div>
+                            ))}
                         </div>
-                    </div>
+                    )}
                 </CardBody>
             </Card>
         </div>

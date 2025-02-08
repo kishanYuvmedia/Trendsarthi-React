@@ -11,30 +11,22 @@ import MomentumSpikeMulti from "pages/InsiderStrategy/MomentumSpikemulti";
 import { shortProductListDataList } from "services/api/api-service";
 import { sector } from "../dataType/sector";
 const SectorScope = (props) => {
+    const sectors = [
+        'Financial Services',
+        'Pharmaceuticals',
+        'Consumer Goods',
+        'Automotive',
+        'Construction & Infrastructure',
+        'Energy',
+        'Telecommunications',
+        'Technology',
+        'Engineering',
+        'Other',
+        'Information Technology',
+    ];
     const [sectorData, setSectorData] = useState([]);
-    let [mergedData, setMergedData] = useState([
-        ["Symbol", "Parent", "Price"],
-        ['ALL', null, 0],
-        ['Financial Services', 'ALL', 0],
-        ['Pharmaceuticals', 'ALL', 0],
-        ['Consumer Goods', 'ALL', 0],
-        ['Automotive', 'ALL', 0],
-        ['Construction & Infrastructure', 'ALL', 0],
-        ['Energy', 'ALL', 0],
-        ['Metals & Mining', 'ALL', 0],
-        ['Telecommunications', 'ALL', 0],
-        ['Airlines', 'ALL', 0],
-        ['Media & Entertainment', 'ALL', 0],
-        ['Technology', 'ALL', 0],
-        ['Logistics', 'ALL', 0],
-        ['Chemicals & Fertilizers', 'ALL', 0],
-        ['Engineering', 'ALL', 0],
-        ['Textiles', 'ALL', 0],
-        ['Sugar', 'ALL', 0],
-        ['Hotels & Tourism', 'ALL', 0],
-        ['Other', 'ALL', 0],
-        ['Information Technology', 'ALL', 0],
-    ]);
+    const [mergedData, setMergedDataList] = useState([]);
+    const [mergedbar, setMergedbarList] = useState([]);
     useEffect(() => {
         const symbolToSector = {};
         sector.forEach(stock => {
@@ -56,22 +48,39 @@ const SectorScope = (props) => {
                     }
                 });
                 setSectorData(enrichedData);
-                const formattedData = enrichedData
-                    .sort((a, b) => b.PRICECHANGE - a.PRICECHANGE)
-                    .map(({ INSTRUMENTIDENTIFIER, PRICECHANGE, sector }) => {
-                        const symbol = INSTRUMENTIDENTIFIER.slice(0, -2); // Extract symbol
-                        const priceChange = Number(PRICECHANGE); // Convert to number (handle potential errors)
-                        if (isNaN(priceChange)) {
-                            console.warn(`Invalid PRICECHANGE value for ${symbol}: ${PRICECHANGE}. Using 0.`);
-                            return null; // Or return a default value: [symbol, sector, 0]
-                        }
-                        return [symbol, sector, priceChange]; // Return the correctly formatted row
-                    })
-                    .filter(row => row !== null); // Remove any rows with invalid PRICECHANGE
-
-                setMergedData(prevData => {
-                    return [...prevData, ...formattedData];
-                });
+                const allDatalist = [];
+                const allDatalistBar = [];
+                allDatalistBar.push(["Sector", "PChange", { role: "style" }]);
+                sectors.forEach(sector => {
+                    let value = 0;
+                    const formattedData = enrichedData
+                        .sort((a, b) => b.PRICECHANGE - a.PRICECHANGE)
+                        .filter(item => item.sector === sector)
+                        .map(({ INSTRUMENTIDENTIFIER, PRICECHANGE, sector }) => {
+                            const symbol = INSTRUMENTIDENTIFIER.slice(0, -2); // Extract symbol
+                            const priceChange = Number(PRICECHANGE); // Convert to number (handle potential errors)
+                            if (isNaN(priceChange)) {
+                                console.warn(`Invalid PRICECHANGE value for ${symbol}: ${PRICECHANGE}. Using 0.`);
+                                return null; // Or return a default value: [symbol, sector, 0]
+                            }
+                            value = value + priceChange;
+                            return [symbol, sector, priceChange]; // Return the correctly formatted row
+                        })
+                        .filter(row => row !== null); // Remove any rows with invalid PRICECHANGE 
+                    allDatalist.push({
+                        type: sector,
+                        data: [
+                            ["Symbol", "Parent", "Price"],
+                            [sector, null, 0], // Sector as parent
+                            ...formattedData
+                        ]
+                    });
+                    allDatalistBar.push([sector, Number((value / formattedData.length).toFixed(2)/10), (value / formattedData.length) > 0 ? 'green' : 'red']);// Add the bar chart data here
+                })
+                //console.log("allDatalist", allDatalist);
+                console.log("allDatalistBar", allDatalistBar);
+                setMergedbarList(allDatalistBar);
+                setMergedDataList(allDatalist);
             }
         })
     }, []);
@@ -89,7 +98,7 @@ const SectorScope = (props) => {
                             <MomentumSpikeMulti header={"Sector Scope"} data={mergedData} />
                         </Col>
                         <Col md={12}>
-                            <SectorBarScope header={"Sector Scope"} data={[]} />
+                            <SectorBarScope header={"Sector Scope"} data={mergedbar} />
                         </Col>
                     </Row>
                     <Row>

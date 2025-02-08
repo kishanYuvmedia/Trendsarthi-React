@@ -53,7 +53,7 @@ const BuildBarChart = ({
       },
     },
     grid: {
-      borderColor: "#ffffff",
+      borderColor: "#000",
     },
     fill: {
       opacity: 1,

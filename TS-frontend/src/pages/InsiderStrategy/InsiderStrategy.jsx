@@ -47,33 +47,33 @@ const InsiderStrategy = (props) => {
                     </div>
                     <Row>
                         <Col md={12}>
-                            <MomentumSpike header={"5 Min Momentum Spike"} data={mergedData} />
+                            <MomentumSpike header={"5 min Flash momentum"} data={mergedData} />
                         </Col>
                         <Col md={12}>
-                            <MomentumSpike header={"10 Min Momentum Spike"} data={mergedData} />
+                            <MomentumSpike header={"10 min Flash momentum"} data={mergedData} />
                         </Col>
                     </Row>
                     {!isEmpty(data) &&
                         <Row>
                             <Col md={6} id="right" className="hideOnMobile">
-                                <TableCard list={data.sort((a, b) => b.PRICECHANGE - a.PRICECHANGE)} type={'highPowerd'} header={"LOM SHORT TERM"} tableId={'pow1'} />
+                                <TableCard list={data.sort((a, b) => b.PRICECHANGE - a.PRICECHANGE)} type={'highPowerd'} header={"Short term track"} tableId={'pow1'} />
                             </Col>
                             <Col md={6} id="left" className="hideOnMobile">
                                 <TableCard list={data.sort((a, b) => b.PRICECHANGEPERCENTAGE
                                     - a.PRICECHANGEPERCENTAGE
-                                )} type={'highPowerd'} header={"LOM LONG TERM"} tableId={'pow2'} />
+                                )} type={'highPowerd'} header={"Long Term track "} tableId={'pow2'} />
                             </Col>
                             <Col md={6} id="left1" className="hideOnMobile">
                                 <TableCard list={data.sort((a, b) => b.VALUE
                                     - a.VALUE
-                                )} type={'highPowerd'} header={"CONTRACTION BO"} tableId={'pow3'} />
+                                )} type={'highPowerd'} header={"Contraction Signal"} tableId={'pow3'} />
                             </Col>
                             <Col md={6} id="left3" className="hideOnMobile">
                                 <TableCard list={data.sort((a, b) => a.BUYQTY - b.BUYQTY
-                                )} type={'highPowerd'} header={"DAY H/L REVERSAL"} tableId={'pow4'} />
+                                )} type={'highPowerd'} header={"Intraday Flip"} tableId={'pow4'} />
                             </Col>
                             <Col md={6} id="left3" className="hideOnMobile">
-                                <TableCard list={data.sort((a, b) => b.TOTALQTYTRADED - a.TOTALQTYTRADED)} type={'highPowerd'} header={"2 DAY H/L BO"} tableId={'pow5'} />
+                                <TableCard list={data.sort((a, b) => b.TOTALQTYTRADED - a.TOTALQTYTRADED)} type={'highPowerd'} header={"2D Breakout Trigger"} tableId={'pow5'} />
                             </Col>
                         </Row>
                     }

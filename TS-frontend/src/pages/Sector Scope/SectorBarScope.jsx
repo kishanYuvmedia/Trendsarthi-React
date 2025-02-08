@@ -31,22 +31,13 @@ export const options = {
   },
   curveType: "function", // Smoothen bars if applicable
 };
-export default function SectorBarScope({ header, status, tableId, data }) {
-  useEffect(() => {
-    // Initialize DataTable when the component mounts
-    const tableElement = document.querySelector(`#${tableId}`);
-    if ($.fn.DataTable.isDataTable(tableElement)) {
-      // Destroy the existing DataTable before reinitializing
-      $(tableElement).DataTable().destroy();
-    }
-
-    // Initialize DataTable with options to disable search and pagination
-    $(tableElement).DataTable({
-      searching: false,   // Disable search
-      paging: false,      // Disable pagination
-    });
-  }, [tableId]);
-
+export default function SectorBarScope({ header, data }) {
+ const [mergedData, setMergedData] = useState([]);
+     useEffect(() => {
+         if (data && data.length > 0) {
+             setMergedData(data);
+         }
+     }, [data]);
   return (
     <div>
       <Card
@@ -73,9 +64,9 @@ export default function SectorBarScope({ header, status, tableId, data }) {
             How to use
           </div>
         </CardHeader>
-        <CardBody className="p-3 pt-0">
-          <div className="border p-3 rounded-4 bg-black">
-            <Chart  chartType="ColumnChart" width="100%" height="100%" options={options} data={data} />
+        <CardBody className="p-1 pt-0">
+          <div className="border p-1 rounded-4 bg-black">
+            <Chart chartType="ColumnChart" width="100%" height="500px" options={options} data={mergedData} />
           </div>
         </CardBody>
       </Card>
