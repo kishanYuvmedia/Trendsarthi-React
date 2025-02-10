@@ -44,9 +44,6 @@ const MarketPulse = () => {
                                 <CardSlider list={data.sort((a, b) => b.PRICECHANGEPERCENTAGE
                                     - a.PRICECHANGEPERCENTAGE
                                 )} type={'highPowerd'} header={"INTRADAY BOOST"} />
-
-
-                                
                             </Col>
                             <Col md={12} className="hideOnDesktop mb-3">
                                 <CardSlider list={data.sort((a, b) => b.AVERAGETRADEDPRICE - a.AVERAGETRADEDPRICE)} type={'highPowerd'} header={"Bull Force"} />

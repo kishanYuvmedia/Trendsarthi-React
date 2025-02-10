@@ -325,4 +325,22 @@ export const getSectorList = async (value) => {
     }
   })
 }
+export const categoryStockData = (type) => {
+  return new Promise((resolve, reject) => {
+    axiosRequest(
+      "GET",
+      `${["TdDerivatives", "getMultiOptionChain"].join("/")}`,
+      undefined,
+      undefined,
+      { type },
+      true
+    )
+      .then(response => {
+        resolve(response) // Resolve the promise with the response data
+      })
+      .catch(error => {
+        reject(error) // Reject the promise with the error
+      })
+  })
+}
 
