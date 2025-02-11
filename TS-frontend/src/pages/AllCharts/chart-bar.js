@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import * as echarts from "echarts";
 
-const CandlestickChart = ({dataList=[]}) => {
+const CandlestickChart = ({dataList=[],datetime=[]}) => {
     const chartRef = useRef(null);
     useEffect(() => {
         let myChart = null;
@@ -10,7 +10,7 @@ const CandlestickChart = ({dataList=[]}) => {
             const option = {
                 xAxis: {
                     type: "category",
-                    data: ["2017-10-24", "2017-10-25", "2017-10-26", "2017-10-27"],
+                    data: datetime,
                     axisLabel: { color: "white" }, // ✅ Ensure axis text is visible in dark mode
                 },
                 yAxis: {
@@ -32,7 +32,6 @@ const CandlestickChart = ({dataList=[]}) => {
             }
         };
     }, []);
-
     return <div ref={chartRef} style={{ width: "100%", height: "500px" }} />;
 };
 

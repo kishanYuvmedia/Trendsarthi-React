@@ -7,21 +7,23 @@ import {
 } from "services/api/api-service";
 import dragula from "dragula";
 import _, { isEmpty, result, set } from "lodash";
-import { getHistoryList } from "services/api/api-service";
+import { geIntradayData } from "services/api/api-service";
 import MomentumSpike from "../InsiderStrategy/MomentumSpike";
 import NightingaleChart from "pages/AllCharts/NightingaleChart";
 import CandlestickChart from "pages/AllCharts/chart-bar";
 const OptionApex = (props) => {
-     let [mergedData, setMergedData] = useState([
-         ["Symbol", "Parent", "Price Change"],
-         ["All Stocks", null, 0],
-     ]);
+    let [mergedData, setMergedData] = useState([
+        ["Symbol", "Parent", "Price Change"],
+        ["All Stocks", null, 0],
+    ]);
     const [typeList] = useState(["NIFTY", "BANKNIFTY", "FINNIFTY", "MIDCPNIFTY"])
     const [selectedValue, setSelectedValue] = useState("NIFTY");
     const [data, setData] = useState([]);
     const [DataChart, setDataChart] = useState([]);
     const [dataList, setDataList] = useState([]);
     const [dataList1, setDataList1] = useState([]);
+    const [dateList, setDateList] = useState([]);
+    const [datetime, setDateTime] = useState([]);
     const options = {
         backgroundColor: "#181a33", // Dark background
         pieHole: 0.4,
@@ -65,18 +67,18 @@ const OptionApex = (props) => {
                     ...result.sort((a, b) => b.PRICECHANGE - a.PRICECHANGE).slice(1, 10).map(item => [item.INSTRUMENTIDENTIFIER, item.PRICECHANGEPERCENTAGE || 0])
                 ];
                 const outputData1 = [ // Header row
-                    ...result.sort((a, b) => b.PRICECHANGEPERCENTAGE - a.PRICECHANGEPERCENTAGE).slice(1, 15).map(item => ({ value: item.PRICECHANGEPERCENTAGE, name: item.INSTRUMENTIDENTIFIER.slice(0, -2) }))
+                    ...result.sort((a, b) => b.PRICECHANGEPERCENTAGE - a.PRICECHANGEPERCENTAGE).slice(1, 10).map(item => ({ value: item.PRICECHANGEPERCENTAGE, name: item.INSTRUMENTIDENTIFIER.slice(0, -2) }))
                 ];
-              
+
                 const formattedData = result
-                .sort((a, b) => b.PRICECHANGE - a.PRICECHANGE)
-                .slice(0, 15)
-                .map(({ INSTRUMENTIDENTIFIER, PRICECHANGE }) => [
-                    INSTRUMENTIDENTIFIER.slice(0, -2),
-                    "All Stocks",
-                    PRICECHANGE,
-                ]);
-        
+                    .sort((a, b) => b.PRICECHANGE - a.PRICECHANGE)
+                    .slice(0, 10)
+                    .map(({ INSTRUMENTIDENTIFIER, PRICECHANGE }) => [
+                        INSTRUMENTIDENTIFIER.slice(0, -2),
+                        "All Stocks",
+                        PRICECHANGE,
+                    ]);
+
                 setMergedData((prevData) => [...prevData, ...formattedData]);
                 //console.log("outputData", outputData);
                 setData(outputData);
@@ -87,23 +89,29 @@ const OptionApex = (props) => {
         getProductDatalist(selectedValue)
     }, [selectedValue])
     function getProductDatalist(type) {
-        getHistoryList("MINUTE", `${type}-I`, 5000, 5).then(result => {
-            const dataResult = []
-            if (!isEmpty(result)) {
-                // console.log("Product stock data", result)
-                result.list.slice(0,100).map(item =>
-                    dataResult.push([item.OPEN, item.HIGH, item.LOW, item.CLOSE])
-                )
-            }
-            console.log("Product stock data", dataResult)
-            setDataChart(dataResult)
-        })
+        geIntradayData(type)
+            .then(result => {
+                if (!_.isEmpty(result)) {
+                    console.log("database", result)
+                    let listData = result.map(item => {
+                        return [item.OPEN, item.HIGH, item.LOW, item.CLOSE]
+                    })
+                    let listDataTime = result.map(item => {
+                        return [item.time]
+                    })
+                    console.log("listData", listData)
+                    setDateList(listData)
+                    setDateTime(listDataTime)
+                }
+            })
+            .catch(err => {
+                console.error("Error fetching getStrikePrice:", err)
+            })
     }
     return (
         <React.Fragment>
             <div className="page-content">
                 <Container fluid>
-
                     <div className="card mb-0">
                         <div className="card-body px-0 pt-0">
                             <div className="row d-flex justify-content-between">
@@ -172,13 +180,13 @@ const OptionApex = (props) => {
                                     backgroundColor: "#181a33"
                                 }}
                             >
-                                <CardBody className='justify-content-between rounded-4  ' style={{ backgroundColor: "#181a33" }}>
-                                    <CandlestickChart dataList={DataChart} />
+                                <CardBody className='justify-content-between rounded-4' style={{ backgroundColor: "#181a33" }}>
+                                    <CandlestickChart dataList={dateList} datetime={datetime} />
                                 </CardBody>
                             </Card>
                         </Col>
                         <Col md={6}>
-                        <MomentumSpike header={"Money Flux"} data={mergedData} />
+                            <MomentumSpike header={"Money Flux"} data={mergedData} />
                         </Col>
                     </Row>
                     <Card
@@ -192,7 +200,7 @@ const OptionApex = (props) => {
                         }}
                     >
                         <CardBody className='d-flex justify-content-between rounded-4' style={{ backgroundColor: "#181a33" }}>
-                            <NightingaleChart dataList={dataList1} title={selectedValue}/>
+                            <NightingaleChart dataList={dataList1} title={selectedValue} />
                         </CardBody>
 
                     </Card>
