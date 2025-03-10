@@ -99,7 +99,6 @@ const OptionChain = props => {
                   ? "BUY"
                   : "SELL",
             })
-
             dataValue.push(Number(item.putTotal) - Number(item.callTotal))
             timevalue.push(item.time)
             zerolist.push(0)

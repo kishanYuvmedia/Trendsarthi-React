@@ -6,7 +6,7 @@ import {
     shortProductListDataList,
 } from "services/api/api-service";
 import dragula from "dragula";
-import _, { isEmpty, result, set } from "lodash";
+import _, { isEmpty } from "lodash";
 import { geIntradayData } from "services/api/api-service";
 import MomentumSpike from "../InsiderStrategy/MomentumSpike";
 import NightingaleChart from "pages/AllCharts/NightingaleChart";
@@ -19,33 +19,11 @@ const OptionApex = (props) => {
     const [typeList] = useState(["NIFTY", "BANKNIFTY", "FINNIFTY", "MIDCPNIFTY"])
     const [selectedValue, setSelectedValue] = useState("NIFTY");
     const [data, setData] = useState([]);
-    const [DataChart, setDataChart] = useState([]);
     const [dataList, setDataList] = useState([]);
     const [dataList1, setDataList1] = useState([]);
     const [dateList, setDateList] = useState([]);
-    const [datetime, setDateTime] = useState([]);
-    const options = {
-        backgroundColor: "#181a33", // Dark background
-        pieHole: 0.4,
-        chartArea: {
-            backgroundColor: "#181a33", // Dark chart area
-        },
-        legend: {
-            textStyle: { color: "white" }, // Legend text color
-        },
-        hAxis: {
-            textStyle: { color: "white" }, // X-axis labels color
-        },
-        vAxis: {
-            textStyle: { color: "white" }, // Y-axis labels color
-        },
-        titleTextStyle: {
-            color: "white", // Title text color
-        },
-    };
     useEffect(() => {
         document.title = "Option Apex | Trendsarthi";
-
         dragula([
             document.getElementById("left"),
             document.getElementById("right"),
@@ -54,7 +32,6 @@ const OptionApex = (props) => {
             document.getElementById("left3"),
             document.getElementById("right3"),
         ]);
-
 
     }, []);
     useEffect(() => {
@@ -93,15 +70,11 @@ const OptionApex = (props) => {
             .then(result => {
                 if (!_.isEmpty(result)) {
                     console.log("database", result)
-                    let listData = result.map(item => {
-                        return [item.OPEN, item.HIGH, item.LOW, item.CLOSE]
-                    })
-                    let listDataTime = result.map(item => {
-                        return [item.time]
-                    })
-                    console.log("listData", listData)
-                    setDateList(listData)
-                    setDateTime(listDataTime)
+                    let dataList =[['Time', 'OPEN', 'HIGH', 'LOW', 'CLOSE']];
+                     result.map(item => (
+                        dataList.push([item.time, item.OPEN, item.HIGH, item.LOW, item.CLOSE])
+                    ));
+                    setDateList(dataList)
                 }
             })
             .catch(err => {
@@ -181,7 +154,7 @@ const OptionApex = (props) => {
                                 }}
                             >
                                 <CardBody className='justify-content-between rounded-4' style={{ backgroundColor: "#181a33" }}>
-                                    <CandlestickChart dataList={dateList} datetime={datetime} />
+                                    {/* <CandlestickChart dataList={dateList} /> */}
                                 </CardBody>
                             </Card>
                         </Col>
@@ -190,7 +163,7 @@ const OptionApex = (props) => {
                         </Col>
                     </Row>
                     <Card
-                        className="my-2 Drag "
+                        className="my-2 Drag"
                         style={{
                             border: '1px solid transparent',
                             borderRadius: '14px',
@@ -202,7 +175,6 @@ const OptionApex = (props) => {
                         <CardBody className='d-flex justify-content-between rounded-4' style={{ backgroundColor: "#181a33" }}>
                             <NightingaleChart dataList={dataList1} title={selectedValue} />
                         </CardBody>
-
                     </Card>
                 </Container>
             </div>

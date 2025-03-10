@@ -8,7 +8,7 @@ export default {
   modalHeaderTextColor: "#FFF",
   topMenuHeaderColor: "#3f51b5",
   linkTextColor: "#556ee6",
-  apiUrl: "http://65.2.40.60:3000/api",
+  apiUrl: "http://13.201.81.3:3000/api",
   //apiUrl: "http://localhost:3000/api",
   RAZORPAY_KEY_ID: "rzp_test_Q2Nqpd2u2kxq1S",
   RAZORPAY_KEY_SECRET: "iOktJpH260XI1YVqTo9n7cPn",

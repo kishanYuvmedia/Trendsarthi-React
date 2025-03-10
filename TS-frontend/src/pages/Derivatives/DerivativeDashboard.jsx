@@ -4,7 +4,7 @@ import Settings from "./DashboardComponents/FilterTabs"
 import Apaexlinecolumn from "./DashboardComponents/apaexlinecolumn"
 import OptionChainTableContainer from "../../components/Common/derivativesComponent/OptionChainTableContainer"
 import ProgressBar from "components/Common/ProgressBar"
-import CardDrag from "pages/Dashboard/components/CardDrag"
+import IntradayTableContainer from "../../components/Common/derivativesComponent/IntradayTableContainer"
 //Import Breadcrumb
 import Breadcrumbs from "../../components/Common/Breadcrumb"
 import { columnsNiftyOption } from "./optionChainData.js"
@@ -12,16 +12,16 @@ import { useEffect } from "react"
 import {
   getStrikePrice,
   getExpairDate,
-  getOptionDataTable,
+  getOptionDataTable, geIntradayData
 } from "../../services/api/api-service"
 const index = () => {
   //meta title
+  const [intradayList, setintradayList] = useState([])
   const [strickPrice, setStrikePrice] = useState(0)
   const [list, setlist] = useState([])
   const [typeList] = useState(["NIFTY", "BANKNIFTY", "FINNIFTY", "MIDCPNIFTY"])
   const [optionType, setOptionType] = useState("NIFTY")
   document.title = "Derivative Dashboard"
-  const [type, settype] = useState("Nifty")
   const [dataCall, setdatacall] = useState([])
   const [dataPut, setdataput] = useState([])
   const [category, setcategory] = useState([])
@@ -31,19 +31,19 @@ const index = () => {
   let [putPers, setputPers] = useState(0)
   const [expdatelist, setExpDate] = useState([])
   useEffect(() => {
-    console.log(type)
+    console.log(optionType)
     setdatacall([])
     setdataput([])
-    getStrikePrice(type)
+    getStrikePrice(optionType)
       .then(resultStrike => {
         const explist = []
         setTimeout(() => {
           //console.log(resultStrike.StrikePrice.value)
-          getExpairDate(type)
+          getExpairDate(optionType)
             .then(result => {
               result.list.map(item => explist.push({ value: item }))
               getOptionDataTable(
-                type,
+                optionType,
                 result.today,
                 resultStrike.StrikePrice.value
               )
@@ -112,7 +112,45 @@ const index = () => {
       .catch(err => {
         console.error("Error fetching getStrikePrice:", err)
       })
-  }, [type])
+    getIntraday();
+  }, [optionType])
+  function getIntraday() {
+    geIntradayData(optionType)
+      .then(result => {
+        if (!_.isEmpty(result)) {
+          console.log("database", result);
+          const IntraDay = []
+          result.map(item => {
+            IntraDay.push({
+              time: item.time,
+              call: item.callTotal,
+              put: item.putTotal,
+              difference: Number(item.putTotal) - Number(item.callTotal),
+              pcr: (Number(item.putTotal) / Number(item.callTotal)).toFixed(2),
+              optionSignal:
+                Number(Number(item.putTotal) / Number(item.callTotal)).toFixed(
+                  2
+                ) > 0.5
+                  ? "BUY"
+                  : "SELL",
+              vwap: item.AVERAGETRADEDPRICE,
+              price: item.BUYPRICE,
+              vwapSignal:
+                Number(
+                  Number(item.AVERAGETRADEDPRICE) < Number(item.BUYPRICE)
+                ).toFixed(2) > 0.5
+                  ? "BUY"
+                  : "SELL",
+            })
+          })
+          console.log("IntraDay", IntraDay)
+          setintradayList(IntraDay)
+        }
+      })
+      .catch(err => {
+        console.error("Error fetching getStrikePrice:", err)
+      })
+  }
   return (
     <React.Fragment>
       <div className="page-content">
@@ -122,18 +160,18 @@ const index = () => {
             breadcrumbItem="Derivative Dashboard"
           />
           <Row>
-          <Col md={8}>
-            
-                {totalcal != 0 && (
-                  <Settings
-                    expdatelist={expdatelist}
-                    totalcal={totalcal}
-                    totalput={totalput}
-                    putPers={putPers}
-                    callPers={callPers}
-                    settype={settype}
-                  />
-                )}
+            <Col md={8}>
+
+              {totalcal != 0 && (
+                <Settings
+                  expdatelist={expdatelist}
+                  totalcal={totalcal}
+                  totalput={totalput}
+                  putPers={putPers}
+                  callPers={callPers}
+                  settype={setOptionType}
+                />
+              )}
             </Col>
             <Col md={4} id="right">
               <Card
@@ -146,18 +184,18 @@ const index = () => {
                   backgroundColor: "#181a33"
                 }}
               >
-                <p className="text-gradient" style={{ fontSize: 20 }}>{`${type} Progress Chart`}</p>
+                <p className="text-gradient" style={{ fontSize: 20 }}>{`${optionType} Progress Chart`}</p>
                 <div className="d-flex justify-content-center">
-                {typeList.map(item => (
-                  <button
-                    type="button"
-                    className={`btn btn-sm m-1 ${optionType === item ? "btn-warning" : " btn-info"
-                      }`}
-                    onClick={e => setOptionType(item)}
-                  >
-                    {item}
-                  </button>
-                ))}
+                  {typeList.map(item => (
+                    <button
+                      type="button"
+                      className={`btn btn-sm m-1 ${optionType === item ? "btn-warning" : " btn-info"
+                        }`}
+                      onClick={e => setOptionType(item)}
+                    >
+                      {item}
+                    </button>
+                  ))}
                 </div>
                 <ProgressBar type={optionType} />
               </Card>
@@ -186,9 +224,9 @@ const index = () => {
                 )}
               </Card>
             </Col>
-            
+
             <Col md={12}>
-            <Card
+              <Card
                 className="my-2 Drag "
                 style={{
                   border: '1px solid transparent',
@@ -199,21 +237,36 @@ const index = () => {
                 }}
               >
                 <p className="text-gradient" style={{ fontSize: 20 }}>Call/Put</p>
-              <OptionChainTableContainer
-                columns={columnsNiftyOption}
-                data={list}
-                isGlobalFilter={false}
-                isAddOptions={false}
-                strickP={strickPrice}
-                customPageSize={10}
-                isPagination={false}
-                tableClass="align-middle table-nowrap table-check table-hover table"
-                theadClass="table-light"
-                tbodyClass="table-striped"
-                paginationDiv="col-12"
-                pagination="justify-content-center pagination pagination-rounded"
-                PCRstatus={false}
-              />
+                <OptionChainTableContainer
+                  columns={columnsNiftyOption}
+                  data={list}
+                  isGlobalFilter={false}
+                  isAddOptions={false}
+                  strickP={strickPrice}
+                  customPageSize={10}
+                  isPagination={false}
+                  tableClass="align-middle table-nowrap table-check table-hover table"
+                  theadClass="table-light"
+                  tbodyClass="table-striped"
+                  paginationDiv="col-12"
+                  pagination="justify-content-center pagination pagination-rounded"
+                  PCRstatus={false}
+                />
+              </Card>
+            </Col>
+            <Col md={12}>
+              <Card
+                className="my-2 Drag "
+                style={{
+                  border: '1px solid transparent',
+                  borderRadius: '14px',
+                  boxShadow: '0 0 0 1px rgba(56, 62, 214, 0.5), 0 0 0 2px rgba(18, 18, 20, 0.5)',
+                  padding: '10px',
+                  backgroundColor: "#181a33"
+                }}
+              >
+                <p className="text-gradient" style={{ fontSize: 20 }}>Intraday Today</p>
+                <IntradayTableContainer data={intradayList} />
               </Card>
             </Col>
           </Row>

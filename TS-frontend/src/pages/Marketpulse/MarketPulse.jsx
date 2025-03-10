@@ -36,65 +36,80 @@ const MarketPulse = () => {
                     {!isEmpty(data) &&
                         <Row>
                             <Col md={12} className="hideOnDesktop mb-3">
-                                <CardSlider list={data.sort((a, b) => b.OPENINTEREST
-                                    - a.OPENINTEREST
-                                )} type={'highPowerd'} header={"Momentum Movers"} />
+                                <CardSlider list={data.map(stock => ({
+                                    ...stock,
+                                    CHANGE_PERCENT: (((stock.AVERAGETRADEDPRICE  * stock.LASTTRADEQTY)/(stock.TOTALQTYTRADED*stock.AVERAGETRADEDPRICE))*100).toFixed(2)                           
+                                })).sort((a, b) => b.CHANGE_PERCENT - a.CHANGE_PERCENT)} type={'highPowerd'} header={"Momentum Movers"} />
                             </Col>
                             <Col md={12} className="hideOnDesktop mb-3">
-                                <CardSlider list={data.sort((a, b) => b.PRICECHANGEPERCENTAGE
-                                    - a.PRICECHANGEPERCENTAGE
-                                )} type={'highPowerd'} header={"INTRADAY BOOST"} />
+                                <CardSlider list={data.map(stock => ({
+                                    ...stock,
+                                    CHANGE_PERCENT: (((stock.AVERAGETRADEDPRICE  * stock.LASTTRADEQTY)/(stock.TOTALQTYTRADED*stock.AVERAGETRADEDPRICE))*100).toFixed(2)                           
+                                })).sort((a, b) => a.CHANGE_PERCENT - b.CHANGE_PERCENT)} type={'highPowerd'} header={"Turbo Trades"} />
                             </Col>
                             <Col md={12} className="hideOnDesktop mb-3">
-                                <CardSlider list={data.sort((a, b) => b.AVERAGETRADEDPRICE - a.AVERAGETRADEDPRICE)} type={'highPowerd'} header={"Bull Force"} />
+                                <CardSlider list={data.map(stock => ({
+                                    ...stock,
+                                    CHANGE_PERCENT: stock.PRICECHANGE
+                                })).sort((a, b) => b.CHANGE_PERCENT - a.CHANGE_PERCENT)} type={'highPowerd'} header={"Bull Force"} />
                             </Col>
                             <Col md={12} className="hideOnDesktop mb-3">
-                                <CardSlider list={data.sort((a, b) => a.OPENINTERESTCHANGE
-                                    - b.OPENINTERESTCHANGE
-                                )} type={'highPowerd'} header={"Bear Force"} />
+                                <CardSlider list={data.map(stock => ({
+                                    ...stock,
+                                    CHANGE_PERCENT: stock.PRICECHANGE
+                                })).sort((a, b) => a.CHANGE_PERCENT - b.CHANGE_PERCENT)} type={'highPowerd'} header={"Bear Force"} />
                             </Col>
                             <Col md={12} className="hideOnDesktop mb-3">
-                                <CardSlider list={data.sort((a, b) => a.OPENINTERESTCHANGE
-                                    - b.OPENINTERESTCHANGE
-                                )} type={'highPowerd'} header={"Turbo Trades"} />
+                                <CardSlider list={data.map(stock => ({
+                                    ...stock,
+                                    CHANGE_PERCENT: stock.PRICECHANGEPERCENTAGE
+                                })).sort((a, b) => b.CHANGE_PERCENT - a.CHANGE_PERCENT)} type={'highPowerd'} header={"wealth Winners"} />
                             </Col>
                             <Col md={12} className="hideOnDesktop mb-3">
-                                <CardSlider list={data.sort((a, b) => a.OPENINTERESTCHANGE
-                                    - b.OPENINTERESTCHANGE
-                                )} type={'highPowerd'} header={"wealth Winners"} />
-                            </Col>
-                            <Col md={12} className="hideOnDesktop mb-3">
-                                <CardSlider list={data.sort((a, b) => a.OPENINTERESTCHANGE
-                                    - b.OPENINTERESTCHANGE
-                                )} type={'highPowerd'} header={"wealth Loosers"} />
+                                <CardSlider list={data.map(stock => ({
+                                    ...stock,
+                                    CHANGE_PERCENT: stock.PRICECHANGEPERCENTAGE
+                                })).sort((a, b) => a.CHANGE_PERCENT - b.CHANGE_PERCENT)} type={'highPowerd'} header={"wealth Loosers"} />
                             </Col>
                         </Row>
                     }
                     {!isEmpty(data) &&
                         <Row>
                             <Col md={6} id="right" className="hideOnMobile">
-                                <TableCard list={data.sort((a, b) => b.OPENINTEREST
-                                    - a.OPENINTEREST
-                                )} type={'highPowerd'} header={"Momentum Movers"} tableId={'pow1'} />
+                                <TableCard list={data.map(stock => ({
+                                    ...stock,
+                                    CHANGE_PERCENT: (((stock.AVERAGETRADEDPRICE  * stock.LASTTRADEQTY)/(stock.TOTALQTYTRADED*stock.AVERAGETRADEDPRICE))*100).toFixed(2)                           
+                                })).sort((a, b) => b.CHANGE_PERCENT - a.CHANGE_PERCENT)} type={'highPowerd'} header={"Momentum Movers"} tableId={'pow1'} />
+                            </Col>
+                            <Col md={6} id="left3" className="hideOnMobile">
+                                <TableCard list={data.map(stock => ({
+                                    ...stock,
+                                    CHANGE_PERCENT: (((stock.AVERAGETRADEDPRICE  * stock.LASTTRADEQTY)/(stock.TOTALQTYTRADED*stock.AVERAGETRADEDPRICE))*100).toFixed(2)                           
+                                })).sort((a, b) => a.CHANGE_PERCENT - b.CHANGE_PERCENT)} type={'highPowerd'} header={"Turbo Trades"} tableId={'pow4'} />
                             </Col>
                             <Col md={6} id="left" className="hideOnMobile">
-                                <TableCard list={data.sort((a, b) => b.PRICECHANGEPERCENTAGE
-                                    - a.PRICECHANGEPERCENTAGE
-                                )} type={'highPowerd'} header={"Bull Force"} tableId={'pow2'} />
+                                <TableCard list={data.map(stock => ({
+                                    ...stock,
+                                    CHANGE_PERCENT: stock.PRICECHANGE
+                                })).sort((a, b) => b.CHANGE_PERCENT - a.CHANGE_PERCENT)} type={'highPowerd'} header={"Bull Force"} tableId={'pow2'} />
                             </Col>
                             <Col md={6} id="left1" className="hideOnMobile">
-                                <TableCard list={data.sort((a, b) => b.AVERAGETRADEDPRICE - a.AVERAGETRADEDPRICE)} type={'highPowerd'} header={"Bear Force"} tableId={'pow3'} />
+                                <TableCard list={data.map(stock => ({
+                                    ...stock,
+                                    CHANGE_PERCENT: stock.PRICECHANGE
+                                })).sort((a, b) => a.CHANGE_PERCENT - b.CHANGE_PERCENT)} type={'highPowerd'} header={"Bear Force"} tableId={'pow3'} />
                             </Col>
                             <Col md={6} id="left3" className="hideOnMobile">
-                                <TableCard list={data.sort((a, b) => a.OPENINTERESTCHANGE
-                                    - b.OPENINTERESTCHANGE
-                                )} type={'highPowerd'} header={"Turbo Trades"} tableId={'pow4'} />
+                                <TableCard list={data.map(stock => ({
+                                    ...stock,
+                                    CHANGE_PERCENT: stock.PRICECHANGEPERCENTAGE
+                                })).sort((a, b) => b.CHANGE_PERCENT - a.CHANGE_PERCENT)} type={'highPowerd'} header={"wealth Winners"} tableId={'pow5'} />
                             </Col>
                             <Col md={6} id="left3" className="hideOnMobile">
-                                <TableCard list={data.sort((a, b) => b.PRICECHANGE - a.PRICECHANGE)} type={'highPowerd'} header={"wealth Winners"} tableId={'pow5'} />
-                            </Col>
-                            <Col md={6} id="left3" className="hideOnMobile">
-                                <TableCard list={data.sort((a, b) => b.PRICECHANGE - a.PRICECHANGE)} type={'highPowerd'} header={"wealth Loosers"} tableId={'pow5'} />
+                                <TableCard list={data.map(stock => ({
+                                    ...stock,
+                                    CHANGE_PERCENT: stock.PRICECHANGEPERCENTAGE
+                                })).sort((a, b) => a.CHANGE_PERCENT - b.CHANGE_PERCENT)} type={'highPowerd'} header={"wealth Loosers"} tableId={'pow5'} />
                             </Col>
                         </Row>
                     }

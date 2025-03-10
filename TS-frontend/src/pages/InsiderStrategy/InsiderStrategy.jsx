@@ -15,27 +15,71 @@ const InsiderStrategy = (props) => {
         ["Symbol", "Parent", "Price Change"],
         ["All Stocks", null, 0],
     ]);
+    let [mergedData10, setMergedData10] = useState([
+        ["Symbol", "Parent", "Price Change"],
+        ["All Stocks", null, 0],
+    ]);
+    const calculateMomentumSpike = (stocks) => {
+        return stocks.slice(2).map(stock => {
+            const priceChange = stock.CLOSE - stock.OPEN;
+            const volumeChange = stock.TOTALQTYTRADED - stock.LASTTRADEQTY;
+            const turnoverChange = (stock.AVERAGETRADEDPRICE * stock.TOTALQTYTRADED) - (stock.LASTTRADEPRICE * stock.LASTTRADEQTY);
+
+            const momentumScore = (priceChange * 0.5) + (volumeChange * 0.3) + (turnoverChange * 0.2);
+
+            return { ...stock, MOMENTUM_SCORE: momentumScore.toFixed(2) };
+        }).sort((a, b) => b.MOMENTUM_SCORE - a.MOMENTUM_SCORE);
+    };
+    const calculateLOM = (stocks) => {
+        return stocks.slice(2).map(stock => {
+            const typicalPrice = (stock.HIGH + stock.LOW + stock.CLOSE) / 3;
+            const vwap = (typicalPrice * stock.TOTALQTYTRADED) / stock.TOTALQTYTRADED;
+
+            const priceChange = stock.CLOSE - stock.OPEN;
+            const volumeChange = stock.TOTALQTYTRADED - stock.LASTTRADEQTY;
+            const vwapDeviation = (stock.CLOSE - vwap) / vwap;
+
+            const currentMomentum = (priceChange * 0.5) + (volumeChange * 0.3) + (vwapDeviation * 0.2);
+            const lom = stock.PREVIOUS_MOMENTUM
+                ? ((stock.PREVIOUS_MOMENTUM - currentMomentum) / stock.PREVIOUS_MOMENTUM) * 100
+                : 0;
+            return {
+                ...stock,
+                CHANGE_PERCENT: lom.toFixed(2),
+            };
+        }).sort((a, b) => b.CHANGE_PERCENT - a.CHANGE_PERCENT);
+    };
     useEffect(() => {
         shortProductListDataList().then(result => {
             if (result?.length > 0) {
                 console.log("Result:", result);
-                setData(result.flat()); // Flatten the original result for `setData`
-                console.log("Processing result in chunks...", result);
-                const formattedData = result
+                const value = calculateLOM(result);
+                setData(value.flat()); // Flatten the original result for `setData`
+                console.log("Processing result in chunks...", value);
+                const calculateData = calculateMomentumSpike(result);
+                const formattedData5Minute = result
                     .sort((a, b) => b.PRICECHANGE - a.PRICECHANGE)
-                    .slice(0, 15)
+                    .slice(2)
                     .map(({ INSTRUMENTIDENTIFIER, PRICECHANGE }) => [
                         INSTRUMENTIDENTIFIER.slice(0, -2),
                         "All Stocks",
                         PRICECHANGE,
                     ]);
-                console.log("Formatted Data:", formattedData);
-            
-                setMergedData((prevData) => [...prevData, ...formattedData]);
+                const formattedData10Minute = calculateData
+                    .sort((a, b) => b.MOMENTUM_SCORE - a.MOMENTUM_SCORE)
+                    .slice(2)
+                    .map(({ INSTRUMENTIDENTIFIER, PRICECHANGE }) => [
+                        INSTRUMENTIDENTIFIER.slice(0, -2),
+                        "All Stocks",
+                        PRICECHANGE,
+                    ]);
+                console.log("Formatted 5 minute Data:", formattedData5Minute);
+                console.log("Formatted 10 minute Data:", formattedData10Minute);
+                setMergedData((prevData) => [...prevData, ...formattedData5Minute]);
+                setMergedData10((prevData) => [...prevData, ...formattedData10Minute]);
             }
         })
     }, [])
-
     return (
         <React.Fragment>
             <div className="page-content">
@@ -50,30 +94,25 @@ const InsiderStrategy = (props) => {
                             <MomentumSpike header={"5 min Flash momentum"} data={mergedData} />
                         </Col>
                         <Col md={12}>
-                            <MomentumSpike header={"10 min Flash momentum"} data={mergedData} />
+                            <MomentumSpike header={"10 min Flash momentum"} data={mergedData10} />
                         </Col>
                     </Row>
                     {!isEmpty(data) &&
                         <Row>
                             <Col md={6} id="right" className="hideOnMobile">
-                                <TableCard list={data.sort((a, b) => b.PRICECHANGE - a.PRICECHANGE)} type={'highPowerd'} header={"Short term track"} tableId={'pow1'} />
+                                <TableCard list={data} type={'highPowerd'} header={"Short term track"} tableId={'pow1'} />
                             </Col>
                             <Col md={6} id="left" className="hideOnMobile">
-                                <TableCard list={data.sort((a, b) => b.PRICECHANGEPERCENTAGE
-                                    - a.PRICECHANGEPERCENTAGE
-                                )} type={'highPowerd'} header={"Long Term track "} tableId={'pow2'} />
+                                <TableCard list={data} type={'highPowerd'} header={"Long Term track "} tableId={'pow2'} />
                             </Col>
                             <Col md={6} id="left1" className="hideOnMobile">
-                                <TableCard list={data.sort((a, b) => b.VALUE
-                                    - a.VALUE
-                                )} type={'highPowerd'} header={"Contraction Signal"} tableId={'pow3'} />
+                                <TableCard list={data} type={'highPowerd'} header={"Contraction Signal"} tableId={'pow3'} />
                             </Col>
                             <Col md={6} id="left3" className="hideOnMobile">
-                                <TableCard list={data.sort((a, b) => a.BUYQTY - b.BUYQTY
-                                )} type={'highPowerd'} header={"Intraday Flip"} tableId={'pow4'} />
+                                <TableCard list={data} type={'highPowerd'} header={"Intraday Flip"} tableId={'pow4'} />
                             </Col>
                             <Col md={6} id="left3" className="hideOnMobile">
-                                <TableCard list={data.sort((a, b) => b.TOTALQTYTRADED - a.TOTALQTYTRADED)} type={'highPowerd'} header={"2D Breakout Trigger"} tableId={'pow5'} />
+                                <TableCard list={data} type={'highPowerd'} header={"2D Breakout Trigger"} tableId={'pow5'} />
                             </Col>
                         </Row>
                     }

@@ -207,7 +207,6 @@ div.dt-container div.dt-search {
   position:relative;
   display: block;
   width:100%;
-  overflow-y: scroll;
 }
 
 .table-scroll tbody{

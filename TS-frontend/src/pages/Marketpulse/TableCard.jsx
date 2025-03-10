@@ -3,26 +3,8 @@ import { Card, CardHeader, CardBody } from "reactstrap";
 
 let negativeStatus = 'https://img.icons8.com/isometric/50/bearish.png';
 let positiveStatus = 'https://img.icons8.com/isometric/50/bullish.png';
-
-
-// Example usage with sample data
-
 const TableCard = ({ header, tableId, list }) => {
-
     useEffect(() => {
-        // Initialize DataTable when the component mounts
-        // const tableElement = document.querySelector(`#${tableId}`);
-        // if ($.fn.DataTable.isDataTable(tableElement)) {
-        //     // Destroy the existing DataTable before reinitializing
-        //     $(tableElement).DataTable().destroy();
-        // }
-
-        // // Initialize DataTable with options to disable search and pagination
-        // $(tableElement).DataTable({
-        //     searching: true,
-        //     paging: false,
-        // });
-        // Add placeholder to the search input
         const searchInputs = document.querySelectorAll('.dt-search input[type="search"]');
         searchInputs.forEach(input => {
             input.placeholder = 'Search...';
@@ -73,31 +55,32 @@ const TableCard = ({ header, tableId, list }) => {
                             </thead>
                             <tbody className="fs-5 fw-light text-white">
                                 {dataList?.map((item, index) => (
-                                    <tr key={index}>
-                                    <td className="text-white fs-6">
-                                        <span>{item.INSTRUMENTIDENTIFIER.slice(0,-2)}</span>
-                                    </td>
-                                    <td className="text-center">
-                                        <div className={`badge rounded-pill fs-6 border-${item.PRICECHANGE > 0 ? 'success' : 'danger'} border p-0 px-3`}>
-                                            {item.breakoutText}
-                                            <img src={item.PRICECHANGE > 0 ? positiveStatus : negativeStatus} width={25} alt={item.INSTRUMENTIDENTIFIER} />
-                                        </div>
-                                    </td>
-                                    <td className="text-center">
-                                        <div className={`badge rounded-pill w-100 p-2 fs-6`} style={{ backgroundColor: item.PRICECHANGE > 0 ? "#19C141" : "#F31C1C" }}>
-                                            {item.PRICECHANGE}
-                                        </div>
-                                    </td>
-                                    <td className="text-white text-center fs-6">
-                                        {item.LASTTRADEPRICE}
-                                    </td>
-                                    <td className="text-center">
-                                        <div className={`badge rounded-pill fs-6 border-${item.PRICECHANGE > 0 ? 'success' : 'danger'} border p-0 px-3`}>
-                                            {item.LASTTRADEPRICE}
-                                            <img src={item.PRICECHANGE > 0 ? positiveStatus : negativeStatus} width={25} alt={item.INSTRUMENTIDENTIFIER} />
-                                        </div>
-                                    </td>
-                                </tr>
+                                    <tr key={index} style={{ display: item.PRICECHANGE === 0 ? "none" : "flex" }}>
+                                        <td className="text-white fs-6">
+                                            <span>{item.INSTRUMENTIDENTIFIER.slice(0, -2)}</span>
+                                        </td>
+                                        <td className="text-center">
+                                            <div className={`badge rounded-pill fs-6 border-${item.PRICECHANGE > 0 ? 'success' : 'danger'} border p-0 px-3`}>
+                                                {item.breakoutText}
+                                                <img src={item.PRICECHANGE > 0 ? positiveStatus : negativeStatus} width={25} alt={item.PRICECHANGE} />
+                                            </div>
+                                        </td>
+                                        <td className="text-center">
+                                            <div className={`badge rounded-pill w-100 p-2 fs-6`} style={{
+                                                backgroundColor: item.PRICECHANGEPERCENTAGE
+                                                    > 0 ? "#19C141" : "#F31C1C"
+                                            }}>{item.PRICECHANGEPERCENTAGE}</div>
+                                        </td>
+                                        <td className="text-white text-center fs-6">
+                                            {(parseFloat((item.PRICECHANGE * 0.5) + (item.OPENINTERESTCHANGE * 0.3) + (item.VALUE * 0.0001))).toFixed(2)}
+                                        </td>
+                                        <td className="text-center">
+                                            <div className={`badge rounded-pill fs-6 border-${item.CHANGE_PERCENT > 0 ? 'success' : 'danger'} border p-0 px-3`}>
+                                                {item.CHANGE_PERCENT > 0 ? "Bullish" : item.CHANGE_PERCENT > 0 ? "Neutral" : "Bearish"}
+                                                <img src={item.CHANGE_PERCENT > 0 ? positiveStatus : negativeStatus} width={25} alt={item.CHANGE_PERCENT} />
+                                            </div>
+                                        </td>
+                                    </tr>
                                 ))}
                             </tbody>
                         </table>
