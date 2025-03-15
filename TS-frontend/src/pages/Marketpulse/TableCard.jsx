@@ -72,7 +72,7 @@ const TableCard = ({ header, tableId, list }) => {
                                             }}>{item.PRICECHANGEPERCENTAGE}</div>
                                         </td>
                                         <td className="text-white text-center fs-6">
-                                            {(parseFloat((item.PRICECHANGE * 0.5) + (item.OPENINTERESTCHANGE * 0.3) + (item.VALUE * 0.0001))).toFixed(2)}
+                                            {item.CHANGE_PERCENT}
                                         </td>
                                         <td className="text-center">
                                             <div className={`badge rounded-pill fs-6 border-${item.CHANGE_PERCENT > 0 ? 'success' : 'danger'} border p-0 px-3`}>

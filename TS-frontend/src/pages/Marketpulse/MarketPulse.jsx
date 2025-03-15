@@ -38,7 +38,7 @@ const MarketPulse = () => {
                             <Col md={12} className="hideOnDesktop mb-3">
                                 <CardSlider list={data.map(stock => ({
                                     ...stock,
-                                    CHANGE_PERCENT: (((stock.AVERAGETRADEDPRICE  * stock.LASTTRADEQTY)/(stock.TOTALQTYTRADED*stock.AVERAGETRADEDPRICE))*100).toFixed(2)                           
+                                    CHANGE_PERCENT: (stock.AVERAGETRADEDPRICE  * stock.LASTTRADEQTY).toFixed(2)                           
                                 })).sort((a, b) => b.CHANGE_PERCENT - a.CHANGE_PERCENT)} type={'highPowerd'} header={"Momentum Movers"} />
                             </Col>
                             <Col md={12} className="hideOnDesktop mb-3">
@@ -78,7 +78,7 @@ const MarketPulse = () => {
                             <Col md={6} id="right" className="hideOnMobile">
                                 <TableCard list={data.map(stock => ({
                                     ...stock,
-                                    CHANGE_PERCENT: (((stock.AVERAGETRADEDPRICE  * stock.LASTTRADEQTY)/(stock.TOTALQTYTRADED*stock.AVERAGETRADEDPRICE))*100).toFixed(2)                           
+                                    CHANGE_PERCENT: (stock.AVERAGETRADEDPRICE  * stock.LASTTRADEQTY).toFixed(2)                           
                                 })).sort((a, b) => b.CHANGE_PERCENT - a.CHANGE_PERCENT)} type={'highPowerd'} header={"Momentum Movers"} tableId={'pow1'} />
                             </Col>
                             <Col md={6} id="left3" className="hideOnMobile">
