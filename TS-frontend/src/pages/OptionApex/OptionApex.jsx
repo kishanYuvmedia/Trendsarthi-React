@@ -70,8 +70,8 @@ const OptionApex = (props) => {
             .then(result => {
                 if (!_.isEmpty(result)) {
                     console.log("database", result)
-                    let dataList =[['Time', 'OPEN', 'HIGH', 'LOW', 'CLOSE']];
-                     result.map(item => (
+                    let dataList = [['Time', 'OPEN', 'HIGH', 'LOW', 'CLOSE']];
+                    result.map(item => (
                         dataList.push([item.time, item.OPEN, item.HIGH, item.LOW, item.CLOSE])
                     ));
                     setDateList(dataList)
@@ -88,55 +88,17 @@ const OptionApex = (props) => {
                     <div className="card mb-0">
                         <div className="card-body px-0 pt-0">
                             <div className="row d-flex justify-content-between">
-                                <div className="col-md-8 pb-3">
+                                <div className="col-md-9 pb-3">
                                     <div className="fs-1 fw-bold text-gradient">Option Apex</div>
                                 </div>
-                                <div className="col-md-4 d-flex justify-content-around">
-                                    <div className="dropdown">
-                                        <button className="btn btn-black  dropdown-toggle text-white" type="button" data-bs-toggle="dropdown" aria-expanded="false" style={{
-                                            border: '1px solid transparent',
-                                            borderRadius: '5px',
-                                            boxShadow: '0 0 0 1px rgba(56, 62, 214, 0.5), 0 0 0 2px rgba(18, 18, 20, 0.5)',
-                                            padding: '10px 20px',
-                                        }}>
-                                            Index: Nift50
-                                        </button>
-                                        <ul className="dropdown-menu">
-                                            <li><a className="dropdown-item" href="#">Nift50</a></li>
-                                            <li><a className="dropdown-item" href="#">Another action</a></li>
-                                            <li><a className="dropdown-item" href="#">Something else here</a></li>
-                                        </ul>
-                                    </div>
-                                    <div className="dropdown ">
-                                        <button className="btn btn-black  dropdown-toggle text-white" type="button" data-bs-toggle="dropdown" aria-expanded="false" style={{
-                                            border: '1px solid transparent',
-                                            borderRadius: '5px',
-                                            boxShadow: '0 0 0 1px rgba(56, 62, 214, 0.5), 0 0 0 2px rgba(18, 18, 20, 0.5)',
-                                            padding: '10px 20px',
-                                        }}>
-                                            Time: 3m
-                                        </button>
-                                        <ul className="dropdown-menu">
-                                            <li><a className="dropdown-item" href="#">Action</a></li>
-                                            <li><a className="dropdown-item" href="#">Another action</a></li>
-                                            <li><a className="dropdown-item" href="#">Something else here</a></li>
-                                        </ul>
-                                    </div>
-                                    <div className="dropdown">
-                                        <button className="btn btn-black  dropdown-toggle text-white" type="button" data-bs-toggle="dropdown" aria-expanded="false" style={{
-                                            border: '1px solid transparent',
-                                            borderRadius: '5px',
-                                            boxShadow: '0 0 0 1px rgba(56, 62, 214, 0.5), 0 0 0 2px rgba(18, 18, 20, 0.5)',
-                                            padding: '10px 20px',
-                                        }}>
-                                            Exp: Jul - 4 wk
-                                        </button>
-                                        <ul className="dropdown-menu dropdown-menu-end">
-                                            <li><a className="dropdown-item" href="#">Action</a></li>
-                                            <li><a className="dropdown-item" href="#">Another action</a></li>
-                                            <li><a className="dropdown-item" href="#">Something else here</a></li>
-                                        </ul>
-                                    </div>
+                                <div className="col-md-3 d-flex justify-content-around">
+                                    <select name="StockType" id="StockType" className="form-control">
+                                        <option value="NIFTY">NIFTY</option>
+                                        <option value="BANKNIFTY">BANKNIFTY</option>
+                                        <option value="FINNIFTY">FINNIFTY</option>
+                                        <option value="MIDCPNIFTY">MIDCPNIFTY</option>
+                                        <option value="SENSEX">SENSEX</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>

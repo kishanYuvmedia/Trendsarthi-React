@@ -100,19 +100,34 @@ const InsiderStrategy = (props) => {
                     {!isEmpty(data) &&
                         <Row>
                             <Col md={6} id="right" className="hideOnMobile">
-                                <TableCard list={data} type={'highPowerd'} header={"Short term track"} tableId={'pow1'} />
+                                <TableCard list={data.map(stock => ({
+                                    ...stock,
+                                    CHANGE_PERCENT: ((stock.BUYPRICE-stock.LOW)/stock.LOW).toFixed(2) 
+                                })).sort((a, b) => a.CHANGE_PERCENT - b.CHANGE_PERCENT)} type={'highPowerd'} header={"Short term track"} tableId={'pow1'} />
                             </Col>
                             <Col md={6} id="left" className="hideOnMobile">
-                                <TableCard list={data} type={'highPowerd'} header={"Long Term track "} tableId={'pow2'} />
+                                <TableCard list={data.map(stock => ({
+                                    ...stock,
+                                    CHANGE_PERCENT: ((stock.BUYPRICE-stock.LOW)/stock.LOW).toFixed(2) 
+                                })).sort((a, b) => a.CHANGE_PERCENT - b.CHANGE_PERCENT)} type={'highPowerd'} header={"Long Term track "} tableId={'pow2'} />
                             </Col>
                             <Col md={6} id="left1" className="hideOnMobile">
-                                <TableCard list={data} type={'highPowerd'} header={"Contraction Signal"} tableId={'pow3'} />
+                                <TableCard list={data.map(stock => ({
+                                    ...stock,
+                                    CHANGE_PERCENT: ((stock.BUYPRICE-stock.LOW)/stock.LOW).toFixed(2) 
+                                })).sort((a, b) => a.CHANGE_PERCENT - b.CHANGE_PERCENT)} type={'highPowerd'} header={"Contraction Signal"} tableId={'pow3'} />
                             </Col>
                             <Col md={6} id="left3" className="hideOnMobile">
-                                <TableCard list={data} type={'highPowerd'} header={"Intraday Flip"} tableId={'pow4'} />
+                                <TableCard list={data.map(stock => ({
+                                    ...stock,
+                                    CHANGE_PERCENT: ((stock.BUYPRICE-stock.LOW)/stock.LOW).toFixed(2) 
+                                })).sort((a, b) => a.CHANGE_PERCENT - b.CHANGE_PERCENT)} type={'highPowerd'} header={"Intraday Flip"} tableId={'pow4'} />
                             </Col>
                             <Col md={6} id="left3" className="hideOnMobile">
-                                <TableCard list={data} type={'highPowerd'} header={"2D Breakout Trigger"} tableId={'pow5'} />
+                                <TableCard list={data.map(stock => ({
+                                    ...stock,
+                                    CHANGE_PERCENT: ((stock.BUYPRICE-stock.LOW)/stock.LOW).toFixed(2) 
+                                })).sort((a, b) => a.CHANGE_PERCENT - b.CHANGE_PERCENT)} type={'highPowerd'} header={"2D Breakout Trigger"} tableId={'pow5'} />
                             </Col>
                         </Row>
                     }
